@@ -80,15 +80,15 @@ snippet forr
 #Como parte importante de switch case tendra su propio snippet
 #switch
 snippet	switch
-	switch(${1:/* condicion */})
+	switch(${1:/* condicion  */})
 	{
-		${2:/* casos */}
+	 	${2:/* casos */}
 		default:
 			${3}
-	}
+	}${4}
 snippet case
-	case ${1:/* valor */}:
-		${2:/* codigo */}
+	case ${1:/* valor */}: 
+		${2:/* codigo * /}
 		break;
 	${3}
 # Funcion
@@ -126,20 +126,18 @@ snippet tds
 snippet tde
 	typedef  enum { 
 		${1:/* data */}
-	} ${2:foo};
+	}${2:foo};${3}
 ########################################################
 ##  Iniciamos con los snippets de la funcion stdio.h  ##
 ########################################################
 snippet printf
-	printf("${1:%s}\n"${2});
-	${3} 
+	printf("${1:%s}\n"${2});${3}  
 snippet fprintf
 	fprintf(${1:stderr}, "${2:%s}\n"${3});${4}
 snippet .
 	[${1}]${2}
 snippet	scanf
-	scanf("${1:variables}",${2});
-	${3}
+	scanf("${1:variables}",${2});${3}
 
 
 ###################
@@ -147,7 +145,7 @@ snippet	scanf
 ###################
 snippet int
 	int ${1:valor_entero};
-	${2}
+	 ${2}
 
 snippet float
 	float ${1:valor_flotante};
