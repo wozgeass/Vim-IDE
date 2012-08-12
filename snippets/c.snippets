@@ -78,17 +78,12 @@ snippet forr
 #Como parte importante de switch case tendra su propio snippet
 #switch
 snippet	switch
-	switch(${1:/* condicion  */})
+	switch (${1:/* condicion  */})
 	{
-	 	${2:/* casos */}
+	  	${2:/* casos */}
 		default:
 			${3}
 	}${4}
-snippet case
-	case ${1:/* valor */}: 
-		${2:/* codigo * /}
-		break;
-	${3}
 # Funcion
 snippet fun
 	${1 :void} ${2:nomb re_funcion}(${3})
@@ -132,8 +127,7 @@ snippet printf
 	printf("${1:/* cadena */}\n"${2});
 	${3}  
 snippet fprintf
-	${1:/*esta funcion tiene los siguentes parametros:
-	fprintf(salida,"cadena", variable)*/}
+	${1:/*fprintf(salida,"cadena", variable)*/}
 	fprintf(${2:stderr}, "${3:%s}\n"${4});
 	${5}
 snippet .
