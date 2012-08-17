@@ -133,7 +133,24 @@ snippet fprintf
 snippet .
 	[${1}]${2}
 snippet	scanf
-	scanf("${1:variables}",${2});${3}
+	scanf("${1:variables}",${2});
+	${3}
+########################################################
+## Inician los Snippets de la funcion ctypes.h        ##
+########################################################
+snippet isalnum
+	isalnum(${1:Parametros});
+	${2}
+snippet isalpha
+	isalpha(${1:Parametros});
+	${2}
+snippet iscntrl
+	iscntrl(${1:Parametros});
+	${2}
+snippet isdigit
+	isdigit(${1});
+	${2}
+
 ###################
 ##  Variables	 ##
 ###################
@@ -150,5 +167,7 @@ snippet	double
 	double ${1:valor_double};
 snippet unsigned
 	unsigned ${1}
+snippet signed
+	signed ${1}
 
 
