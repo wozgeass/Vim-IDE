@@ -64,12 +64,12 @@ snippet do
 snippet while
 	while (${1:/* condicion */}) {
 		${2:/* codigo */}
-	}  
+	}
 # For Loop
 snippet for
 	for (${2:i} = 0;  $2 < ${1:contador}; $2${3:++}) {
-		${4:/* codigo */}
-	} 
+		${4:/* codigo */}	
+	}	 
 # Custom For Loop
 snippet forr
 	for (${1:i} = ${2: 0}; ${3:$1 < 10}; $1${4:++}) {
@@ -82,8 +82,8 @@ snippet	switch
 	{
 	  	${2:/* casos */}
 		default:
-			${3}
-	}${4}
+			
+	}
 # Funcion
 snippet fun
 	${1 :void} ${2:nomb re_funcion}(${3})
@@ -136,7 +136,7 @@ snippet	scanf
 	scanf("${1:variables}",${2});
 	${3}
 ########################################################
-## Inician los Snippets de la funcion ctypes.h        ##
+##    Inician los Snippets de la funcion ctypes.h     ##
 ########################################################
 snippet isalnum
 	isalnum(${1:Parametros});
@@ -148,9 +148,36 @@ snippet iscntrl
 	iscntrl(${1:Parametros});
 	${2}
 snippet isdigit
-	isdigit(${1});
+	isdigit(${1:Parametro});
 	${2}
+snippet isgraph
+	isgraph(${1:Parametro});
+	${2}
+snippet islower
+	islower(${1:Parametro});
+	${2}
+snippet isprint
+	isprint(${1:Parametro});
+	${2}
+snippet ispunct
+	ispunct(${1:Parametro});
+	${2}
+snippet isspace
+	isspace(${1:Parametro});
+	${2}
+snippet	isupper
+	isupper(${1:Parametro});
+	${2}
+snippet isxdigit
+	isxdigit(${1:Parametro});
+	${2}
+############################################################
+##   Inicician los snippets de las funciones de math.h	  ##
+############################################################
 
+############################################################
+##                                                        ## 
+############################################################
 ###################
 ##  Variables	 ##
 ###################
