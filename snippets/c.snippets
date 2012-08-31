@@ -123,13 +123,13 @@ snippet tde
 ########################################################
 ##  Iniciamos con los snippets de la funcion stdio.h  ##
 ########################################################
-snippet printf
-	printf("${1:/* cadena */}\n"${2});
-	${3}  
-snippet fprintf
-	${1:/*fprintf(salida,"cadena", variable)*/}
-	fprintf(${2:stderr}, "${3:%s}\n"${4});
-	${5}
+#snippet printf
+#	printf("${1:/* cadena */}\n"${2});
+#	${3}  
+#snippet fprintf
+#	${1:/*fprintf(salida,"cadena", variable)*/}
+#	fprintf(${2:stderr}, "${3:%s}\n"${4});
+#	${5}
 snippet .
 	[${1}]${2}
 snippet	scanf
@@ -164,6 +164,42 @@ snippet freopen
 	${4}
 snippet fseek
 	fseek(${1:FILE *cadena},${2:long int offset},${3:int whence});
+	${4}
+snippet fsetpos
+	fsetpos(${1:FILE *stream,${2:const fpos_t *pos}});
+	${3}
+snippet ftell
+	ftell(${1:FILE *stream});
+	${2}
+snippet fwrite
+	fwrite(${1:const void *apuntador},${2:size_t tamañano},${3:size_t nmemb},${4:FILE *cadena});
+	${5}
+snippet remove
+	remove(${1:const char *archivo});
+	${2}
+snippet rename
+	rename(${1:const char *Nombre_viejo},${2:const char *Nombre_nuevo});
+	${3}
+snippet setbuf
+	setbuf(${1:FILE *cadena,${2:char *buffer}});
+	${2}
+snippet setvbuf
+	setvbuf(${1:FILE *cadena},${2:char *buffer},${3:int modo},${4:size_t tamaño});
+	${5}
+snippet tmpfile
+	tmpfile(${1:void});
+	${2}
+snippet fprintf
+	fprintf(${1:FILE *cadena},${2:const char *formatos},${3:...});
+	${4}
+snippet printf
+	printf("${1:}\n"${2:});
+	${2}
+snippet sprintf
+	sprintf(${1:char *cadena},${2:const char *format},${3:...});
+	${4}
+snippet vfprintf
+	vfprintf(${1:FILE *cadena},${2:const char *formatos},${3:...});
 	${4}
 ########################################################
 ##    Inician los Snippets de la funcion ctypes.h     ##
@@ -283,16 +319,18 @@ snippet tanh
 ##   Variables	 ##
 ###################
 snippet int
-	int ${1:valor_entero};
-	 ${2}
+	int ${1:variable_entero};
+	${2}
 snippet float
-	float ${1:valor_flotante};
+	float ${1:variable_flotante};
 	${2}
 snippet char
-	char ${1:valor_caracter};
+	char ${1:variable_caracter};
 	${2}
 snippet	double
-	double ${1:valor_double};
+	double ${1:variable_double};
+snippet long
+	long ${1:variable_double};
 snippet unsigned
 	unsigned ${1}
 snippet signed
