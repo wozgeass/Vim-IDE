@@ -201,6 +201,54 @@ snippet sprintf
 snippet vfprintf
 	vfprintf(${1:FILE *cadena},${2:const char *formatos},${3:...});
 	${4}
+snippet vprintf
+	vprintf(${1:const char *formato},${2:va_list arg});
+	${3}
+snippet vsprintf
+	vsprintf(${1:char *cadena},${2:const char *formato},${3:va_list arg});
+	${4}
+snippet fscanf
+	fscanf(${1:FILE *cadena},${2:const char *formato});
+	${3}
+snippet scanf
+	scanf(${1:const char *formato},${2:...});
+	${3}
+snippet sscanf
+	sscanf(${1:const char *cadena},${2:const char *formato});
+	${3}
+snippet fgetc
+	fgetc(${1:FILE *cadena});
+	${2}
+snippet fgets
+	fgets(${1:char *cadena},${2:int n},${3:FILE *cadena});
+	${4}
+snippet fputc
+	fputc(${1:int char},${2:FILE *cadena});
+	${3}
+snippet fputs
+	fputs(${1:const char *cadena},${2:FILE *stream});
+	${3}
+snippet getc
+	getc(${1:FILE *cadena});
+	${2}
+snippet getchar
+	getchar(${1:char *cadena});
+	${2}
+snippet putc
+	putc(${1:int caracter},${2:FILE *cadena});
+	${3}
+snippet putchar
+	putchar(${1:int caracter});
+	${2}
+snippet puts
+	puts(${1:const char *cadena});
+	${2}
+snippet ungetc
+	ungetc(${1:int char},${2:FILE *cadena});
+	${3}
+snippet perror
+	perror(${1:const char *cadena});
+	${2}
 ########################################################
 ##    Inician los Snippets de la funcion ctypes.h     ##
 ########################################################
@@ -307,8 +355,20 @@ snippet tanh
 	tanh(${1:double valor});
 	${2}
 ############################################################
-## 	Inician los Snippets de ctypes.h                  ## 
+## 	Inician los Snippets de stdlib.h                  ## 
 ############################################################
+snippet atof
+	atof(${1:const char *cadena});
+	${2}
+snippet atoi
+	atoi(${1:const char *cadena});
+	${2}
+snippet atol
+	atol(${1:const char *cadena},${2:char **endptr});
+	${3}
+snippet strtod
+	strtod(${1:const char *cadena},${2:char **endptr});
+	${3}
 ############################################################
 ##      Inician los Snippets de Stdio.h                   ##
 ############################################################
