@@ -132,9 +132,6 @@ snippet tde
 #	${5}
 snippet .
 	[${1}]${2}
-snippet	scanf
-	scanf("${1:Tipos de Datos}",${2:variables});
-	${3}
 snippet clearerr
 	clearerr(${1:FILE *cadena});
 	${2}
@@ -369,6 +366,62 @@ snippet atol
 snippet strtod
 	strtod(${1:const char *cadena},${2:char **endptr});
 	${3}
+snippet strtol
+	strtol(${1:const char *cadena},${2:char **endptr},${3:int base});
+	${4}
+snippet strtoul
+	strtoul(${1:const char *cadena},${2:char **endptr},${3:int base});
+	${4}
+snippet calloc
+	calloc(${1:size_t No.Elementos}, ${2:size_t tam});
+	${3}
+snippet free
+	free(${1:void *apuntador});
+	${2}
+snippet malloc
+	malloc(${1:size_t tam});
+	${2}
+snippet realloc
+	realloc(${1:void *apuntador},${2:size_t tam});
+	${3}
+snippet abort
+	abort(${1:void});
+	${2}
+snippet atexit
+	atexit(${1:void (*funcion)(void)});
+	${2}
+snippet exit
+	exit(${1:int status});
+	${2}
+snippet getenv
+	getenv(${1:const char *name});
+	${2}
+snippet system
+	system(${1:const char *cadena});
+	${2}
+snippet bsearch
+	bsearch(${1:const void *llave},${2:const void *base},${3:size_t No.Elementos},${4:size_t tam},${5:int (*comparacion)(const void *,const void *)});
+	${6}
+snippet qsort
+	qsort(${1:void *base},${2:size_t No.Elementos},${3:size_t tam},${4:int (*comparacion)(const void *,const void *)});
+	${5}
+snippet abs
+	abs(${1:int valor});
+	${2}
+snippet div
+	div(${1:int numerador},${2:int denominador});
+	${3}
+snippet labs
+	labs(${1:long int valor});
+	${2}
+snippet ldiv
+	ldiv(${1:long int numerador},${2:long int denominador});
+	${3}
+snippet rand
+	rand(${1:void});
+	${2}
+snippet srand
+	srand(${1:unsigned int seed})
 ############################################################
 ##      Inician los Snippets de Stdio.h                   ##
 ############################################################
@@ -388,12 +441,13 @@ snippet char
 	char ${1:variable_caracter};
 	${2}
 snippet	double
-	double ${1:variable_double};
+	double ${1:variable_double}
 snippet long
-	long ${1:variable_double};
+	long ${1:variable_double}
 snippet unsigned
 	unsigned ${1}
 snippet signed
 	signed ${1}
-
+snippet void
+	void
 
