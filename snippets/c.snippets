@@ -421,9 +421,85 @@ snippet rand
 	rand(${1:void});
 	${2}
 snippet srand
-	srand(${1:unsigned int seed})
+	srand(${1:unsigned int seed});
+	${2}
+snippet mblen
+	mblen(${1:const char *cadena},${2:size_t numero});
+	${3}
+snippet mbstowcs
+	mbstowcs(${1:schar_t *pwcs}, ${2:const char *cadena},${3:size_t tam});
+	${4}
+snippet mbtowc
+	mbtowc(${1:wchar_t *pwc},${2:const char *cadena},${3:size_t tam});
+	${4}
+snippet wcstombs
+	wcstombs(${1:char *cadena},${2:const wchar_t *pwcs},${3:size_t tam});
+	${4}
+snippet wctomb
+	wctomb(${1:char *cadena},${2:wchar_t wchar});
+	${3}
 ############################################################
-##      Inician los Snippets de Stdio.h                   ##
+##      Inician los Snippets de string.h                  ##
+############################################################
+snippet memchr
+	memchr(${1:const void *cadena},${2:int caracter},${3:size_t tam});
+	${4}
+snippet memcmp
+	memcmp(${1:const void *cadena1},${2:const void *cadena2},${3:size_t tam});
+	${4}
+snippet memcpy
+	memcpy(${1:void *cadena},${2:const void *cadena2},${3:size_t tam});
+	${4}
+snippet memmove
+	memmove(${1:void *cadena1},${2:const void *cadena2},${3:size_t tam});
+	${4}
+snippet memset
+	memset(${1:void *cadena},${2:int caracter},${3:size_t tam});
+	${4}
+snippet strcat
+	strcat(${1:char *cadena1},${2:const char *cadena2});
+	${3}
+snippet strncat
+	strncat(${1:char *cadena1},${2:const char *cadena2},${3:size_t tam});
+	${4}
+snippet strchr
+	strchr(${1:const char *cadena},${2:int caracter});
+	${3}
+snippet strcmp
+	strcmp(${1:const char *cadena1},${2:const char *cadena2});
+	${3}
+snippet strncmp
+	strncmp(${1:const char *cadena1},${2:const char *cadena2},${3:size_t tam});
+	${4}
+snippet strcoll
+	strcoll(${1:const char *cadena1},${2:const char *cadena2});
+	${3}
+snippet strcpy
+	strcpy(${1:char *cadena1},${2:const char *cadena2});
+	${3}
+snippet strncpy
+	strncpy(${1:char *cadena1},${2:const char *cadena2},${3:size_t tam});
+	${4}
+snippet strcspn
+	strcspn(${1:const char *cadena1},${2:const char *cadena2});
+	${3}
+snippet strerror
+	strerror(${1:int errnum});
+	${2}
+snippet strlen
+	strlen(${1:const char *cadena});
+	${2}
+snippet strpbrk
+	strpbrk(${1:const char *cadena1},${2:const char *cadena2});
+	${3}
+snippet strrchr
+	strrchr(${1:const char *cadena},${2:int caracter});
+	${3}
+snippet strspn
+	strspn(${1:const char *cadena1},${2:const char *cadena2});
+	${3}
+############################################################
+##      Inician los Snippets de stdio.h                   ##
 ############################################################
 ############################################################
 ##	                                                  ##
