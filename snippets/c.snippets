@@ -8,12 +8,10 @@ snippet main
 snippet inc
 	#include <${1:stdio}.h>
 	${2}
-
 # #include "..."
 #snippet Inc
 #	#include "${1:`Filename("$1.h")`}"${2}
 # #ifndef ... #define ... #endif
-
 snippet ifndef
 	#ifndef ${1}
 	${2}
@@ -130,8 +128,10 @@ snippet tde
 #	${1:/*fprintf(salida,"cadena", variable)*/}
 #	fprintf(${2:stderr}, "${3:%s}\n"${4});
 #	${5}
-snippet .
+snippet [
 	[${1}]${2}
+snippet "
+	"${1}"${2}
 snippet clearerr
 	clearerr(${1:FILE *cadena});
 	${2}
@@ -498,12 +498,64 @@ snippet strrchr
 snippet strspn
 	strspn(${1:const char *cadena1},${2:const char *cadena2});
 	${3}
+snippet strstr
+	strstr(${1:const char cadena1},${2:const char cadena2});
+	${3}
+snippet strtok
+	strtok(${1:char cadena1},${1:const char cadena2});
+	${3}
+snippet strxfrm
+	strxfrm(${1:const char *cadena1},${2:const char *cadena2},${3:size_t tam});
+	${4}
 ############################################################
-##      Inician los Snippets de stdio.h                   ##
+##           Inician los Snippets de time.h               ##
+############################################################
+snippet struct_tm
+	struct tm{
+		int tm_sec${1:<Segundos 0-60>}
+		int tm_min${2:<Minutos 0-59>}
+		int tm_hour${3:<Horas 0-23>}
+		int tm_mday${4:<Dia del Mes 0-11>}
+		int tm_mon${5:<Meses de 0-11>}
+		int tm_year${6:<Desde 1990>}
+		int tm_wday${7:<Dias desde Domingo 0-6>}
+		int tm_yday${8:<Dias de Enero desde 0-365>}
+		int tm_isdst${9:<Horario Ahorro de Energia>}
+	};${10}
+snippet asctime
+	asctime(${1:const struct tm *ApuntTiempo});
+	${2}
+snippet clock
+	clock(${1:void});
+	${2}
+snippet ctime
+	ctime(${1:const time_t *tiempo});
+	${2}
+snippet difftime
+	difftime(${1:time_t tiempo1},${2:time_t tiempo2});
+	${3}
+snippet gmtime
+	gmtime(${1:const time_t *tiempo});
+	${2}
+snippet localtime
+	localtime(${1:const time_t *tiempo});
+	${2}
+snippet mktime
+	mktime(${1:struct tm *ApuntTiempo});
+	${2}
+snippet strftime
+	strftime(${1:char *cadena},${2:size_t maxtam},${3:const char *formato},${4:const struct tm ApuntTiempo});
+	${5}
+snippet time
+	time(${1:time_t *tiempo});
+	${2}
+############################################################
+##	     Inician los Snippets de ncurses.h            ##
 ############################################################
 ############################################################
-##	                                                  ##
+##         Agregamos otra libreria                        ##
 ############################################################
+
 ###################
 ##   Variables	 ##
 ###################
