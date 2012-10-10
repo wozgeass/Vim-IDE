@@ -118,8 +118,8 @@ snippet t
 # Do while 
 snippet do
 	do { 
-		${2:/* codigo */}
-	} while (${ 1:/* condicion */});
+		${2:codigo}
+	} while (${1:Condicion});
 # While 
 snippet while
 	while (${1:/* condicion */}) {
@@ -146,7 +146,7 @@ snippet	switch
 	}
 # Funcion
 snippet fun
-	${1 :void} ${2:nomb re_funcion}(${3})
+	${1:void} ${2:nomb re_funcion}(${3})
 	{
 		${4:/* codigo */}
 	}
