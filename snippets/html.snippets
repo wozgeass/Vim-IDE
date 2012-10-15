@@ -97,31 +97,40 @@ snippet docx
 	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 snippet html
 	<html>
-	${1}
+		${1}
 	</html>
 snippet xhtml
 	<html xmlns="http://www.w3.org/1999/xhtml">
-	${1}
+		${1}
 	</html>
+snippet head
+	<head>
+		<meta charset="utf-8" />
+		<title>${1:`substitute(Filename('', 'Page Title'), '^.', '\u&', '')`}</title>
+		${2}
+	</head>
 snippet body
 	<body>
 		${1}
 	</body>
-snippet head
-	<head>
-		<meta http-equiv="content-type" content="text/html; charset=utf-8"`Close()`>
-
-		<title>${1:`substitute(Filename('', 'Page Title'), '^.', '\u&', '')`}</title>
-		${2}
-	</head>
+#snippet head
+#	<head>
+#		<meta http-equiv="content-type" content="text/html; charset=utf-8"`Close()`>
+#
+#		<title>${1:`substitute(Filename('', 'Page Title'), '^.', '\u&', '')`}</title>
+#		${2}
+#	</head>
 snippet title
-	<title>${1:`substitute(Filename('', 'Page Title'), '^.', '\u&', '')`}</title>${2}
+	<title>${1:`substitute(Filename('', 'Page Title'), '^.', '\u&', '')`}</title>
+	${2}
 snippet script
 	<script type="text/javascript" charset="utf-8">
 		${1}
-	</script>${2}
+	</script>
+	${2}
 snippet scriptsrc
-	<script src="${1}.js" type="text/javascript" charset="utf-8"></script>${2}
+	<script src="${1}.js" type="text/javascript" charset="utf-8"></script>
+	${2}
 snippet style
 	<style type="text/css" media="${1:screen}">
 		${2}
@@ -151,7 +160,6 @@ snippet movie
 snippet fieldset
 	<fieldset id="$1">
 		<legend>${1:name}</legend>
-
 		${3}
 	</fieldset>
 snippet form
@@ -163,6 +171,26 @@ snippet form
 	</form>
 snippet h1
 	<h1 id="${1:heading}">${2:$1}</h1>
+	${3}
+snippet h2
+	<h2 id="${1:Cabecera}">${2:$1}</h2>
+	${3}
+snippet h3
+	<h3 id="${1:Cabecera}">${2:${1}}</h3>
+	${3}
+snippet h4
+	<h4 id="${1:Cabecera}">${2:${1}}</h4>
+	${3}
+snippet h5
+	<h5 id="${1:Cabecera}">${2:${1}}</h5>
+	${3}
+snippet p
+	<p>${1:Texto}</p>${2}
+snippet b
+	<b>${1:Texto Resaltado}</b>${2}
+snippet i
+	<i>${1:Texto en Italica}</i>${2}
+
 snippet input
 	<input type="${1:text/submit/hidden/button}" name="${2:some_name}" value="${3}"`Close()`>${4}
 snippet label
@@ -178,7 +206,7 @@ snippet opt
 snippet optt
 	<option>${1:option}</option>${2}
 snippet select
-	<select name="${1:some_name}" id="${2:$1}">
+		<select name="${1:some_name}" id="${2:$1}">
 		<option value="${3:option}">${4:$3}</option>
 	</select>${5}
 snippet table
