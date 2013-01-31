@@ -136,9 +136,9 @@ snippet style
 		${2}
 	</style>${3}
 snippet base
-	<base href="${1}" target="${2}"`Close()`>
-snippet r
-	<br`Close()[1:]`>
+	<base href="${1}" target="${2}">
+snippet br
+	<br/>
 snippet div
 	<div id="${1:name}">
 		${2}
@@ -216,3 +216,86 @@ snippet table
 	</table>${4}
 snippet textarea
 	<textarea name="${1:Name}" rows="${2:8}" cols="${3:40}">${4}</textarea>${5}
+snippet header
+	<header>
+		${1}
+	</header>${2}
+snippet canvas
+	<canvas id="${1:name}" width="${2:width}" height="${3:height}"></canvas>${4}
+snippet article
+	<article>
+		${1}
+	</article>
+snippet aside
+	<aside>
+		${1}
+	</aside>
+snippet audio
+	<audio>
+		${1}
+	</audio>
+snippet source
+	<source src="${1:src}" type="${2:type}">${3}
+snippet caption
+	<caption>${1}</caption>${2}
+snippet hgroup
+	<hgroup>
+		${1}
+	</hgroup>${2}
+snippet cite
+	<cite>${1}</cite>
+snippet footer
+	<footer>
+		${1}
+	</footer>${2}
+snippet nav
+	<nav>
+		${1}
+	</nav>${2}
+snippet details
+	<details>
+		${1}
+	</details>
+snippet summary
+	<summary>${1}</summary>${2}
+snippet figure
+	<figure>
+		${1}
+	</figure>${2}
+snippet figcaption
+	<figcaption>
+		${1}
+	</figcaption>${2}
+snippet mark
+	<mark>${1}</mark>${2}
+snippet meter
+	<meter value="${1}" min="${2}" max="${3}">${4}</meter>
+snippet progress
+	<progress value="${1}"max="${2}"></progress>
+snippet ruby
+	<ruby>
+		${1}
+	</ruby>
+snippet rt
+	<rt>${1}</rt>
+snippet rp
+	<rp>${1}</rp>
+snippet section
+	<section>
+		${1}
+	</section>
+snippet time
+	<time datetime="${1}">${2}</time>
+snippet video
+	<video width="${1}" height="${2}" controls>
+		${3}
+	</video>
+snippet embed
+	<embed src="${1}" type="${2}" width="${3}" height="${4}">${5}
+snippet datalist
+	<datalist id="${1}">
+		${2}
+	</datalist>${3}
+snippet option
+	<option value="${1}">${2}
+
