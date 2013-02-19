@@ -1,3 +1,4 @@
+# Licencia GPL
 snippet gpl
 	/* Licencia GPL
 	* ${1:Nombre Programa}
@@ -23,12 +24,15 @@ snippet gpl
 	*
 	*
 	*/
-
+# ShellBang
 snippet #!
 	#!/usr/bin/python
-
+# Importar modulos
 snippet imp
 	import ${1:module}
+# Moldulos por especiales
+snippet from
+	from ${1:Modulo} import ${2:Libreria}
 # Module Docstring
 snippet docs
 	'''
@@ -36,16 +40,16 @@ snippet docs
 	Author: ${2:`g:snips_author`}
 	Description: ${3}
 	'''
-snippet wh
+snippet while
 	while ${1:condition}:
 		${2:# code...}
 snippet for
 	for ${1:needle} in ${2:haystack}:
 		${3:# code...}
 # New Class
-snippet cl
-	class ${1:ClassName}(${2:object}):
-		"""${3:docstring for $1}"""
+snippet class
+	class ${1:Nombre de la Clase}(${2:objetos}):
+		"""${3:docstring fori $1}"""
 		def __init__(self, ${4:arg}):
 			${5:super($1, self).__init__()}
 			self.$4 = $4
@@ -72,13 +76,13 @@ snippet property
 			${4:self._$1 = value}
 # Lambda
 snippet ld
-	${1:var} = lambda ${2:vars} : ${3:action}
+	${1:variable} = lambda ${2:variables} : ${3:accion}
 snippet .
 	self.
 snippet try Try/Except
 	try:
 		${1:pass}
-	except ${2:Exception}, ${3:e}:
+	except ${2:Excepcion}, ${3:e}:
 		${4:raise $3}
 snippet try Try/Except/Else
 	try:
