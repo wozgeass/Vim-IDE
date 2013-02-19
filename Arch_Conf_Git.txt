@@ -1,0 +1,4 @@
+git config --global user.name "nombre"
+git config --global user.email "mail"
+git config --global core.editor vim
+git config color.diff auto
