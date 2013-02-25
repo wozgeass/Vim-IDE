@@ -1,5 +1,7 @@
-# Some useful Unicode entities
-# Non-Breaking Space
+#Inician los Snippets de HTML, esperemos le sean de utilidad
+#Snippets Modificados por:
+# Adrian Perez Dominguez --> lelouchy@gmail.com
+# Marichela Sanchez Miranda --> Maye[at]algo.com
 snippet nbs
 	&nbsp;
 # ←
@@ -79,7 +81,6 @@ snippet xhtml
 snippet head
 	<head>
 		<meta charset="utf-8" />
-		<title>${1:`substitute(Filename('', 'Page Title'), '^.', '\u&', '')`}</title>
 		${2}
 	</head>
 snippet body
@@ -94,16 +95,13 @@ snippet body
 #		${2}
 #	</head>
 snippet title
-	<title>${1:Titulo}</title>
-	${2}
-snippet script
+	<title>${1:Titulo}</title>${2}
+snippet script embebido
 	<script type="text/javascript" charset="utf-8">
 		${1}
-	</script>
-	${2}
-snippet scriptsrc
-	<script src="${1}.js" type="text/javascript" charset="utf-8"></script>
-	${2}
+	</script>${2}
+snippet script archivo
+	<script src="${1}.js" type="text/javascript" charset="utf-8"></script>${2}
 snippet style
 	<style type="text/css" media="${1:screen}">
 		${2}
@@ -120,15 +118,14 @@ snippet div
 snippet movie
 	<object width="$2" height="$3" classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B"
 	 codebase="http://www.apple.com/qtactivex/qtplugin.cab">
-		<param name="src" value="$1"`Close()`>
-		<param name="controller" value="$4"`Close()`>
-		<param name="autoplay" value="$5"`Close()`>
+		<param name="src" value="$1">
+		<param name="controller" value="$4">
+		<param name="autoplay" value="$5">
 		<embed src="${1:movie.mov}"
 			width="${2:320}" height="${3:240}"
 			controller="${4:true}" autoplay="${5:true}"
 			scale="tofit" cache="true"
-			pluginspage="http://www.apple.com/quicktime/download/"
-		`Close()[1:]`>
+			pluginspage="http://www.apple.com/quicktime/download/">
 	</object>${6}
 snippet fieldset
 	<fieldset id="$1">
@@ -136,11 +133,11 @@ snippet fieldset
 		${3}
 	</fieldset>
 snippet form
-	<form action="${1:`Filename('$1_submit')`}" method="${2:get}" accept-charset="utf-8">
+	<form action="${1:Accion}" method="${2:get}" accept-charset="utf-8">
 		${3}
 
 
-	<p><input type="submit" value="Continue &rarr;"`Close()`></p>
+	<p><input type="submit" value="Continue &rarr;"></p>
 	</form>
 snippet h1
 	<h1 id="${1:heading}">${2:$1}</h1>
@@ -165,15 +162,15 @@ snippet i
 	<i>${1:Texto en Italica}</i>${2}
 
 snippet input
-	<input type="${1:text/submit/hidden/button}" name="${2:some_name}" value="${3}"`Close()`>${4}
+	<input type="${1:text/submit/hidden/button}" name="${2:some_name}" value="${3}">${4}
 snippet label
-	<label for="${2:$1}">${1:name}</label><input type="${3:text/submit/hidden/button}" name="${4:$2}" value="${5}" id="${6:$2}"`Close()`>${7}
+	<label for="${2:$1}">${1:Nombre}</label>${3}
 snippet link
-	<link rel="${1:stylesheet}" href="${2:/css/master.css}" type="text/css" media="${3:screen}" charset="utf-8"`Close()`>${4}
+	<link rel="${1:stylesheet}" href="${2:/css/master.css}" type="text/css" media="${3:screen}" charset="utf-8">${4}
 snippet mailto
 	<a href="mailto:${1:joe@example.com}?subject=${2:feedback}">${3:email me}</a>
 snippet meta
-	<meta name="${1:name}" content="${2:content}"`Close()`>${3}
+	<meta name="${1:name}" content="${2:content}">${3}
 snippet opt
 	<option value="${1:option}">${2:$1}</option>${3}
 snippet optt
