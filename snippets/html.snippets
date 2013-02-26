@@ -1,7 +1,5 @@
-#Inician los Snippets de HTML, esperemos le sean de utilidad
-#Snippets Modificados por:
-# Adrian Perez Dominguez --> lelouchy@gmail.com
-# Marichela Sanchez Miranda --> Maye[at]algo.com
+# Some useful Unicode entities
+# Non-Breaking Space
 snippet nbs
 	&nbsp;
 # ←
@@ -49,7 +47,7 @@ snippet backspace
 # ⎋
 snippet escape
 	&#x238B;
-# Doctype Generico
+# Generic Doctype
 snippet doctype HTML 4.01 Strict
 	<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN""
 	"http://www.w3.org/TR/html4/strict.dtd">
@@ -70,6 +68,33 @@ snippet doctype XHTML 1.0 Transitional
 snippet doctype XHTML 1.1
 	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
 	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+# HTML Doctype 4.01 Strict
+snippet docts
+	<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN""
+	"http://www.w3.org/TR/html4/strict.dtd">
+# HTML Doctype 4.01 Transitional
+snippet doct
+	<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""
+	"http://www.w3.org/TR/html4/loose.dtd">
+# HTML Doctype 5
+snippet doct5
+	<!DOCTYPE HTML>
+# XHTML Doctype 1.0 Frameset
+snippet docxf
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+# XHTML Doctype 1.0 Strict
+snippet docxs
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+# XHTML Doctype 1.0 Transitional
+snippet docxt
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+# XHTML Doctype 1.1
+snippet docx
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 snippet html
 	<html>
 		${1}
@@ -79,29 +104,26 @@ snippet xhtml
 		${1}
 	</html>
 snippet head
-	<head>
+	<head id="${1:id_elemento}" class="${2:nombre_clase}">
 		<meta charset="utf-8" />
-		${2}
+		<title>${3:texto del titulo}</title>
+		${4}
 	</head>
 snippet body
-	<body>
-		${1}
+	<body id ="${1:id_elemento}"class="${2:nombre_clase}">
+		${3}
 	</body>
-#snippet head
-#	<head>
-#		<meta http-equiv="content-type" content="text/html; charset=utf-8"`Close()`>
-#
-#		<title>${1:`substitute(Filename('', 'Page Title'), '^.', '\u&', '')`}</title>
-#		${2}
-#	</head>
 snippet title
-	<title>${1:Titulo}</title>${2}
-snippet script embebido
+	<title id="${1:id_elemento"} class="${2:nombre_clase}">${3:texto}</title>
+	${4}
+snippet script
 	<script type="text/javascript" charset="utf-8">
 		${1}
-	</script>${2}
-snippet script archivo
-	<script src="${1}.js" type="text/javascript" charset="utf-8"></script>${2}
+	</script>
+	${2}
+snippet scriptsrc
+	<script src="${1}.js" type="text/javascript" charset="utf-8"></script>
+	${2}
 snippet style
 	<style type="text/css" media="${1:screen}">
 		${2}
@@ -111,49 +133,53 @@ snippet base
 snippet br
 	<br>
 snippet div
-	<div id="${1:name}">
-		${2}
+	<div id="${1:id_elemento}" class="${2:nombre_clase}">
+		${3}
 	</div>
 # Embed QT Movie
 snippet movie
 	<object width="$2" height="$3" classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B"
 	 codebase="http://www.apple.com/qtactivex/qtplugin.cab">
-		<param name="src" value="$1">
+		<param name="src" value="$1"`>
 		<param name="controller" value="$4">
 		<param name="autoplay" value="$5">
 		<embed src="${1:movie.mov}"
 			width="${2:320}" height="${3:240}"
 			controller="${4:true}" autoplay="${5:true}"
 			scale="tofit" cache="true"
-			pluginspage="http://www.apple.com/quicktime/download/">
+			pluginspage="http://www.apple.com/quicktime/download/"
+		>
 	</object>${6}
 snippet fieldset
-	<fieldset id="$1">
-		<legend>${1:name}</legend>
-		${3}
+	<fieldset id="${1:identificador}" class="${2:nombre_clase}">
+		<legend>${4:texto}</legend>
+		${5}
 	</fieldset>
 snippet form
-	<form action="${1:Accion}" method="${2:get}" accept-charset="utf-8">
+	<form action="${1:action}" method="${2:get}" accept-charset="utf-8">
 		${3}
 
 
 	<p><input type="submit" value="Continue &rarr;"></p>
 	</form>
 snippet h1
-	<h1 id="${1:heading}">${2:$1}</h1>
-	${3}
+	<h1 id="${1:identificador}" class="${2:clase}">${3:texto titulo}</h1>
+	${4}
 snippet h2
-	<h2 id="${1:Cabecera}">${2:$1}</h2>
-	${3}
+	<h2 id="${1:identificador}" class="${2:clase}">${3:$texto titulo}</h2>
+	${4}
 snippet h3
-	<h3 id="${1:Cabecera}">${2:${1}}</h3>
-	${3}
+	<h3 id="${1:identificador}" class="${2:clase}">${3:texto titulo}</h3>
+	${4}
 snippet h4
-	<h4 id="${1:Cabecera}">${2:${1}}</h4>
-	${3}
+	<h4 id="${1:identificador}" class="${2:clase}">${3:texto titulo}</h4>
+	${4}
 snippet h5
-	<h5 id="${1:Cabecera}">${2:${1}}</h5>
-	${3}
+	<h5 id="${1:identificador}" class="${2:clase}">${3:texto titulo}</h5>
+	${4}
+snippet h6
+	<h6 id="${1:identificador}"class="${2:clase}">${3:texto titulo}</h6>
+	${4}
 snippet p
 	<p>${1:Texto}</p>${2}
 snippet b
@@ -162,9 +188,10 @@ snippet i
 	<i>${1:Texto en Italica}</i>${2}
 
 snippet input
-	<input type="${1:text/submit/hidden/button}" name="${2:some_name}" value="${3}">${4}
+	<input type="${1:text|submit|hidden|button}" name="${2:some_name}" value="${3:value for input}">${4}
 snippet label
-	<label for="${2:$1}">${1:Nombre}</label>${3}
+	<label id="${1:id_elemento}" class="${2:nombre_clase}" for="${3:}">${4:texto label}</label>
+	<input type="${5:text|submit|hidden|button}" name="${6:nombre_input}" value="${7:valor}" id="${8:identificador}">${9}
 snippet link
 	<link rel="${1:stylesheet}" href="${2:/css/master.css}" type="text/css" media="${3:screen}" charset="utf-8">${4}
 snippet mailto
@@ -185,7 +212,7 @@ snippet table
 		<tr><th>${3:Data}</th></tr>
 	</table>${4}
 snippet textarea
-	<textarea name="${1:Name}" rows="${2:8}" cols="${3:40}">${4}</textarea>${5}
+	<textarea id="${1:id_elemento}" class="${2:nombre_clase"} name="${3:nombre}" rows="${4:no.filas}" cols="${5:no.columnas}">${6}</textarea>${7}
 snippet header
 	<header>
 		${1}
@@ -251,8 +278,8 @@ snippet rt
 snippet rp
 	<rp>${1}</rp>
 snippet section
-	<section>
-		${1}
+	<section id="${1:identificador}" class="${2:nombre_clase}">
+		${3}
 	</section>
 snippet time
 	<time datetime="${1}">${2}</time>
@@ -268,4 +295,9 @@ snippet datalist
 	</datalist>${3}
 snippet option
 	<option value="${1}">${2}
-
+snippet button
+	<button>${1:texto_boton}</button>${2}
+snippet td
+	<td>${1}</td>${2}
+snippet tr
+	<tr>${1}</tr>${2}
