@@ -1,6 +1,6 @@
 # Estos snippets han sido modificados por:
 #	Adrian Perez Dominguez lelouch[at]gmail.com
-#	Maricela Miranda mashe[at]gmail.com
+#	Maricela Sanchez-Miranda patito.rainbow[at]gmail.com
 snippet nbs
 	&nbsp;
 # ←
@@ -130,8 +130,8 @@ snippet fieldset
 		${5}
 	</fieldset>
 snippet form
-	<form action="${1:action}" method="${2:get}" accept-charset="utf-8">
-		${3}
+	<form action="${1:action}" method="${2:get}" id="${3:identificador}" class="${4:nombre_clase}" accept-charset="utf-8">
+		${5}
 
 
 	<p><input type="submit" value="Continue &rarr;"></p>
@@ -155,7 +155,7 @@ snippet h6
 	<h6 id="${1:identificador}"class="${2:clase}">${3:texto titulo}</h6>
 	${4}
 snippet p
-	<p>${1:Texto}</p>${2}
+	<p id="${1:identificador}" class="${2:nombre_clase}">${3:Texto}</p>${4}
 snippet b
 	<b>${1:Texto Resaltado}</b>${2}
 snippet i
@@ -177,29 +177,29 @@ snippet opt
 snippet optt
 	<option>${1:option}</option>${2}
 snippet select
-		<select name="${1:some_name}" id="${2:$1}">
-		<option value="${3:option}">${4:$3}</option>
-	</select>${5}
+		<select name="${1:some_name}" id="${2:identificador}" class="${3:nombre_clase}">
+		<option value="${4:option}">${5:$4}</option>
+	</select>${6}
 snippet table
-	<table border="${1:0}">
+	<table>
 		<tr><th>${2:Header}</th></tr>
 		<tr><th>${3:Data}</th></tr>
 	</table>${4}
 snippet textarea
 	<textarea id="${1:id_elemento}" class="${2:nombre_clase"} name="${3:nombre}" rows="${4:no.filas}" cols="${5:no.columnas}">${6}</textarea>${7}
 snippet header
-	<header>
-		${1}
-	</header>${2}
+	<header id="${1:identificador}" class="${2:nombre_clase}">
+		${3}
+	</header>${4}
 snippet canvas
-	<canvas id="${1:name}" width="${2:width}" height="${3:height}"></canvas>${4}
+	<canvas id="${1:name}" class="${2:nombre_clase}" width="${3:width}" height="${4:height}"></canvas>${4}
 snippet article
-	<article>
-		${1}
+	<article id="${1:identificador}" class="${2:nombre_clase}">
+		${3}
 	</article>
 snippet aside
-	<aside>
-		${1}
+	<aside id="${1:identificador}" class="${2:nombre_clase}">
+		${3}
 	</aside>
 snippet audio
 	<audio>
@@ -210,23 +210,23 @@ snippet source
 snippet caption
 	<caption>${1}</caption>${2}
 snippet hgroup
-	<hgroup>
-		${1}
-	</hgroup>${2}
+	<hgroup id="${1:identificador}" class="${2:nombre_clase}">
+		${3}
+	</hgroup>${4}
 snippet cite
-	<cite>${1}</cite>
+	<cite id="${1:identificador}" class="${2:nombre_clase}">${3}</cite>${4}
 snippet footer
-	<footer>
-		${1}
-	</footer>${2}
+	<footer id="${1:identificador}" class="${2:nombre_clase}">
+		${3}
+	</footer>${4}
 snippet nav
-	<nav>
-		${1}
-	</nav>${2}
+	<nav id="${1:identificador}" class="${2:nombre_clase}">
+		${3}
+	</nav>${4}
 snippet details
 	<details>
 		${1}
-	</details>
+	</details>${2}
 snippet summary
 	<summary>${1}</summary>${2}
 snippet figure
@@ -264,13 +264,13 @@ snippet video
 snippet embed
 	<embed src="${1}" type="${2}" width="${3}" height="${4}">${5}
 snippet datalist
-	<datalist id="${1}">
+	<datalist id="${1:identificador}" class="${2:nombre_clase}">
 		${2}
 	</datalist>${3}
 snippet option
 	<option value="${1}">${2}
 snippet button
-	<button>${1:texto_boton}</button>${2}
+	<button id=${1:identificador}" class="${2:nombre_clase}">${2:texto_boton}</button>${3}
 snippet td
 	<td>${1}</td>${2}
 snippet tr
