@@ -70,7 +70,7 @@ snippet doctype XHTML 1.1
 	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
 	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 snippet html
-	<html>
+	<html lang=${1:Idioma}>
 		${1}
 	</html>
 snippet xhtml
@@ -78,7 +78,7 @@ snippet xhtml
 		${1}
 	</html>
 snippet head
-	<head id="${1:id_elemento}" class="${2:nombre_clase}">
+	<head>
 		<meta charset="utf-8" />
 		<title>${3:texto del titulo}</title>
 		${4}
@@ -88,14 +88,18 @@ snippet body
 		${3}
 	</body>
 snippet title
-	<title id="${1:id_elemento"} class="${2:nombre_clase}">${3:texto}</title>
-	${4}
-snippet script
+	<title>${1:Titulo}</title>
+	${2}
+snippet id
+	id=${1:Identificador}
+snippet class
+	class=${1:Clase}
+snippet script Embebido
 	<script type="text/javascript" charset="utf-8">
 		${1}
 	</script>
 	${2}
-snippet scriptsrc
+snippet script Archivo
 	<script src="${1}.js" type="text/javascript" charset="utf-8"></script>
 	${2}
 snippet style
@@ -160,16 +164,17 @@ snippet b
 	<b>${1:Texto Resaltado}</b>${2}
 snippet i
 	<i>${1:Texto en Italica}</i>${2}
-
+snippet date
+	`system("date +%Y-%m-%d")`
 snippet input
-	<input type="${1:text|submit|hidden|button}" name="${2:some_name}" value="${3:value for input}">${4}
+	<input type="${1:text|submit|hidden|button}"  name="${2:Nombre}" value="${3:value for input}">${4}
 snippet label
 	<label id="${1:id_elemento}" class="${2:nombre_clase}" for="${3:}">${4:texto label}</label>
 	<input type="${5:text|submit|hidden|button}" name="${6:nombre_input}" value="${7:valor}" id="${8:identificador}">${9}
 snippet link
 	<link rel="${1:stylesheet}" href="${2:/css/master.css}" type="text/css" media="${3:screen}" charset="utf-8">${4}
 snippet mailto
-	<a href="mailto:${1:joe@example.com}?subject=${2:feedback}">${3:email me}</a>
+	<a href="mailto:${1:juanote@ejemplo.com}?subject=${2:feedback}">${3:email me}</a>
 snippet meta
 	<meta name="${1:name}" content="${2:content}">${3}
 snippet opt
@@ -177,7 +182,7 @@ snippet opt
 snippet optt
 	<option>${1:option}</option>${2}
 snippet select
-		<select name="${1:some_name}" id="${2:$1}">
+		<select name="${1:some_name}">
 		<option value="${3:option}">${4:$3}</option>
 	</select>${5}
 snippet table
@@ -186,13 +191,13 @@ snippet table
 		<tr><th>${3:Data}</th></tr>
 	</table>${4}
 snippet textarea
-	<textarea id="${1:id_elemento}" class="${2:nombre_clase"} name="${3:nombre}" rows="${4:no.filas}" cols="${5:no.columnas}">${6}</textarea>${7}
+	<textarea name="${3:nombre}" rows="${4:no.filas}" cols="${5:no.columnas}">${6}</textarea>${7}
 snippet header
 	<header>
 		${1}
 	</header>${2}
 snippet canvas
-	<canvas id="${1:name}" width="${2:width}" height="${3:height}"></canvas>${4}
+	<canvas width="${2:width}" height="${3:height}"></canvas>${4}
 snippet article
 	<article>
 		${1}
