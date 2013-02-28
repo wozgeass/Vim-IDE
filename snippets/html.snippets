@@ -104,14 +104,14 @@ snippet script Archivo
 	${2}
 snippet style
 	<style type="text/css" media="${1:screen}">
-		${2}
-	</style>${3}
+		${1:codigo}
+	</style>
 snippet base
 	<base href="${1}" target="${2}">
 snippet br
 	<br>
 snippet div
-	<div id="${1:id_elemento}" class="${2:nombre_clase}">
+	<div>
 		${3}
 	</div>
 # Embed QT Movie
@@ -129,37 +129,26 @@ snippet movie
 		>
 	</object>${6}
 snippet fieldset
-	<fieldset id="${1:identificador}" class="${2:nombre_clase}">
+	<fieldset>
 		<legend>${4:texto}</legend>
-		${5}
 	</fieldset>
 snippet form
-	<form action="${1:action}" method="${2:get}" id="${3:identificador}" class="${4:nombre_clase}" accept-charset="utf-8">
-		${5}
-
-
-	<p><input type="submit" value="Continue &rarr;"></p>
+	<form action="${1:action}" method="${2:get}" accept-charset="utf-8">
 	</form>
 snippet h1
-	<h1 id="${1:identificador}" class="${2:clase}">${3:texto titulo}</h1>
-	${4}
+	<h1>${3:texto titulo}</h1>
 snippet h2
-	<h2 id="${1:identificador}" class="${2:clase}">${3:$texto titulo}</h2>
-	${4}
+	<h2>${3:$texto titulo}</h2>
 snippet h3
-	<h3 id="${1:identificador}" class="${2:clase}">${3:texto titulo}</h3>
-	${4}
+	<h3>${3:texto titulo}</h3>
 snippet h4
-	<h4 id="${1:identificador}" class="${2:clase}">${3:texto titulo}</h4>
-	${4}
+	<h4>${3:texto titulo}</h4>
 snippet h5
-	<h5 id="${1:identificador}" class="${2:clase}">${3:texto titulo}</h5>
-	${4}
+	<h5>${3:texto titulo}</h5>
 snippet h6
-	<h6 id="${1:identificador}"class="${2:clase}">${3:texto titulo}</h6>
-	${4}
+	<h6>${3:texto titulo}</h6>
 snippet p
-	<p id="${1:identificador}" class="${2:nombre_clase}">${3:Texto}</p>${4}
+	<p>${3:Texto}</p>
 snippet b
 	<b>${1:Texto Resaltado}</b>${2}
 snippet i
@@ -167,7 +156,7 @@ snippet i
 snippet date
 	`system("date +%Y-%m-%d")`
 snippet input
-	<input type="${1:text|submit|hidden|button}"  name="${2:Nombre}" value="${3:value for input}">${4}
+	<input type="${1:text|submit|hidden|button}"  name="${2:Nombre}" value="${3:valor de entrada}" placeholder="" autocomplete="${1:off/on}">${4}
 snippet label
 	<label id="${1:id_elemento}" class="${2:nombre_clase}" for="${3:}">${4:texto label}</label>
 	<input type="${5:text|submit|hidden|button}" name="${6:nombre_input}" value="${7:valor}" id="${8:identificador}">${9}
@@ -199,11 +188,11 @@ snippet header
 snippet canvas
 	<canvas width="${2:width}" height="${3:height}"></canvas>${4}
 snippet article
-	<article id="${1:identificador}" class="${2:nombre_clase}">
+	<article>
 		${3}
 	</article>
 snippet aside
-	<aside id="${1:identificador}" class="${2:nombre_clase}">
+	<aside>
 		${3}
 	</aside>
 snippet audio
@@ -211,39 +200,39 @@ snippet audio
 		${1}
 	</audio>
 snippet source
-	<source src="${1:src}" type="${2:type}">${3}
+	<source src="${1:src}" type="${2:type}">
 snippet caption
-	<caption>${1}</caption>${2}
+	<caption>${1}</caption>
 snippet hgroup
-	<hgroup id="${1:identificador}" class="${2:nombre_clase}">
+	<hgroup>
 		${3}
-	</hgroup>${4}
+	</hgroup>
 snippet cite
-	<cite id="${1:identificador}" class="${2:nombre_clase}">${3}</cite>${4}
+	<cite>${3}</cite>
 snippet footer
-	<footer id="${1:identificador}" class="${2:nombre_clase}">
+	<footer>
 		${3}
-	</footer>${4}
+	</footer>
 snippet nav
-	<nav id="${1:identificador}" class="${2:nombre_clase}">
+	<nav>
 		${3}
-	</nav>${4}
+	</nav>
 snippet details
 	<details>
 		${1}
-	</details>${2}
+	</details>
 snippet summary
-	<summary>${1}</summary>${2}
+	<summary>${1}</summary>
 snippet figure
 	<figure>
 		${1}
-	</figure>${2}
+	</figure>
 snippet figcaption
 	<figcaption>
 		${1}
-	</figcaption>${2}
+	</figcaption>
 snippet mark
-	<mark>${1}</mark>${2}
+	<mark>${1}</mark>
 snippet meter
 	<meter value="${1}" min="${2}" max="${3}">${4}</meter>
 snippet progress
@@ -257,7 +246,7 @@ snippet rt
 snippet rp
 	<rp>${1}</rp>
 snippet section
-	<section id="${1:identificador}" class="${2:nombre_clase}">
+	<section>
 		${3}
 	</section>
 snippet time
@@ -267,16 +256,16 @@ snippet video
 		${3}
 	</video>
 snippet embed
-	<embed src="${1}" type="${2}" width="${3}" height="${4}">${5}
+	<embed src="${1}" type="${2}" width="${3}" height="${4}">
 snippet datalist
-	<datalist id="${1:identificador}" class="${2:nombre_clase}">
+	<datalist>
 		${2}
-	</datalist>${3}
+	</datalist>
 snippet option
-	<option value="${1}">${2}
+	<option value="${1}">
 snippet button
-	<button id=${1:identificador}" class="${2:nombre_clase}">${2:texto_boton}</button>${3}
+	<button>${2:texto_boton}</button>${3}
 snippet td
-	<td>${1}</td>${2}
+	<td>${1}</td>
 snippet tr
-	<tr>${1}</tr>${2}
+	<tr>${1}</tr>
