@@ -69,52 +69,122 @@ snippet doctype XHTML 1.0 Transitional
 snippet doctype XHTML 1.1
 	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
 	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-snippet html
-	<html lang=${1:Idioma}>
+##########################################      Tags     ###################################################
+snippet acronym
+	<acronym title="${1:nombre_completo}">${2}</acronym>${3}
+snippet 
+snippet article
+	<article>
+		${3}
+	</article>
+snippet aside
+	<aside>
+		${3}
+	</aside>
+snippet audio
+	<audio>
 		${1}
-	</html>
-snippet xhtml
-	<html xmlns="http://www.w3.org/1999/xhtml">
+	</audio>
+snippet b
+	<b>${1:Texto Resaltado}</b>${2}
+snippet base
+	<base href="${1}" target="${2}">
+snippet body
+	<body id ="${1:id_elemento}"class="${2:nombre_clase}">
+		${3}
+	</body>
+snippet br
+	<br>
+snippet button
+	<button>${2:texto_boton}</button>${3}
+snippet canvas
+	<canvas width="${2:width}" height="${3:height}"></canvas>${4}
+snippet caption
+	<caption>${1}</caption>
+snippet cite
+	<cite>${3}</cite>
+snippet comment
+	<!-- ${1} -->
+snippet datalist
+	<datalist>
+		${2}
+	</datalist>
+snippet details
+	<details>
 		${1}
-	</html>
+	</details>
+snippet div
+	<div>
+		${3}
+	</div>
+snippet embed
+	<embed src="${1}" type="${2}" width="${3}" height="${4}">
+snippet figure
+	<figure>
+		${1}
+	</figure>
+snippet figcaption
+	<figcaption>
+		${1}
+	</figcaption>
+snippet fieldset
+	<fieldset>
+		<legend>${4:texto}</legend>
+	</fieldset>
+snippet form
+	<form action="${1:action}" method="${2:get}" accept-charset="utf-8">
+	</form>
+snippet footer
+	<footer>
+		${3}
+	</footer>
+snippet h1
+	<h1>${3:texto titulo}</h1>
+snippet h2
+	<h2>${3:$texto titulo}</h2>
+snippet h3
+	<h3>${3:texto titulo}</h3>
+snippet h4
+	<h4>${3:texto titulo}</h4>
+snippet h5
+	<h5>${3:texto titulo}</h5>
+snippet h6
+	<h6>${3:texto titulo}</h6>
 snippet head
 	<head>
 		<meta charset="utf-8" />
 		<title>${3:texto del titulo}</title>
 		${4}
 	</head>
-snippet body
-	<body id ="${1:id_elemento}"class="${2:nombre_clase}">
+snippet header
+	<header id="${1:identificador}" class="${2:nombre_clase}">
 		${3}
-	</body>
-snippet title
-	<title>${1:Titulo}</title>
-	${2}
-snippet id
-	id=${1:Identificador}
-snippet class
-	class=${1:Clase}
-snippet script Embebido
-	<script type="text/javascript" charset="utf-8">
+	</header>${4}
+snippet hgroup
+	<hgroup>
+		${3}
+	</hgroup>
+snippet html
+	<html lang=${1:Idioma}>
 		${1}
-	</script>
-	${2}
-snippet script Archivo
-	<script src="${1}.js" type="text/javascript" charset="utf-8"></script>
-	${2}
-snippet style
-	<style type="text/css" media="${1:screen}">
-		${1:codigo}
-	</style>
-snippet base
-	<base href="${1}" target="${2}">
-snippet br
-	<br>
-snippet div
-	<div>
-		${3}
-	</div>
-# Embed QT Movie
+	</html>
+snippet i
+	<i>${1:Texto en Italica}</i>${2}
+snippet input
+	<input type="${1:text|submit|hidden|button}"  name="${2:Nombre}" value="${3:valor de entrada}" placeholder="" autocomplete="${1:off/on}">${4}
+snippet label
+	<label id="${1:id_elemento}" class="${2:nombre_clase}" for="${3:}">${4:texto label}</label>
+	<input type="${5:text|submit|hidden|button}" name="${6:nombre_input}" value="${7:valor}" id="${8:identificador}">${9}
+snippet link
+	<link rel="${1:stylesheet}" href="${2:/css/master.css}" type="text/css" media="${3:screen}" charset="utf-8">${4}
+snippet mailto
+	<a href="mailto:${1:juanote@ejemplo.com}?subject=${2:feedback}">${3:email me}</a>
+snippet mark
+	<mark>${1}</mark>
+snippet meta
+	<meta name="${1:name}" content="${2:content}">${3}
+snippet meter
+	<meter value="${1}" min="${2}" max="${3}">${4}</meter>
 snippet movie
 	<object width="$2" height="$3" classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B"
 	 codebase="http://www.apple.com/qtactivex/qtplugin.cab">
@@ -128,113 +198,18 @@ snippet movie
 			pluginspage="http://www.apple.com/quicktime/download/"
 		>
 	</object>${6}
-snippet fieldset
-	<fieldset>
-		<legend>${4:texto}</legend>
-	</fieldset>
-snippet form
-	<form action="${1:action}" method="${2:get}" accept-charset="utf-8">
-	</form>
-snippet h1
-	<h1>${3:texto titulo}</h1>
-snippet h2
-	<h2>${3:$texto titulo}</h2>
-snippet h3
-	<h3>${3:texto titulo}</h3>
-snippet h4
-	<h4>${3:texto titulo}</h4>
-snippet h5
-	<h5>${3:texto titulo}</h5>
-snippet h6
-	<h6>${3:texto titulo}</h6>
-snippet p
-	<p>${3:Texto}</p>
-snippet b
-	<b>${1:Texto Resaltado}</b>${2}
-snippet i
-	<i>${1:Texto en Italica}</i>${2}
-snippet date
-	`system("date +%Y-%m-%d")`
-snippet input
-	<input type="${1:text|submit|hidden|button}"  name="${2:Nombre}" value="${3:valor de entrada}" placeholder="" autocomplete="${1:off/on}">${4}
-snippet label
-	<label id="${1:id_elemento}" class="${2:nombre_clase}" for="${3:}">${4:texto label}</label>
-	<input type="${5:text|submit|hidden|button}" name="${6:nombre_input}" value="${7:valor}" id="${8:identificador}">${9}
-snippet link
-	<link rel="${1:stylesheet}" href="${2:/css/master.css}" type="text/css" media="${3:screen}" charset="utf-8">${4}
-snippet mailto
-	<a href="mailto:${1:juanote@ejemplo.com}?subject=${2:feedback}">${3:email me}</a>
-snippet meta
-	<meta name="${1:name}" content="${2:content}">${3}
-snippet opt
-	<option value="${1:option}">${2:$1}</option>${3}
-snippet optt
-	<option>${1:option}</option>${2}
-snippet select
-		<select name="${1:some_name}">
-		<option value="${3:option}">${4:$3}</option>
-	</select>${5}
-snippet table
-	<table>
-		<tr><th>${2:Header}</th></tr>
-		<tr><th>${3:Data}</th></tr>
-	</table>${4}
-snippet textarea
-	<textarea name="${3:nombre}" rows="${4:no.filas}" cols="${5:no.columnas}">${6}</textarea>${7}
-snippet header
-	<header id="${1:identificador}" class="${2:nombre_clase}">
-		${3}
-	</header>${4}
-snippet canvas
-	<canvas width="${2:width}" height="${3:height}"></canvas>${4}
-snippet article
-	<article>
-		${3}
-	</article>
-snippet aside
-	<aside>
-		${3}
-	</aside>
-snippet audio
-	<audio>
-		${1}
-	</audio>
-snippet source
-	<source src="${1:src}" type="${2:type}">
-snippet caption
-	<caption>${1}</caption>
-snippet hgroup
-	<hgroup>
-		${3}
-	</hgroup>
-snippet cite
-	<cite>${3}</cite>
-snippet footer
-	<footer>
-		${3}
-	</footer>
 snippet nav
 	<nav>
 		${3}
 	</nav>
-snippet details
-	<details>
-		${1}
-	</details>
-snippet summary
-	<summary>${1}</summary>
-snippet figure
-	<figure>
-		${1}
-	</figure>
-snippet figcaption
-	<figcaption>
-		${1}
-	</figcaption>
-snippet mark
-	<mark>${1}</mark>
-snippet meter
-	<meter value="${1}" min="${2}" max="${3}">${4}</meter>
+snippet option
+	<option value="${1}">
+snippet opt
+	<option value="${1:option}">${2:$1}</option>${3}
+snippet optt
+	<option>${1:option}</option>${2}
+snippet p
+	<p>${3:Texto}</p>
 snippet progress
 	<progress value="${1}"max="${2}"></progress>
 snippet ruby
@@ -249,23 +224,115 @@ snippet section
 	<section>
 		${3}
 	</section>
+snippet script Embebido
+	<script type="text/javascript" charset="utf-8">
+		${1}
+	</script>
+	${2}
+snippet script Archivo
+	<script src="${1}.js" type="text/javascript" charset="utf-8"></script>
+	${2}
+snippet style
+	<style type="text/css" media="${1:screen}">
+		${1:codigo}
+	</style>
+snippet select
+		<select name="${1:some_name}">
+		<option value="${3:option}">${4:$3}</option>
+	</select>${5}
+snippet source
+	<source src="${1:src}" type="${2:type}">
+snippet summary
+	<summary>${1}</summary>
 snippet time
 	<time datetime="${1}">${2}</time>
-snippet video
-	<video width="${1}" height="${2}" controls>
-		${3}
-	</video>
-snippet embed
-	<embed src="${1}" type="${2}" width="${3}" height="${4}">
-snippet datalist
-	<datalist>
-		${2}
-	</datalist>
-snippet option
-	<option value="${1}">
-snippet button
-	<button>${2:texto_boton}</button>${3}
 snippet td
 	<td>${1}</td>
 snippet tr
 	<tr>${1}</tr>
+snippet title
+	<title>${1:Titulo}</title>
+	${2}
+snippet table
+	<table>
+		<tr><th>${2:Header}</th></tr>
+		<tr><th>${3:Data}</th></tr>
+	</table>${4}
+snippet textarea
+	<textarea name="${3:nombre}" rows="${4:no.filas}" cols="${5:no.columnas}">${6}</textarea>${7}
+snippet video
+	<video width="${1}" height="${2}" controls>
+		${3}
+	</video>
+snippet xhtml
+	<html xmlns="http://www.w3.org/1999/xhtml">
+		${1}
+	</html>
+
+####################################      Atributos     ######################################################
+snippet accesskey
+	accesskey="${1}"
+snippet class
+	class="${1:Clase}"
+snippet colspan
+	colspan="${1}"
+snippet contedit
+	contenteditable="${1}"
+snippet contxmenu
+	contextmenu="${1}"
+snippet dir
+	dir="${1}"
+snippet draggable
+	draggable="${1}"
+snippet for
+	for="${1}"
+snippet form
+	form="${1}"
+snippet height
+	height="${1}"
+snippet hidden
+	hidden="${1}"
+snippet href
+	href="${1}"
+snippet id
+	id="${1:Identificador}"
+snippet irrelevant
+	irrelevant="${1}"
+snippet lang
+	lang="${1}"
+snippet name
+	name="${1}"
+snippet ref 
+	ref="${1}"
+snippet regmark
+	registrationmark="${1}"
+snippet tabindex
+	tabindex="${1}"
+snippet template
+	template="${1}"
+snippet title
+	title="${1}"
+snippet width
+	width="${1}"
+snippet src
+	src="${1}"
+snippet value
+	value="${1}"
+snippet type
+	type="${1}"
+snippet rowspan
+	rowspan="${1}"
+snippet datetime
+	datetime="${1}"
+snippet selected
+	selected="${1}"
+snippet autobuffer
+	autobuffer="${1}"
+snippet controls
+	controls="${1}"
+snippet autoplay
+	autoplay="${1}"
+snippet media
+	media="${1}"
+snippet novalidate
+	novalidate="${2}"
