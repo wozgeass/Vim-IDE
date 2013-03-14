@@ -70,33 +70,47 @@ snippet doctype XHTML 1.1
 	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
 	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 ##########################################      Tags     ###################################################
-snippet acronym
-	<acronym title="${1:nombre_completo}">${2}</acronym>${3}
-snippet 
+
+snippet a
+	<a ${1}> </a>
+snippet abbr
+	<abbr ${1}></abbr>
+snippet address
+	<address ${1}></address>
+snippet area
+	<area ${1}>
 snippet article
-	<article>
-		${3}
+	<article ${1}>
+	${2}
 	</article>
 snippet aside
-	<aside>
-		${3}
+	<aside ${1}>
+		${2}
 	</aside>
 snippet audio
-	<audio>
-		${1}
+	<audio ${1}>
+		${2}
 	</audio>
 snippet b
-	<b>${1:Texto Resaltado}</b>${2}
+	<b ${1}> </b>
 snippet base
-	<base href="${1}" target="${2}">
+	<base ${1}>
+snippet bdi
+	<bdi ${}> </bdi>
+snippet bdo
+	<bdo ${1}> </bdo>
+snippet big
+	<big ${1}> </big>
+snippet blockquote
+	<blockquote ${1}> </blockquote>
 snippet body
-	<body id ="${1:id_elemento}"class="${2:nombre_clase}">
-		${3}
+	<body ${1}>
+		${2}
 	</body>
 snippet br
 	<br>
 snippet button
-	<button>${2:texto_boton}</button>${3}
+	<button ${1}>${2}</button>
 snippet canvas
 	<canvas width="${2:width}" height="${3:height}"></canvas>${4}
 snippet caption
