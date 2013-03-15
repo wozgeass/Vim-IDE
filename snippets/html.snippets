@@ -34,7 +34,7 @@ snippet control
 snippet enter
 	&#x2305;
 # ⌘
-snippet command
+snippet cmd
 	&#x2318;
 # ⌥
 snippet option
@@ -105,127 +105,156 @@ snippet blockquote
 	<blockquote ${1}> </blockquote>
 snippet body
 	<body ${1}>
-		${2}
+
 	</body>
 snippet br
 	<br>
 snippet button
-	<button ${1}>${2}</button>
+	<button ${1}> </button>
 snippet canvas
-	<canvas width="${2:width}" height="${3:height}"></canvas>${4}
+	<canvas ${1}> </canvas>
 snippet caption
-	<caption>${1}</caption>
+	<caption ${1}> </caption>
 snippet cite
-	<cite>${3}</cite>
+	<cite ${1}> </cite>
+snippet code
+	<code ${1}> </code>
+snippet command
+	<command ${1}> </command>
 snippet comment
-	<!-- ${1} -->
+	<!-- ${1} -->${2}
+snippet datagrid
+	<datagrid ${1}> </datagrid>
+snippet dd
+	<dd ${1}> </dd>
 snippet datalist
-	<datalist>
-		${2}
+	<datalist ${1}>
+
 	</datalist>
 snippet details
-	<details>
-		${1}
+	<details ${1}>
+
 	</details>
+snippet dfn
+	<dfn ${1}> </dfn>
+snippet dialog
+	<dialog	${1}> </dialog>
 snippet div
-	<div>
-		${3}
+	<div ${1}>
+
 	</div>
+snippet dl
+	<dl ${1}> </dl>
+snippet dt
+	<dt ${1}> </dt>
+snippet em
+	<em ${1}> </em>
 snippet embed
-	<embed src="${1}" type="${2}" width="${3}" height="${4}">
+	<embed ${1}>
 snippet figure
-	<figure>
-		${1}
+	<figure ${1}>
+
 	</figure>
 snippet figcaption
-	<figcaption>
-		${1}
+	<figcaption ${1}>
+
 	</figcaption>
 snippet fieldset
-	<fieldset>
-		<legend>${4:texto}</legend>
+	<fieldset ${1}>
+
 	</fieldset>
 snippet form
-	<form action="${1:action}" method="${2:get}" accept-charset="utf-8">
+	<form ${1}>
+
 	</form>
 snippet footer
-	<footer>
-		${3}
+	<footer ${1}>
+
 	</footer>
 snippet h1
-	<h1>${3:texto titulo}</h1>
+	<h1 ${1}></h1>
 snippet h2
-	<h2>${3:$texto titulo}</h2>
+	<h2 ${1}></h2>
 snippet h3
-	<h3>${3:texto titulo}</h3>
+	<h3 ${1}></h3>
 snippet h4
-	<h4>${3:texto titulo}</h4>
+	<h4 ${1}></h4>
 snippet h5
-	<h5>${3:texto titulo}</h5>
+	<h5 ${1}></h5>
 snippet h6
-	<h6>${3:texto titulo}</h6>
+	<h6 ${1}></h6>
 snippet head
-	<head>
-		<meta charset="utf-8" />
-		<title>${3:texto del titulo}</title>
-		${4}
+	<head ${1}>
+
 	</head>
 snippet header
-	<header id="${1:identificador}" class="${2:nombre_clase}">
-		${3}
-	</header>${4}
+	<header ${1}>
+		
+	</header>
 snippet hgroup
-	<hgroup>
-		${3}
+	<hgroup ${1}>
+	
 	</hgroup>
 snippet html
-	<html lang=${1:Idioma}>
-		${1}
+	<html ${1}>
+	
 	</html>
+snippet hr
+	<hr ${1}>
 snippet i
-	<i>${1:Texto en Italica}</i>${2}
+	<i></i>
+snippet iframe
+	<iframe ${1}> </iframe>
 snippet input
-	<input type="${1:text|submit|hidden|button}"  name="${2:Nombre}" value="${3:valor de entrada}" placeholder="" autocomplete="${1:off/on}">${4}
+	<input ${1}> </input
+snippet ins
+	<ins ${1}> </ins>
+snippet kbd
+	<kbd ${1}> </kbd>
+snippet keygen
+	<keygen ${1}>
 snippet label
-	<label id="${1:id_elemento}" class="${2:nombre_clase}" for="${3:}">${4:texto label}</label>
-	<input type="${5:text|submit|hidden|button}" name="${6:nombre_input}" value="${7:valor}" id="${8:identificador}">${9}
+	<label ${1}> </label>
+snippet legend
+	<legend ${1}> </legend>
+snippet li
+	<li ${1}> </li>
 snippet link
-	<link rel="${1:stylesheet}" href="${2:/css/master.css}" type="text/css" media="${3:screen}" charset="utf-8">${4}
+	<link ${1}>
 snippet mailto
 	<a href="mailto:${1:juanote@ejemplo.com}?subject=${2:feedback}">${3:email me}</a>
+snippet map
+	<map ${1}> </map>
 snippet mark
 	<mark>${1}</mark>
+snippet menu
+	<menu ${1}> </menu>
 snippet meta
 	<meta name="${1:name}" content="${2:content}">${3}
 snippet meter
 	<meter value="${1}" min="${2}" max="${3}">${4}</meter>
-snippet movie
-	<object width="$2" height="$3" classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B"
-	 codebase="http://www.apple.com/qtactivex/qtplugin.cab">
-		<param name="src" value="$1"`>
-		<param name="controller" value="$4">
-		<param name="autoplay" value="$5">
-		<embed src="${1:movie.mov}"
-			width="${2:320}" height="${3:240}"
-			controller="${4:true}" autoplay="${5:true}"
-			scale="tofit" cache="true"
-			pluginspage="http://www.apple.com/quicktime/download/"
-		>
-	</object>${6}
 snippet nav
-	<nav>
-		${3}
-	</nav>
+	<nav ${1}> <nav>
+snippet noscript
+	<noscript ${1}> </noscript>
+snippet ol
+	<ol ${1}> </ol>
+snippet optgroup
+	<optgroup ${1}> </optgroup>
 snippet option
-	<option value="${1}">
-snippet opt
-	<option value="${1:option}">${2:$1}</option>${3}
-snippet optt
-	<option>${1:option}</option>${2}
+	<option ${1}> </option>
+snippet output
+	<output ${1}> </output>
 snippet p
-	<p>${3:Texto}</p>
+	<p ${1}> </p>
+snippet param
+	<param ${1}> </param>
+snippet pre
+	<pre ${1}> </pre>
 snippet progress
-	<progress value="${1}"max="${2}"></progress>
+	<progress ${1}> </progress>
+snippet q
+	<q ${1}> </q>
 snippet ruby
 	<ruby>
 		${1}
@@ -234,32 +263,40 @@ snippet rt
 	<rt>${1}</rt>
 snippet rp
 	<rp>${1}</rp>
+snippet s
+	<s ${1}> </s>
+snippet samp
+	<samp ${1}> </samp>
 snippet section
-	<section>
-		${3}
+	<section ${1}>
+
 	</section>
-snippet script Embebido
-	<script type="text/javascript" charset="utf-8">
-		${1}
+snippet script 
+	<script ${1}>
+
 	</script>
-	${2}
-snippet script Archivo
-	<script src="${1}.js" type="text/javascript" charset="utf-8"></script>
-	${2}
 snippet style
-	<style type="text/css" media="${1:screen}">
-		${1:codigo}
+	<style ${1}>
+		
 	</style>
 snippet select
-		<select name="${1:some_name}">
-		<option value="${3:option}">${4:$3}</option>
-	</select>${5}
+	<select ${1}>
+		
+	</select>
+snippet small
+	<small ${1}> </small>
 snippet source
-	<source src="${1:src}" type="${2:type}">
+	<source ${1}>
+snippet span
+	<span ${1}> </span>
+snippet sub
+	<sub ${1}> </sub>
+snippet sup
+	<sup ${1}> </sup>
 snippet summary
 	<summary>${1}</summary>
 snippet time
-	<time datetime="${1}">${2}</time>
+	<time ${1}></time>
 snippet td
 	<td>${1}</td>
 snippet tr
@@ -268,15 +305,26 @@ snippet title
 	<title>${1:Titulo}</title>
 	${2}
 snippet table
-	<table>
-		<tr><th>${2:Header}</th></tr>
-		<tr><th>${3:Data}</th></tr>
-	</table>${4}
+	<table ${1}>
+		
+	</table>
+snippet tbody
+	<tbody ${1}> </tbody>
+snippet td
+	<td ${1}> </td>
 snippet textarea
-	<textarea name="${3:nombre}" rows="${4:no.filas}" cols="${5:no.columnas}">${6}</textarea>${7}
+	<textarea ${1}> </textarea>
+snippet tfoot
+	<tfoot ${1}> </tfoot>
+snippet th
+	<th ${1}> </th>
+snippet thead
+	<thead ${1}> </thead>
+snippet tr
+	<tr ${1}> </tr>
 snippet video
-	<video width="${1}" height="${2}" controls>
-		${3}
+	<video ${1}>
+	
 	</video>
 snippet xhtml
 	<html xmlns="http://www.w3.org/1999/xhtml">
@@ -322,8 +370,12 @@ snippet irrelevant
 	irrelevant="${1}"
 snippet lang
 	lang="${1}"
+snippet max
+	max="${1}"
 snippet media
 	media="${1}"
+snippet min
+	min="${1}"
 snippet name
 	name="${1}"
 snippet novalidate
@@ -486,9 +538,9 @@ snippet template
 	template="${1}"
 snippet title
 	title="${1}"
-snippet width
-	width="${1}"
 snippet type
-	type="${1}"
+	type="${1:text|submit|hidden|button}"
 snippet value
 	value="${1}"
+snippet width
+	width="${1}"
