@@ -71,267 +71,265 @@ snippet doctype XHTML 1.1
 	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 ##########################################      Tags     ###################################################
 
-snippet a
+snippet <a
 	<a ${1}> </a>
-snippet abbr
+snippet <abbr
 	<abbr ${1}></abbr>
-snippet address
+snippet <address
 	<address ${1}></address>
-snippet area
+snippet <area
 	<area ${1}>
-snippet article
+snippet <article
 	<article ${1}>
 	${2}
 	</article>
-snippet aside
+snippet <aside
 	<aside ${1}>
 		${2}
 	</aside>
-snippet audio
+snippet <audio
 	<audio ${1}>
 		${2}
 	</audio>
-snippet b
+snippet <b
 	<b ${1}> </b>
-snippet base
+snippet <base
 	<base ${1}>
-snippet bdi
+snippet <bdi
 	<bdi ${}> </bdi>
-snippet bdo
+snippet <bdo
 	<bdo ${1}> </bdo>
-snippet big
+snippet <big
 	<big ${1}> </big>
-snippet blockquote
+snippet <blockquote
 	<blockquote ${1}> </blockquote>
-snippet body
+snippet <body
 	<body ${1}>
 
 	</body>
-snippet br
+snippet <br
 	<br>
-snippet button
+snippet <button
 	<button ${1}> </button>
-snippet canvas
+snippet <canvas
 	<canvas ${1}> </canvas>
-snippet caption
+snippet <caption
 	<caption ${1}> </caption>
-snippet cite
+snippet <cite
 	<cite ${1}> </cite>
-snippet code
+snippet <code
 	<code ${1}> </code>
-snippet command
+snippet <command
 	<command ${1}> </command>
 snippet comment
 	<!-- ${1} -->${2}
-snippet datagrid
+snippet <datagrid
 	<datagrid ${1}> </datagrid>
-snippet dd
+snippet <dd
 	<dd ${1}> </dd>
-snippet datalist
+snippet <datalist
 	<datalist ${1}>
 
 	</datalist>
-snippet details
+snippet <details
 	<details ${1}>
 
 	</details>
-snippet dfn
+snippet <dfn
 	<dfn ${1}> </dfn>
-snippet dialog
+snippet <dialog
 	<dialog	${1}> </dialog>
-snippet div
+snippet <div
 	<div ${1}>
 
 	</div>
-snippet dl
+snippet <dl
 	<dl ${1}> </dl>
-snippet dt
+snippet <dt
 	<dt ${1}> </dt>
-snippet em
+snippet <em
 	<em ${1}> </em>
-snippet embed
+snippet <embed
 	<embed ${1}>
-snippet figure
+snippet <figure
 	<figure ${1}>
 
 	</figure>
-snippet figcaption
+snippet <figcaption
 	<figcaption ${1}>
 
 	</figcaption>
-snippet fieldset
+snippet <fieldset
 	<fieldset ${1}>
 
 	</fieldset>
-snippet form
+snippet <form
 	<form ${1}>
 
 	</form>
-snippet footer
+snippet <footer
 	<footer ${1}>
 
 	</footer>
-snippet h1
+snippet <h1
 	<h1 ${1}></h1>
-snippet h2
+snippet <h2
 	<h2 ${1}></h2>
-snippet h3
+snippet <h3
 	<h3 ${1}></h3>
-snippet h4
+snippet <h4
 	<h4 ${1}></h4>
-snippet h5
+snippet <h5
 	<h5 ${1}></h5>
-snippet h6
+snippet <h6
 	<h6 ${1}></h6>
-snippet head
+snippet <head
 	<head ${1}>
 
 	</head>
-snippet header
+snippet <header
 	<header ${1}>
 		
 	</header>
-snippet hgroup
+snippet <hgroup
 	<hgroup ${1}>
 	
 	</hgroup>
-snippet html
+snippet <html
 	<html ${1}>
 	
 	</html>
-snippet hr
+snippet <hr
 	<hr ${1}>
-snippet i
-	<i></i>
-snippet iframe
+snippet <i
+	<i>${1}</i>
+snippet <iframe
 	<iframe ${1}> </iframe>
-snippet img
+snippet <img
 	<img ${1}>
-snippet input
+snippet <input
 	<input ${1}> </input>
-snippet ins
+snippet <ins
 	<ins ${1}> </ins>
-snippet kbd
+snippet <kbd
 	<kbd ${1}> </kbd>
-snippet keygen
+snippet <keygen
 	<keygen ${1}>
-snippet label
+snippet <label
 	<label ${1}> </label>
-snippet legend
+snippet <legend
 	<legend ${1}> </legend>
-snippet li
+snippet <li
 	<li ${1}> </li>
-snippet link
+snippet <link
 	<link ${1}>
-snippet mailto
+snippet <mailto
 	<a href="mailto:${1:juanote@ejemplo.com}?subject=${2:feedback}">${3:email me}</a>
-snippet map
+snippet <map
 	<map ${1}> </map>
-snippet mark
+snippet <mark
 	<mark>${1}</mark>
-snippet menu
+snippet <menu
 	<menu ${1}> </menu>
-snippet meta
+snippet <meta
 	<meta name="${1:name}" content="${2:content}">${3}
-snippet meter
+snippet <meter
 	<meter value="${1}" min="${2}" max="${3}">${4}</meter>
-snippet nav
+snippet <nav
 	<nav ${1}> <nav>
-snippet noscript
+snippet <noscript
 	<noscript ${1}> </noscript>
-snippet ol
+snippet <ol
 	<ol ${1}> </ol>
-snippet optgroup
+snippet <optgroup
 	<optgroup ${1}> </optgroup>
-snippet option
+snippet <option
 	<option ${1}> </option>
-snippet output
+snippet <output
 	<output ${1}> </output>
-snippet p
+snippet <p
 	<p ${1}> </p>
-snippet param
+snippet <param
 	<param ${1}> </param>
-snippet pre
+snippet <pre
 	<pre ${1}> </pre>
-snippet progress
+snippet <progress
 	<progress ${1}> </progress>
-snippet q
+snippet <q
 	<q ${1}> </q>
-snippet ruby
+snippet <ruby
 	<ruby>
 		${1}
 	</ruby>
-snippet rt
+snippet <rt
 	<rt>${1}</rt>
-snippet rp
+snippet <rp
 	<rp>${1}</rp>
-snippet s
+snippet <s
 	<s ${1}> </s>
-snippet samp
+snippet <samp
 	<samp ${1}> </samp>
-snippet section
+snippet <section
 	<section ${1}>
 
 	</section>
-snippet script 
+snippet <script 
 	<script ${1}>
 
 	</script>
-snippet style
+snippet <style
 	<style ${1}>
 		
 	</style>
-snippet select
+snippet <select
 	<select ${1}>
 		
 	</select>
-snippet small
+snippet <small
 	<small ${1}> </small>
-snippet source
+snippet <source
 	<source ${1}>
-snippet span
+snippet <span
 	<span ${1}> </span>
-snippet sub
+snippet <sub
 	<sub ${1}> </sub>
-snippet sup
+snippet <sup
 	<sup ${1}> </sup>
-snippet summary
+snippet <summary
 	<summary>${1}</summary>
-snippet time
+snippet <time
 	<time ${1}></time>
-snippet td
+snippet <td
 	<td>${1}</td>
-snippet tr
+snippet <tr
 	<tr>${1}</tr>
-snippet title
+snippet <title
 	<title>${1:Titulo}</title>
 	${2}
-snippet table
+snippet <table
 	<table ${1}>
 		
 	</table>
-snippet tbody
+snippet <tbody
 	<tbody ${1}> </tbody>
-snippet td
+snippet <td
 	<td ${1}> </td>
-snippet textarea
+snippet <textarea
 	<textarea ${1}> </textarea>
-snippet tfoot
+snippet <tfoot
 	<tfoot ${1}> </tfoot>
-snippet th
+snippet <th
 	<th ${1}> </th>
-snippet thead
+snippet <thead
 	<thead ${1}> </thead>
-snippet tr
+snippet <tr
 	<tr ${1}> </tr>
-snippet video
+snippet <video
 	<video ${1}>
 	
 	</video>
-snippet xhtml
-	<html xmlns="http://www.w3.org/1999/xhtml">
-		${1}
-	</html>
+snippet <ul
+	<ul ${1}></ul>
 
 ####################################      Atributos     ######################################################
 snippet accesskey
