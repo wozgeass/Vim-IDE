@@ -57,9 +57,12 @@ endif
 syntax enable
 filetype plugin on
 set tabstop=4
+set showmatch
 set shiftwidth=4
-set expandtab
-"set nocp
+set nocp
+set smartindent
+set smarttab
+set autoindent
 set tags+=~/.vim/tags/ctags
 set number
 autocmd FileType python set omnifunc=pythoncomplete#Complete
