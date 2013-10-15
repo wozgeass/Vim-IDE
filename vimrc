@@ -57,6 +57,7 @@ endif
 syntax enable
 filetype plugin on
 set tabstop=4
+set showmatch
 set shiftwidth=4
 set nocp
 set smartindent
