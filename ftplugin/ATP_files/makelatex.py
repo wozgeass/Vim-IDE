@@ -14,16 +14,28 @@
 # def handler(signum, frame):
 
 
-import shutil, os.path, re, optparse, subprocess, traceback, psutil
-import tempfile, os, atexit, sys
+import sys
+import os
+import os.path
+import shutil
+import re
+import optparse
+import subprocess
+import traceback
+import psutil
+import tempfile
+import atexit
 import locale
+
 encoding = locale.getpreferredencoding()
+if not encoding:
+    encoding = 'UTF-8'
+PY3 = sys.version_info[0] == 3
 
 import latex_log
 
 from optparse import OptionParser
 from os import getcwd
-from signal import SIGKILL
 from collections import deque
 
 usage   = "usage: %prog [options]"
@@ -64,10 +76,11 @@ texfile = options.texfile
 bufnr   = options.bufnr
 basename = os.path.splitext(os.path.basename(texfile))[0]
 texfile_dir = os.path.dirname(texfile)
+debug_file.write("texfile_dir='%s'\n" % texfile_dir)
 if options.tempdir == "":
     options.tempdir = os.path.join(texfile_dir,".tmp")
 logfile = basename+".log"
-debug_file.write("logfile="+logfile+"\n")
+debug_file.write("logfile='%s'\n" % logfile)
 auxfile = basename+".aux"
 bibfile = basename+".bbl"
 idxfile = basename+".idx"
@@ -88,19 +101,10 @@ tmpdir  = tempfile.mkdtemp(dir=options.tempdir,prefix="")
 # List of pids runing.
 pids    = []
 # Cleanup on exit:
-def cleanup(debug_file, tmpdir, pids):
+def cleanup(debug_file):
     debug_file.close()
     shutil.rmtree(tmpdir)
-# Will this function be called when scripts get SIGKILL, if yes
-# then this code might be helpful:
-# THIS NEEDS sys MODULE AND SIGKILL from SIGNAL MODULE
-#     for pid in pids:
-#         try:
-#             os.kill(pid,SIGKILL)
-#         except OSError:
-#             # No such process error.
-#             pass
-atexit.register(cleanup, debug_file, tmpdir, pids)
+atexit.register(cleanup, debug_file)
 
 # FILTER:
 nonempty = lambda x: (re.match('\s*$', x) is None)
@@ -132,7 +136,7 @@ bibliographies  = list(filter(nonempty, bibliographies))
 tex_options     = list(filter(nonempty,re.split('\s*,\s*',options.tex_options)))
 debug_file.write("TEX_OPTIONS_LIST="+str(tex_options)+"\n")
 
-outdir		= options.outdir
+outdir		= os.path.abspath(options.outdir)
 debug_file.write("OUTDIR="+outdir+"\n")
 force		= options.force
 debug_file.write("FORCE="+str(force)+"\n")
@@ -186,7 +190,7 @@ def vim_remote_expr(servername, expr):
 def latex_progress_bar(cmd):
     """Run latex and send data for progress bar,"""
 
-    debug_file.write("RUN "+str(run)+" CMD"+str(cmd)+"\n")
+    debug_file.write("RUN %s\n  CMD %s\n  CDIR %s\n" % (run, cmd, os.path.abspath(os.curdir)))
 
     child = subprocess.Popen(cmd, stdout=subprocess.PIPE)
     pid   = child.pid
@@ -266,10 +270,10 @@ def copy_back_output(tmpdir):
     aux file is copied also to _aux file used by ATP."""
     os.chdir(tmpdir)
     if os.path.exists(basename+output_ext):
-        shutil.copy(basename+output_ext, texfile_dir)
+        shutil.copy(basename+output_ext, outdir)
     if os.path.exists(basename+".aux"):
-        shutil.copy(basename+".aux", texfile_dir)
-        shutil.copy(basename+".aux", os.path.join(texfile_dir, basename+"._aux"))
+        shutil.copy(basename+".aux", outdir)
+        shutil.copy(basename+".aux", os.path.join(outdir, basename+"._aux"))
     os.chdir(texfile_dir)
 
 def copy_back(tmpdir, latex_returncode):
@@ -282,14 +286,12 @@ def copy_back(tmpdir, latex_returncode):
     for ext in ext_list:
         file_cp=basename+"."+ext
         if os.path.exists(file_cp):
-            shutil.copy(file_cp, texfile_dir)
+            shutil.copy(file_cp, outdir)
     os.chdir(texfile_dir)
 
 try:
     # Send pid to ATP:
     vim_remote_expr(servername, "atplib#callback#PythonPID("+str(os.getpid())+")")
-    cwd = getcwd()
-    os.chdir(texfile_dir)
 
     # Note always run first time.
     # this ensures that the aux, ... files are uptodate.
@@ -299,18 +301,40 @@ try:
     tmplog  = os.path.join(tmpdir,basename+".log")
     debug_file.write("TMPLOG="+tmplog+"\n")
     tmpaux  = os.path.join(tmpdir,basename+".aux")
+    dirs = filter(lambda d: os.path.isdir(d), os.listdir(texfile_dir))
+    dirs = map(lambda d: os.path.basename(d),dirs)
+    for d in dirs:
+        os.mkdir(os.path.join(tmpdir, d))
 
-    for ext in filter(lambda x: x != 'log', keep):
+    cdir = os.curdir
+    os.chdir(outdir)
+    for ext in filter(lambda x: x != 'log' and x != 'bib', keep):
         file_cp=basename+"."+ext
         if os.path.exists(file_cp):
             shutil.copy(file_cp, tmpdir)
+    if 'bib' in keep:
+        bibs = filter(lambda p: p.endswith('.bib'), os.listdir(texfile_dir))
+        for bib in bibs:
+            if hasattr(os, 'symlink'):
+                os.symlink(os.path.join(texfile_dir, bib), os.path.join(tmpdir, bib))
+            else:
+                shutil.copy(os.path.join(texfile_dir, bib), tmpdir)
+    os.chdir(texfile_dir)
 
-    tempdir_list = os.listdir(tmpdir)
-    debug_file.write("ls tmpdir "+str(tempdir_list)+"\n")
+    debug_file.write("bibliographies = %s\n" % bibliographies)
     for bib in bibliographies:
-        if os.path.exists(os.path.join(texfile_dir,os.path.basename(bib))):
-            os.symlink(os.path.join(texfile_dir,os.path.basename(bib)),os.path.join(tmpdir,os.path.basename(bib)))
+        if os.path.exists(os.path.join(outdir,os.path.basename(bib))):
+            if hasattr(os, 'symlink'):
+                os.symlink(os.path.join(outdir,os.path.basename(bib)),os.path.join(tmpdir,os.path.basename(bib)))
+            else:
+                shutil.copyfile(os.path.join(outdir,os.path.basename(bib)),os.path.join(tmpdir,os.path.basename(bib)))
+        elif os.path.exists(os.path.join(texfile_dir,os.path.basename(bib))):
+            if hasattr(os, 'symlink'):
+                os.symlink(os.path.join(texfile_dir,os.path.basename(bib)),os.path.join(tmpdir,os.path.basename(bib)))
+            else:
+                shutil.copyfile(os.path.join(texfile_dir,os.path.basename(bib)),os.path.join(tmpdir,os.path.basename(bib)))
 
+    debug_file.write("TMPDIR contains: %s\n" % os.listdir(tmpdir))
     # SET ENVIRONMENT
     for var in env:
         os.putenv(var[0], var[1])
@@ -341,7 +365,7 @@ try:
 
         need_runs = [0]
 
-        if sys.version_info.major < 3:
+        if not PY3:
             with open(tmplog, "r") as log_file:
                 log = log_file.read().decode(encoding, errors='replace')
         else:
@@ -404,8 +428,9 @@ try:
         lotfile_readable = os.path.isfile(lotfile)
         thmfile_readable = os.path.isfile(thmfile)
 
+        debug_file.write("AUXFILE: %s\n" % tmpaux)
         try:
-            if sys.version_info.major < 3:
+            if not PY3:
                 with open(tmpaux, "r") as aux_file:
                     aux=aux_file.read().decode(encoding, errors="replace")
             else:
@@ -413,23 +438,23 @@ try:
                     aux=aux_file.read()
         except IOError:
             aux=""
-        bibtex=re.search('\\\\bibdata\s*{', aux)
+        bibtex=re.search(r'\\bibdata\s*{', aux)
         # This can be used to make it faster and use the old bbl file.
         # For this I have add a switch (bang).
         #         bibtex=re.search('No file '+basename+'\.bbl\.', log)
         if not bibtex:
             # Then search for biblatex package. Alternatively, I can search for biblatex messages in log file.
-            if sys.version_info.major < 3:
+            if not PY3:
                 with open(texfile, 'r') as sock:
                     tex_lines = sock.read().decode(encoding=encoding, errors="replace").split("\n")
             else:
                 with open(texfile, 'r', encoding=encoding, errors="replace") as sock:
                     tex_lines = sock.read().split("\n")
             for line in tex_lines:
-                if re.match('[^%]*\\\\usepackage\s*(\[[^]]*\])?\s*{(\w\|,)*biblatex',line):
+                if re.match(r'[^%]*\\usepackage\s*(\[[^]]*\])?\s*{(\w\|,)*biblatex',line):
                     bibtex=True
                     break
-                elif re.search('\\\\begin\s*{\s*document\s*}',line):
+                elif re.search(r'\\begin\s*{\s*document\s*}',line):
                     break
         debug_file.write("BIBTEX="+str(bibtex)+"\n")
 
@@ -486,7 +511,7 @@ try:
 
             #CONDITION
             try:
-                if sys.version_info.major < 3:
+                if not PY3:
                     with open(tmplog, "r") as sock:
                         log=sock.read().decode(encoding, errors='replace')
                 else:
@@ -542,7 +567,7 @@ except Exception:
     vim_remote_expr(servername, "atplib#callback#Echo(\"[ATP:] error in makelatex.py, catched python exception:\n"+error_str+"[ATP info:] this error message is recorded in makelatex.log under g:atp_TempDir\",'echo','ErrorMsg')")
 
 # Rewrite the LaTeX log file.
-latex_log.rewrite_log(logfile, check_path=True, project_dir=texfile_dir, project_tmpdir=tmpdir)
+latex_log.rewrite_log(os.path.join(outdir,logfile), check_path=True, project_dir=texfile_dir, project_tmpdir=tmpdir)
 
 debug_file.write("PIDS="+str(pids))
 vim_remote_expr(servername, "atplib#callback#Echo('[ATP:] MakeLatex finished.', 'echomsg', 'Normal')")

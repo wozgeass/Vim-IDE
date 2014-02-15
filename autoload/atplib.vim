@@ -24,7 +24,7 @@ function! atplib#ReadATPRC() "{{{
 	    execute 'source ' . fnameescape(atprc_file)
 	endif
     else
-	let atprc_file = get(split(globpath(&rtp, "**/ftplugin/ATP_files/atprc.vim"), '\n'), 0, "")
+	let atprc_file=get(split(globpath($HOME, '_atprc.vim', 1), "\n"), 0, "")
 	if filereadable(atprc_file)
 	    execute 'source ' . fnameescape(atprc_file)
 	endif
@@ -36,8 +36,10 @@ function! atplib#KillPIDs(pids,...) "{{{
 	return
     endif
 python << END
-import os, signal
+import os
+import signal
 from signal import SIGKILL
+
 pids=vim.eval("a:pids")
 for pid in pids:
     try:
@@ -133,12 +135,211 @@ function! atplib#pyeval(string) " {{{1
     endif
 endfunction "}}}1
 
+" Status Line:
+fun! atplib#ProgressBar() "{{{1
+
+    if !g:atp_statusNotif
+	" Do not put any message if user dosn't want it. 
+	return ""
+    endif
+
+    if !exists("g:atp_DEV_no_check") || !g:atp_DEV_no_check
+    if g:atp_Compiler =~ '\<python' 
+        " For python compiler
+        for var in [ "Latex", "Bibtex", "Python" ] 
+	    if !exists("b:atp_".var."PIDs")
+		let b:atp_{var}PIDs = []
+	    endif
+	    call atplib#callback#PIDsRunning("b:atp_".var."PIDs")
+	endfor
+	if len(b:atp_LatexPIDs) > 0
+	    let atp_running= len(b:atp_LatexPIDs) 
+	elseif len(b:atp_BibtexPIDs) > 0
+	    let atp_running= len(b:atp_BibtexPIDs)
+	else
+	    return ''
+	endif
+    else
+	" for g:atp_Compiler='bash' 
+	let atp_running=b:atp_running
+
+	for cmd in keys(g:CompilerMsg_Dict) 
+	    if b:atp_TexCompiler =~ '^\s*' . cmd . '\s*$'
+		let Compiler = g:CompilerMsg_Dict[cmd]
+		break
+	    else
+		let Compiler = b:atp_TexCompiler
+	    endif
+	endfor
+	if atp_running >= 2
+	    return atp_running." ".Compiler
+	elseif atp_running >= 1
+	    return Compiler
+	else
+	    return ""
+	endif
+    endif
+    endif
+
+    for cmd in keys(g:CompilerMsg_Dict) 
+	if b:atp_TexCompiler =~ '^\s*' . cmd . '\s*$'
+	    let Compiler = g:CompilerMsg_Dict[cmd]
+	    break
+	else
+	    let Compiler = b:atp_TexCompiler
+	endif
+    endfor
+
+    " For g:atp_Compiler='python'
+    if exists("g:atp_callback") && g:atp_callback
+	if exists("b:atp_LatexPIDs") && len(b:atp_LatexPIDs)>0  
+
+
+	    if exists("g:atp_ProgressBarValues") && type(g:atp_ProgressBarValues) == 4 && get(g:atp_ProgressBarValues,bufnr("%"), {}) != {}
+		let max = max(values(get(g:atp_ProgressBarValues, bufnr("%"))))
+		let progress_bar="[".max."]".( g:atp_statusOutDir ? " " : "" )
+	    else
+		let progress_bar=""
+	    endif
+
+	    if atp_running >= 2
+		return atp_running." ".Compiler." ".progress_bar
+	    elseif atp_running >= 1
+		return Compiler." ".progress_bar
+	    else
+		return ""
+	    endif
+	elseif exists("b:atp_BibtexPIDs") && len(b:atp_BibtexPIDs)>0
+	    return b:atp_BibCompiler
+	elseif exists("b:atp_MakeindexPIDs") && len(b:atp_MakeindexPIDs)>0
+	    return "makeindex"
+	endif
+    else
+	if g:atp_ProgressBar
+	    try
+		let pb_file = readfile(g:atp_ProgressBarFile)
+	    catch /.*:/
+		let pb_file = []
+	    endtry
+	    if len(pb_file)
+		let progressbar = Compiler." [".get(pb_file, 0, "")."]"
+" 		let progressbar = Compiler
+	    else
+		let progressbar = ""
+	    endif
+	else
+	    let progressbar = ""
+	endif
+	return progressbar
+    endif
+    return ""
+endf
+fun! atplib#StatusOutDir() "{{{1
+    if exists("b:atp_OutDir") 
+	if b:atp_OutDir != "" 
+	    let status= "Output dir: " . pathshorten(substitute(b:atp_OutDir,"\/\s*$","","")) 
+	else
+	    let status= "Output dir: not set"
+	endif
+    endif	
+return status
+endf
+fun! atplib#CurentSection() " {{{1 
+
+    if &l:filetype !~ 'tex$' || expand("%:e") != 'tex'
+	return ""
+    endif
+
+    let winsavedview = winsaveview()
+    try
+	if exists("b:atp_MainFile") && bufloaded(atplib#FullPath(b:atp_MainFile))
+	    let file = getbufline(bufnr(atplib#FullPath(b:atp_MainFile)), 0, "$")
+	elseif exists("b:atp_MainFile") && filereadable(atplib#FullPath(b:atp_MainFile))
+	    let file = readfile(atplib#FullPath(b:atp_MainFile))
+	else
+	    let s:document_class = ""
+	endif
+	for fline in file
+	    if fline =~# '^\([^%]\|\\%\)*\\documentclass\>'
+		break
+	    endif
+	endfor
+	let s:document_class = matchstr(fline, '\\documentclass\[.*\]{\s*\zs[^}]*\ze\s*}')
+    catch /E\(484\|121\):/
+	if !exists("s:document_class")
+	    let s:document_class = ""
+	endif
+    endtry
+    if s:document_class == "beamer"
+	let saved_pos = getpos(".")
+	if getline(line(".")) =~ '^\([^%]\|\\%\)*\\end\s*{\s*frame\s*}' 
+	    call cursor(line(".")-1, len(getline(line("."))))
+	endif
+	keepjumps call searchpair('^\([^%]\|\\%\)*\\begin\s*{\s*frame\s*}', '', '^\([^%]\|\\%\)*\\end\s*{\s*frame\s*}', 'cbW', '',
+		    \ search('^\([^%]\|\\%\)*\\begin\s*{\s*frame\s*}', 'bnW'))
+	let limit 	= search('^\([^%]\|\\%\)*\\end\s*{\s*frame\s*}', 'nW')
+	let pos	= [ line("."), col(".") ]
+	keepjumps call search('^\([^%]\|\\%\)*\frametitle\>\zs{', 'W', limit)
+	if pos != getpos(".")[1:2]
+	    let a 	= @a
+	    if mode() ==# 'n'
+		" We can't use this normal mode command in visual mode.
+		keepjumps normal! "ayi}
+		let title	= substitute(@a, '\_s\+', ' ', 'g')
+		let @a 	= a
+	    else
+		let title	= matchstr(getline(line(".")), '\\frametitle\s*{\s*\zs[^}]*\ze\(}\|$\)')
+		let title	= substitute(title, '\s\+', ' ', 'g')
+		let title	= substitute(title, '\s\+$', '', 'g')
+		if getline(line(".")) =~ '\\frametitle\s*{[^}]*$'
+		    let title 	.= " ".matchstr(getline(line(".")+1), '\s*\zs[^}]*\ze\(}\|$\)')
+		endif
+	    endif
+	    call winrestview(winsavedview)
+	    return substitute(strpart(title,0,b:atp_TruncateStatusSection/2), '\_s*$', '','')
+	else
+	    call cursor(saved_pos[1:2])
+	    return ""
+	endif
+    endif
+
+    let names		= atplib#motion#ctoc()
+    let chapter_name	= get(names, 0, '')
+    let section_name	= get(names, 1, '')
+    let subsection_name	= get(names, 2, '')
+    let g:names = names
+
+
+    if chapter_name == "" && section_name == "" && subsection_name == ""
+
+	return ""
+	
+    elseif chapter_name != ""
+	if section_name != ""
+	    return substitute(strpart(chapter_name,0,b:atp_TruncateStatusSection/2), '\_s*$', '','') . "/" . substitute(strpart(section_name,0,b:atp_TruncateStatusSection/2), '\_s*$', '','')
+	else
+	    return substitute(strpart(chapter_name,0,b:atp_TruncateStatusSection), '\_s*$', '','')
+	endif
+    elseif chapter_name == "" && section_name != ""
+	if subsection_name != ""
+	    return substitute(strpart(section_name,0,b:atp_TruncateStatusSection/2), '\_s*$', '','') . "/" . substitute(strpart(subsection_name,0,b:atp_TruncateStatusSection/2), '\_s*$', '','')
+	else
+	    return substitute(strpart(section_name,0,b:atp_TruncateStatusSection), '\_s*$', '','')
+	endif
+    elseif chapter_name == "" && section_name == "" && subsection_name != ""
+	return substitute(strpart(subsection_name,0,b:atp_TruncateStatusSection), '\_s*$', '','')
+    endif
+endf "}}}1
+
 "Make g:atp_TempDir, where log files are stored.
 function! atplib#TempDir() "{{{1
     " Return temporary directory, unique for each user.
 if has("python")
 python << END
-import vim, tempfile, os
+import vim
+import tempfile
+import os
+
 USER=os.getenv("USER")
 tmp=tempfile.mkdtemp(suffix="", prefix="atp_")
 vim.command("let g:atp_TempDir='"+tmp+"'")
@@ -149,23 +350,39 @@ else
     call mkdir(g:atp_TempDir, "p", 0700)
 endif
 endfunction
-"}}}1
-" Outdir: append to '/' to b:atp_OutDir if it is not present. 
-function! atplib#outdir() "{{{1
-    if has("win16") || has("win32") || has("win64") || has("win95")
-	if b:atp_OutDir !~ "\/$"
-	    let b:atp_OutDir=b:atp_OutDir . "\\"
-	endif
-    else
-	if b:atp_OutDir !~ "\/$"
-	    let b:atp_OutDir=b:atp_OutDir . "/"
-	endif
+fun! atplib#joinpath(path1, path2) " {{{1
+    if has("python")
+python << EOF
+import vim
+import os.path
+import json
+path = os.path.join(vim.eval('a:path1'), vim.eval('a:path2'))
+vim.command('let path = %s' % json.dumps(path))
+EOF
+    return path
     endif
-    return b:atp_OutDir
-endfunction
-"}}}1
-" Return {path} relative to {rel}, if not under {rel} return {path}
+
+    if has('win16') || has('win32') || has('win64') || has('win95')
+	let sep = '\'
+    else
+	let sep = '/'
+    endif
+    let idx = match(a:path1, '\/\s*$')
+    if idx != -1
+	let path1 = a:path1[:(idx-1)]
+    else
+	let path1 = a:path1
+    endif
+    let idx = len(matchstr(a:path2, '\s*\/'))
+    if idx != 0
+	let path2 = a:path2[(idx):]
+    else
+	let path2 = a:path2
+    endif
+    return path1.sep.path2
+endfun
 function! atplib#RelativePath(path, rel) "{{{1
+    " Return {path} relative to {rel}, if not under {rel} return {path}
     let current_dir 	= getcwd()
     exe "lcd " . fnameescape(a:rel)
     let rel_path	= fnamemodify(a:path, ':.')
@@ -173,8 +390,8 @@ function! atplib#RelativePath(path, rel) "{{{1
     return rel_path
 endfunction
 "}}}1
-" Return fullpath
 function! atplib#FullPath(file_name) "{{{1
+    " Return fullpath
     let cwd = getcwd()
     if a:file_name == fnamemodify(fnamemodify(a:file_name, ":t"), ":p") 
 	" if a:file_name is already a full path
@@ -213,10 +430,10 @@ function! atplib#FullPath(file_name) "{{{1
 		" this will show not the right place:
 		if stridx(project_dir, 'fugitive:') == 0
 		    return a:file_name
-		else
-		    echohl ErrorMsg
-		    echomsg "E344: in atplib#FullPath(): b:atp_ProjectDir=".project_dir." from buffer ".bufname." does not exist."
-		    echohl Normal
+		" else
+		    " echohl ErrorMsg
+		    " echomsg "E344: in atplib#FullPath(): b:atp_ProjectDir=".project_dir." does not exist"
+		    " echohl Normal
 		endif
 		let file_path = fnamemodify(a:file_name, ":p")
 	    endtry
@@ -301,7 +518,6 @@ endfunction "}}}
 
 " IMap Functions:
 " {{{
-" These maps extend ideas from TeX_9 plugin:
 " With a:1 = "!" (bang) remove texMathZoneT (tikzpicture from MathZones).
 function! atplib#IsInMath(...)
     let line		= a:0 >= 2 ? a:2 : line(".")
@@ -341,7 +557,7 @@ function! atplib#DelMaps(maps)
 	endtry
     endfor
 endfunction
-" From TeX_nine plugin:
+" From TeX_9 plugin:
 function! atplib#IsLeft(lchar,...)
     let nr = ( a:0 >= 1 ? a:1 : 0 )
     let left = getline('.')[col('.')-2-nr]
@@ -351,7 +567,6 @@ function! atplib#IsLeft(lchar,...)
 	return 0
     endif
 endfunction
-" try
 function! atplib#ToggleIMaps(var, augroup, ...)
     if exists("s:isinmath") && 
 		\ ( atplib#IsInMath() == s:isinmath ) &&
@@ -360,7 +575,9 @@ function! atplib#ToggleIMaps(var, augroup, ...)
 	return
     endif
 
-    call SetMathVimOptions()
+    if a:augroup == 'CursorMovedI'
+	call SetMathVimOptions('CursorMovedI')
+    endif
 
     if atplib#IsInMath() 
 	call atplib#MakeMaps(a:var, a:augroup)
@@ -372,8 +589,7 @@ function! atplib#ToggleIMaps(var, augroup, ...)
     endif
     let s:isinmath = atplib#IsInMath() 
 endfunction
-" catch E127
-" endtry "}}}
+"}}}
 
 " Toggle on/off Completion 
 " {{{1 atplib#OnOffComp
@@ -408,12 +624,12 @@ function! atplib#ServerListOfFiles()
 	if exists("main_file")
 	    unlet main_file
 	endif
-	let main_file 	= getbufvar(nr, "atp_MainFile")
-	let log_file	= ( expand("%:e") =~# '^_\?log$' )
+	let main_file = getbufvar(nr, "atp_MainFile")
+	let log_file = ( expand("%:e") =~# '^_\?log$' )
 	if exists("files")
 	    unlet files
 	endif
-	let files 	= getbufvar(nr, "ListOfFiles")
+	let files = getbufvar(nr, "ListOfFiles")
 	if string(main_file) != "" && !log_file
 	    call add(file_list, main_file)
 	endif
@@ -425,6 +641,22 @@ function! atplib#ServerListOfFiles()
     redir end
     return file_list
 endfunction
+fun! atplib#PyLog(file, message,...)
+if !has("python")
+    return
+endif
+let mode = a:0 ? a:1 : 'a'
+python << EOF
+import vim
+fname = vim.eval('a:file')
+message = vim.eval('a:message')
+mode = vim.eval('mode')
+if not message.endswith('\n'):
+    message += '\n'
+with open(fname, mode) as fo:
+    fo.write(message)
+EOF
+endfun
 function! atplib#FindAndOpen(file, output_file, line, ...)
     let col		= ( a:0 >= 1 && a:1 > 0 ? a:1 : 1 )
     let file		= ( fnamemodify(simplify(a:file), ":e") == "tex" ? simplify(a:file) : fnamemodify(simplify(a:file), ":p:r") . ".tex" )
@@ -434,24 +666,48 @@ function! atplib#FindAndOpen(file, output_file, line, ...)
     let server_list	= split(serverlist(), "\n")
     exe "redir! > /tmp/FindAndOpen.log"
     if len(server_list) == 0
-	return 1
+	" No server is hosting the file
+	exe "edit ".fnameescape(a:file)
+	call cursor(a:line, col)
+	redraw
+	redir END
+	return 0
     endif
     let open		= "buffer"
     let use_server	= ""
     let use_servers	= []
+    let server_filedict = {}
     for server in server_list
 	let file_list=split(remote_expr(server, 'atplib#ServerListOfFiles()'), "\n")
+        let server_filedict[server]=file_list
 	" Note: atplib#ServerListOfFiles returns all the files loaded by the
 	" server plus all corresponding values of b:ListOfFiles
 	let cond_1 = (index(file_list, file) != "-1")
 	let cond_2 = (index(file_list, file_t) != "-1")
 	if cond_1
-	    let use_server	= server
+	    let use_server = server
 	    break
 	elseif cond_2
 	    call add(use_servers, server)
 	endif
     endfor
+    if use_server == ""
+        " If b:ListOfFiles was not defined, the previous for would not return
+        " a server, run again, but now looking for the main file.
+        for server in keys(server_filedict)
+            let file_list=aserver_filedict[server]
+            " Note: atplib#ServerListOfFiles returns all the files loaded by the
+            " server plus all corresponding values of b:ListOfFiles
+            let cond_1 = (index(file_list, main_file) != "-1")
+            let cond_2 = (index(file_list, main_file_t) != "-1")
+            if cond_1
+                let use_server = server
+                break
+            elseif cond_2
+                call add(use_servers, server)
+            endif
+        endfor
+    endif
     " If we could not find file name with full path in server list use the
     " first server where is fnamemodify(file, ":t"). 
     if use_server == ""
@@ -504,7 +760,15 @@ function! atplib#FindAndOpen(file, output_file, line, ...)
 	    " Set the ' mark (jump list), cursor position and redraw:
 	    call remote_send(use_server, "<Esc>:call cursor(".a:line.",".col.")<CR>:redraw<CR>")
 	endif
+    else
+	" No server is hosting the file
+	exe "edit ".fnameescape(a:file)
+	call cursor(a:line, col)
+	redraw
+	redir END
+	return v:servername
     endif
+    redir END
     return use_server
 endfunction
 "}}}1
@@ -587,24 +851,25 @@ endfunction
 " directory. The last argument if equal to 1, then look also
 " under g:texmf.
 function! atplib#ReadInputFile(ifile,check_texmf)
-
-    let l:input_file = []
+    let input_file = []
 
     " read the buffer or read file if the buffer is not listed.
     if buflisted(fnamemodify(a:ifile,":t"))
-	let l:input_file=getbufline(fnamemodify(a:ifile,":t"),1,'$')
+	let input_file=getbufline(fnamemodify(a:ifile,":t"),1,'$')
     " if the ifile is given with a path it should be tried to read from there
     elseif filereadable(a:ifile)
-	let l:input_file=readfile(a:ifile)
+	let input_file=readfile(a:ifile)
+    elseif filereadable(atplib#joinpath(expand(b:atp_ProjectDir), fnamemodify(a:ifile,":t")))
+	let input_file=readfile(atplib#joinpath(expand(b:atp_ProjectDir), fnamemodify(a:ifile,":t")))
     " if not then try to read it from b:atp_OutDir
-    elseif filereadable(b:atp_OutDir . fnamemodify(a:ifile,":t"))
-	let l:input_file=readfile(filereadable(b:atp_OutDir . fnamemodify(a:ifile,":t")))
+    elseif filereadable(atplib#joinpath(expand(b:atp_OutDir), fnamemodify(a:ifile,":t")))
+	let input_file=readfile(atplib#joinpath(expand(b:atp_OutDir), fnamemodify(a:ifile,":t")))
     " the last chance is to look for it in the g:texmf directory
     elseif a:check_texmf && filereadable(findfile(a:ifile,g:texmf . '**'))
-	let l:input_file=readfile(findfile(a:ifile,g:texmf . '**'))
+	let input_file=readfile(findfile(a:ifile,g:texmf . '**'))
     endif
 
-    return l:input_file
+    return input_file
 endfunction
 "}}}1
 
@@ -680,6 +945,22 @@ fun! atplib#append_ext(fname, ext)
 endfun
 " }}}1
 
+fu! atplib#VimToPyPattern(pattern) " {{{1
+    " \( -> ( and ( -> \(, 
+    " \) -> ) and ) -> \),
+    let pattern = substitute(a:pattern, '[()]', "\\\\&", "g")
+    let pattern = substitute(pattern, '\\\@<!\\\\\((\|)\||\)', '\1', "g")
+
+    " \| -> | and | -> \|
+    let pattern = substitute(pattern, '|', '\\|', 'g') 
+    let pattern = substitute(pattern, '\\\\|', '|', 'g')
+
+    " ( ... \& ... ) -> ( 
+    " See ":help /zero-width"
+
+    return pattern
+endfu
+
 " List Functions:
 " atplib#Extend {{{1
 " arguments are the same as for extend(), but it adds only the entries which
@@ -708,8 +989,13 @@ endfunction
 function! atplib#TexKeyword() " {{{
     let isk = &isk
     let &isk = g:atp_iskeyword
-    let word = expand("<cword>")
+    let line = getline(line("."))
+    let beg = matchstr(line[:(col(".")-1)], '\\\k*$')
+    if empty(beg)
+	let beg = matchstr(line[:(col(".")-1)], '\k*$')
+    endif
+    let end = matchstr(line[col("."):], '^\k*')
     let &isk = isk
-    return word
+    return beg.end
 endfunction " }}}
 " vim:fdm=marker:ff=unix:noet:ts=8:sw=4:fdc=1

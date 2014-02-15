@@ -52,9 +52,9 @@ def check_bracket_frompos(text, o_bra, c_bra, pos):
     if DEBUG:
         print("  >> count_open =  %d" % count_open)
     while idx < length:
-        if text[idx:idx+len(o_bra)] == o_bra:
+        if text[idx:idx+len(o_bra)] == o_bra and (idx == 0 or text[idx-1] != "\\"):
             count_open +=1
-        if text[idx:idx+len(c_bra)] == c_bra:
+        if text[idx:idx+len(c_bra)] == c_bra and (idx == 0 or text[idx-1] != "\\"):
             count_close +=1
         # if DEBUG:
             # print("  >> (%d,%s) (%d,%d)" % (idx, text[idx], count_open, count_close))
@@ -97,20 +97,21 @@ def check_bracket(text, line, col, bracket_dict):
         c_cond = False
         if not found_closed:
             for (O_BRA, C_BRA) in bracket_dict.items():
-                if text[x:x+len(O_BRA)] == O_BRA:
+                (o_bra, c_bra) = (O_BRA, C_BRA)
+                if text[x:x+len(O_BRA)] == O_BRA and (x == 0 or text[x-1] != "\\"):
                     o_cond = True
                     if DEBUG:
                         lpos = line_pos(text, x)
                         print("-- o_cond: %d, (%d, %d), %s" % (x, lpos[0], lpos[1], O_BRA))
                     break
-                elif text[x:x+len(C_BRA)] == C_BRA:
+                elif text[x:x+len(C_BRA)] == C_BRA and (x == 0 or text[x-1] != "\\"):
                     c_cond = True
                     break
         else:
-            if text[x:x+len(O_BRA)] == O_BRA:
+            if text[x:x+len(O_BRA)] == O_BRA and (x == 0 or text[x-1] != "\\"):
                 o_cond = True
             for (o_bra, c_bra) in bracket_dict.items():
-                if text[x:x+len(c_bra)] == c_bra:
+                if text[x:x+len(c_bra)] == c_bra and (x == 0 or text[x-1] != "\\"):
                     c_cond = True
                     break
 
@@ -156,13 +157,13 @@ def check_bracket(text, line, col, bracket_dict):
                 """
                 x -= 1
                 t = beg[x]
-                if text[x:x+len(O_BRA)] == O_BRA:
+                if text[x:x+len(o_bra)] == o_bra:
                     if backslash :
                         if x-1 and text[x-1] == "\\":
                             count_open += 1
                     else:
                         count_open += 1
-                if text[x:x+len(C_BRA)] == C_BRA:
+                if text[x:x+len(c_bra)] == c_bra:
                     if backslash :
                         if x-1 and text[x-1] == "\\":
                             count_closed += 1
@@ -173,7 +174,7 @@ def check_bracket(text, line, col, bracket_dict):
                     return (-1, -1, O_BRA)
 
             if DEBUG:
-                print("Skipping `%s:%s` (%d:%s,%d,%s)." % (O_BRA, C_BRA, s_x, text[s_x], x, text[x]))
+                print("Skipping `%s:%s` (%d,%s,%d,%s)." % (O_BRA, C_BRA, s_x, text[s_x], x, text[x]))
     return (-1, -1, '')
 
 if __name__ == "__main__":
@@ -271,7 +272,34 @@ X
 X
 )"""
 
+    test_10=u"""(
+ {    }  (
+X
+)
+"""
 
+    test_11=u"""\\(
+( )
+X
+
+"""
+
+    test_12=u"""( \\(
+  (  ) \\)
+X
+"""
+
+    test_13=u"""( \\(
+  (  )
+X
+\\)
+"""
+
+    test_14=u"""\\(
+  (
+X
+)
+"""
 
     real_test_1="""Now let us give a construction of a generalised quotient of
 \(\mathcal{U}(\mathfrak{g})\). Let \(\pi:\mathfrak{g}\eir\mathfrak{h}\) be
@@ -417,7 +445,7 @@ subalgebras and closed generalised quotients to crossed products.
 ( X
 \section{Preliminaries}\label{subsec:basics}"""
 
-    bracket_dict = {'[': ']', '(': ')', '{': '}', '\\lceil': '\\rceil', '\\begin': '\\end', '\\lfloor': '\\rfloor', '\\langle': '\\rangle'}
+    bracket_dict = {'[': ']', '(': ')', '{': '}', '\\(': '\\)', '\\[': '\\]', '\\{': '\\}', '\\lceil': '\\rceil', '\\begin': '\\end', '\\lfloor': '\\rfloor', '\\langle': '\\rangle'}
     # bracket_dict = {'[': ']', '(': ')', '{': '}', '\\lceil': '\\rceil', '\\begin': '\\end', '\\lfloor': '\\rfloor'}
     # bracket_dict = {'[': ']', '(': ')', '{': '}'}
     # bracket_dict = {'(': ')'}
@@ -441,35 +469,35 @@ subalgebras and closed generalised quotients to crossed products.
     test = check_bracket(test_1, 2, 0, bracket_dict)
     print(test)
     if test != (-1, -1, ''):
-        raise AssertionError('test 1: FAILED')
+        raise AssertionError('test 1: FAILED: (%s,%s)' % test[:2])
 
     print("\n"+"-"*10)
     print("test_2:")
     test = check_bracket(test_2, 2, 0, bracket_dict)
     print(test)
     if test != (1, 0, '('):
-        raise AssertionError('test 2: FAILED')
+        raise AssertionError('test 2: FAILED: (%s,%s)' % test[:2])
 
     print("\n"+"-"*10)
     print("test_3:")
     test = check_bracket(test_3, 3, 0, bracket_dict)
     print(test)
     if test != (2, 0, '('):
-        raise AssertionError('test 3: FAILED')
+        raise AssertionError('test 3: FAILED: (%s,%s)' % test[:2])
 
     print("\n"+"-"*10)
     print("test_4:")
     test = check_bracket(test_4, 3, 0, bracket_dict)
     print(test)
     if test != (-1, -1, ''):
-        raise AssertionError('test 4: FAILED')
+        raise AssertionError('test 4: FAILED: (%s,%s)' % test[:2])
 
     print("\n"+"-"*10)
     print("test_5:")
     test = check_bracket(test_5, 3, 10, bracket_dict)
     print(test)
     if test != (2, 0, '('):
-        raise AssertionError('test 5: FAILED')
+        raise AssertionError('test 5: FAILED: (%s,%s)' % test[:2])
 
     print("\n"+"-"*10)
     print("test_6:")
@@ -483,21 +511,56 @@ subalgebras and closed generalised quotients to crossed products.
     test = check_bracket(test_7, 7, 0, bracket_dict)
     print(test)
     if test != (0, 0, '('):
-        raise AssertionError('test 7: FAILED')
+        raise AssertionError('test 7: FAILED: (%s,%s)' % test[:2])
 
     print("\n"+"-"*10)
     print("test_8:")
     test = check_bracket(test_8, 2, 0, bracket_dict)
     print(test)
     if test[:2] != (-1, -1):
-        raise AssertionError('test 8: FAILED')
+        raise AssertionError('test 8: FAILED: (%s,%s)' % test[:2])
 
     print("\n"+"-"*10)
     print("test_9:")
     test = check_bracket(test_9, 2, 0, bracket_dict)
     print(test)
     if test[:2] != (-1, -1):
-        raise AssertionError('test 9: FAILED')
+        raise AssertionError('test 9: FAILED: (%s,%s)' % test[:2])
+
+    print("\n"+"-"*10)
+    print("test_10:")
+    test = check_bracket(test_10, 2, 0, bracket_dict)
+    print(test)
+    if test[:2] != (1, 9):
+        raise AssertionError('test 10: FAILED: (%s,%s)' % test[:2])
+
+    print("\n"+"-"*10)
+    print("test_11:")
+    test = check_bracket(test_11, 2, 0, bracket_dict)
+    print(test)
+    if test[:2] != (0, 0):
+        raise AssertionError('test 11: FAILED: (%s,%s)' % test[:2])
+
+    print("\n"+"-"*10)
+    print("test_12:")
+    test = check_bracket(test_12, 2, 0, bracket_dict)
+    print(test)
+    if test[:2] != (0, 0):
+        raise AssertionError('test 12: FAILED: (%s,%s)' % test[:2])
+
+    print("\n"+"-"*10)
+    print("test_13:")
+    test = check_bracket(test_13, 2, 0, bracket_dict)
+    print(test)
+    if test[:2] != (-1, -1):
+        raise AssertionError('test 13: FAILED: (%s,%s)' % test[:2])
+
+    print("\n"+"-"*10)
+    print("test_14:")
+    test = check_bracket(test_14, 2, 0, bracket_dict)
+    print(test)
+    if test[:2] != (-1, -1):
+        raise AssertionError('test 14: FAILED: (%s,%s)' % test[:2])
 
     print("\n"+"-"*10)
     print("real_test_1:")
@@ -515,7 +578,7 @@ subalgebras and closed generalised quotients to crossed products.
     test = check_bracket(real_test_2, 30, 10, bracket_dict)
     print(test)
     if test[:2] != (-1, -1):
-        raise AssertionError('real_test_2: FAILED')
+        raise AssertionError('real_test_2: FAILED: (%s,%s)' % test[:2])
 
     print("\n"+"-"*10)
     spos = byte_pos(real_test_3, 30, 10)
@@ -524,7 +587,7 @@ subalgebras and closed generalised quotients to crossed products.
     test = check_bracket(real_test_3, 30, 10, bracket_dict)
     print(test)
     if test[:2] != (30, 0):
-        raise AssertionError('real_test_3: FAILED')
+        raise AssertionError('real_test_3: FAILED: (%s,%s)' % test[:2])
 
     if True:
         # speed test

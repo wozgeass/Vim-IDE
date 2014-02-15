@@ -2,7 +2,7 @@
 " Description: 	This file contains all the options and functions for completion.
 " Note:		This file is a part of Automatic Tex Plugin for Vim.
 " Language:	tex
-" Last Change: Mon Sep 03, 2012 at 19:01:07  +0100
+" Last Change: Mon Feb 04, 2013 at 11:41:25  +0000
 
 " Todo: biblatex.sty (recursive search for commands contains strange command \i}.
 
@@ -28,7 +28,7 @@ let g:atp_completion_modes=[
 	    \ 'page numberings',	'abbreviations',
 	    \ 'package options', 	'documentclass options',
 	    \ 'package options values', 'environment options',
-	    \ 'command values'
+	    \ 'command values',		'command optional values'
 	    \ ]
 lockvar 2 g:atp_completion_modes
 catch /E741:/
@@ -65,13 +65,13 @@ endif
 	let g:atp_Environments=['array', 'abstract', 'center', 'corollary', 
 		\ 'definition', 'document', 'description', 'displaymath',
 		\ 'enumerate', 'example', 'eqnarray', 
-		\ 'flushright', 'flushleft', 'figure', 'frontmatter', 
+		\ 'flushright', 'flushleft', 'figure', 'frame', 'frontmatter', 
 		\ 'keywords', 
 		\ 'itemize', 'lemma', 'list', 'letter', 'notation', 'minipage', 
 		\ 'proof', 'proposition', 'picture', 'theorem', 'tikzpicture',  
 		\ 'tabular', 'table', 'tabbing', 'thebibliography', 'titlepage',
 		\ 'quotation', 'quote',
-		\ 'remark', 'verbatim', 'verse', 'frame' ]
+		\ 'remark', 'verbatim', 'verse' ]
 
 	let g:atp_amsmath_environments=['align', 'alignat', 'equation', 'gather',
 		\ 'multline', 'split', 'substack', 'flalign', 'smallmatrix', 'subeqations',
@@ -88,7 +88,7 @@ endif
 		    \ 'corollary' 	: 'cor',	'enumerate' 	: 'enum',
 		    \ 'example' 	: 'ex',		'itemize' 	: 'it',
 		    \ 'item'		: 'itm',	'algorithmic'	: 'alg',
-		    \ 'algorithm'	: 'alg',
+		    \ 'algorithm'	: 'alg',	'note'		: 'note',
 		    \ 'remark' 		: 'rem',	'notation' 	: 'not',
 		    \ 'center' 		: '', 		'flushright' 	: '',
 		    \ 'flushleft' 	: '', 		'quotation' 	: 'quot',
@@ -105,7 +105,8 @@ endif
 		    \ 'part'		: 'prt',	'chapter' 	: 'chap',
 		    \ 'section' 	: 'sec',	'subsection' 	: 'ssec',
 		    \ 'subsubsection' 	: 'sssec', 	'paragraph' 	: 'par',
-		    \ 'subparagraph' 	: 'spar',	'subequations'	: 'eq' }
+		    \ 'subparagraph' 	: 'spar',	'subequations'	: 'eq',
+		    \ }
 
 	" ToDo: Doc.
 	" Usage: \label{l:shorn_env_name . g:atp_separator
@@ -164,7 +165,7 @@ endif
 	\ "\\maketitle",
 	\ "\\marginpar", "\\indent", "\\par", "\\sloppy", "\\pagebreak", "\\nopagebreak",
 	\ "\\newpage", "\\newline", "\\newtheorem{", "\\linebreak", "\\line", "\\linespread{",
-	\ "\\hyphenation{", "\\fussy", "\\eject",
+	\ "\\listoftables", "\\hyphenation{", "\\fussy", "\\eject",
 	\ "\\enlagrethispage{", "\\centerline{", "\\centering", "\\clearpage", "\\cleardoublepage",
 	\ "\\encodingdefault", 
 	\ "\\caption{", "\\chapter", 
@@ -200,6 +201,13 @@ endif
 	\ "\\linepenalty", "\\outputpenalty", "\\penalty", "\\postdisplaypenalty", "\\predisplaypenalty", 
 	\ "\\repenalty", "\\unpenalty", "\\everymath", "\\DeclareMathSizes{",
 	\ "\\abovedisplayskip", "\\belowdisplayskip", "\\abovedisplayshortskip", "\\belowdisplayshortskip", ]
+
+	let g:atp_TexCommands = [
+		    \ '\begingroup', '\endgroup', '\bgroup', '\egroup', '\let', '\center',
+		    \ '\flushleft', '\endflushleft', '\flushright', '\endflushright',
+		    \ '\def', '\edef'
+		    \ ]
+	call extend(g:atp_Commands, g:atp_TexCommands)
 	
 	let g:atp_picture_commands=[ "\\put", "\\circle", "\\dashbox", "\\frame{", 
 		    \"\\framebox(", "\\line(", "\\linethickness{",
@@ -258,7 +266,7 @@ endif
 	\ "\\langle", "\\rangle", "\\Diamond", "\\lgroup", "\\rgroup", "\\propto", "\\Join", "\\div", 
 	\ "\\land", "\\star", "\\uplus", "\\leadsto", "\\rbrack", "\\lbrack", "\\mho", 
 	\ "\\diamondsuit", "\\heartsuit", "\\clubsuit", "\\spadesuit", "\\top", "\\ell", 
-	\ "\\imath", "\\jmath", "\\wp", "\\Im", "\\Re", "\\prime", "\\ll", "\\gg", "\\Nabla", ]
+	\ "\\imath", "\\jmath", "\\wp", "\\Im", "\\Re", "\\prime", "\\ll", "\\gg", "\\Nabla",]
 
 	let g:atp_math_commands_PRE=[  
 		    \ "\\diagdown", "\\diagup", 
@@ -520,22 +528,26 @@ if get(self, a:package_name, {}) == {}
 endif
 " a:1 = [ 'options', 'commands' ] (list of things to scan if
 " a:1 = [ 'options!' ] then make scan even if the value exists.
-let modes = ( !a:0 ? [ 'options', 'commands' ] : a:1 )
+let modes = ( !a:0 ? [ 'options', 'commands', 'environments' ] : a:1 )
 " a:2 == 1 : recursive search (\RequirePackage, \input)
 let recursive = ( a:0 < 2 ? 0 : a:1 )
-let modes_dict = {'options' : 0, 'commands' : 0}
+let modes_dict = {'options' : 0, 'commands' : 0, 'environments': 0}
 for mode in modes
     let m = matchstr(mode, '\w*\ze!\?')
     let modes_dict[m]= get(self[a:package_name], m, ['@']) == ['@'] || ( mode != m )
 endfor
-if modes_dict['options'] == 0 && modes_dict['commands'] == 0
+if modes_dict['options'] == 0 && modes_dict['commands'] == 0 && modes_dict['environments'] == 0
     return self
 endif
 if !has("python")
     return {'options' : []}
 endif
 python << EOF
-import vim, re, subprocess, os.path
+import vim
+import re
+import subprocess
+import os.path
+
 package = vim.eval("a:package_name")
 
 # Pattern to find declared options:
@@ -557,7 +569,7 @@ option_pat = re.compile('\\\\(?:KOMA@|X)?Declare(?:Void|Local|(?:Bi)?Bool(?:ean)
 # /usr/local/texlive/2011/texmf-dist/tex/latex/koma-script/scrbook.cls
 
 # Pattern to find command name without the leading '\':
-command_pat = re.compile('(?:^\s*\\\\e\?def|\\\\(?:newcommand|Declare(?:Document|Uni|(?:Multi)?Cite|Page|Url|Robust|Text(?:Font|Composite)?|OldFont|)Command(?:Default)?\*?))\s*(?:{\\\\([^}]*)|\\\\([^#\[{]*))', re.MULTILINE)
+command_pat = re.compile(r'(?:^\s*\\e?def|\\(?:newcommand|Declare(?:Document|Uni|(?:Multi)?Cite|Page|Url|Robust|Text(?:Font|Composite)?|OldFont|)Command(?:Default)?\*?))\s*(?:{\\([^}]*)|\\([^#\[{]*))', re.MULTILINE)
 # only accept \def and \edef statements at the begining of a line. This excludes internal variables (inside groups: {...}).
 
 # How to work with this :
@@ -578,6 +590,7 @@ command_pat = re.compile('(?:^\s*\\\\e\?def|\\\\(?:newcommand|Declare(?:Document
 # /usr/local/texlive/2011/texmf-dist/tex/latex/index/index.sty
 # it is \RequirePackage by /usr/local/texlive/2011/texmf-dist/tex/latex/index/bibref.sty
 # it uses \def to define commands.
+environment_pat = re.compile(r'^\s*\\newenvironment\s*{\s*([^}]*)\s*}', re.MULTILINE)
 
 def remove_duplicates(seq, idfun=None):
     # found at http://www.peterbe.com/plog/uniqifiers-benchmark
@@ -602,18 +615,24 @@ def Kpsewhich(package):
         return ''
 
 
-def ScanPackage(package, o=True, c=True):
+def ScanPackage(package, o=True, c=True, e=True):
 
     options = []
     commands = []
+    environments = []
 
     package_file = Kpsewhich(package)
     # check the variable: @classoptionslist
     if package_file != '':
         vim.command("let path='%s'" % str(package_file))
-        package_fo = open(package_file, 'r')
-        package_f  = package_fo.read()
-        package_fo.close()
+        if package_file[-1] in ['\n', '\r']:
+            package_file = package_file[:-1]
+	try:
+            with open(package_file, 'r') as fo:
+		package_f  = fo.read()
+        except IOError as err:
+            vim.command('echom "[ATP:] (%r) error: [%s]"' % (package_file,err))
+            package_f = ""
         if o:
             # We can cut the package_f variable at \ProcessOptions:
             o_match = re.match('((?:.|\n)*)\\\\ProcessOptions', package_f)
@@ -628,22 +647,26 @@ def ScanPackage(package, o=True, c=True):
                 option_list = [item for item in option_list if re.match('(?:\w|\d|-|_|\*)+$',item)]
                 options+=option_list
         if c:
-            vim.command("echomsg '[ATP]: processing commands from "+package+"'")
+            vim.command("echomsg '[ATP]: processing commands from %s'" % package)
             matches = re.findall(command_pat, package_f)
             for match in matches:
                 for m in match:
-                    if not re.search('@', m) and not re.search('\\\\', m) and \
-			not re.match('Declare\w*(?:Command|Option)', m) and m != '':
+                    if (not '@' in m and not '\\' in m and
+			not re.match('Declare\w*(?:Command|Option)', m) and m != ''):
                         commands.append(re.match('(\S*)', m).group(1))
-    return [options, remove_duplicates(commands)]
+	if e:
+            vim.command("echomsg '[ATP]: processing environments from %s'" % package)
+            matches = re.findall(environment_pat, package_f)
+            for match in matches:
+                environments.append(match)
+    return [options, remove_duplicates(commands), remove_duplicates(environments)]
 
-require_package_pat = re.compile('\\\\RequirePackage\s*{([^}]*)}')
+require_package_pat = re.compile(r'\\RequirePackage\s*{([^}]*)}')
 def RequiredPackage(package):
     #scan package for input files
     package_file = Kpsewhich(package)
-    package_fo = open(package_file, 'r!')
-    package_f = package_fo.read()
-    package_fo.close()
+    with open(package_file, 'r') as fo:
+        package_f = fo.read()
     matches = re.findall(require_package_pat, package_f)
     input_files = []
     for match in matches:
@@ -656,7 +679,8 @@ def RequiredPackage(package):
 
 # List of all commands: 
 re_commands=[]
-# dictionary { package_name : commands }:
+re_environments=[]
+# dictionary { package_name : (commands, environments) }:
 recursive_dict = {}
 # do not scan files twice:
 did_files=[]
@@ -668,11 +692,15 @@ def RecursiveSearch(package):
     global did_files
     i_files = RequiredPackage(Kpsewhich(package))
     did_files.append(package)
-    re_commands_add = ScanPackage(package, o=False, c=True)[1]
-    recursive_dict[package]=remove_duplicates(re_commands_add)
+    re_commands_add, re_environments_add = ScanPackage(package, o=False, c=True, e=True)[1:]
+    recursive_dict[package]=(remove_duplicates(re_commands_add),
+                            remove_duplicates(re_environments_add))
     for c in re_commands_add:
 	if not c in re_commands:
             re_commands.append(c)
+    for e in re_environments_add:
+        if not e in re_environments:
+            re_environments.append(e)
     for p in i_files:
 	if not p in did_files:
             RecursiveSearch(p)
@@ -681,22 +709,25 @@ def RecursiveSearch(package):
 if vim.eval("recursive") == '0':
     o = ( str(vim.eval("modes_dict['options']")) == '1' )
     c = ( str(vim.eval("modes_dict['commands']")) == '1' )
-    [options, commands]=ScanPackage(package, o, c)
+    e = ( str(vim.eval("modes_dict['environments']")) == '1')
+    [options, commands, environments]=ScanPackage(package, o, c, e)
 else:
     RecursiveSearch(package)
     import json
     vim.command("let recursive_dict="+json.dmup(recursive_dict))
     commands = re_commands
+    environments = re_environments
     # print("re_commands="+str(re_commands))
     o = ( str(vim.eval("modes_dict['options']")) == '1' )
     if o:
-        options=ScanPackage(package, o, c=False)[0]
+        options=ScanPackage(package, o, c=False, e=False)[0]
     else:
         options=[]
 
 
 vim.command("let options = "+str(options))
 vim.command("let commands= "+str(commands))
+vim.command("let environments= "+str(environments))
 EOF
 if exists('path')
     let self[a:package_name]['path'] = path
@@ -706,6 +737,9 @@ if exists('options') && modes_dict['options']
 endif
 if exists('commands') && modes_dict['commands']
     let self[a:package_name]['commands']=map(commands, "'\\'.v:val")
+endif
+if exists('environments') && modes_dict['environments']
+    let self[a:package_name]['environments']=environments
 endif
 if exists('recursive_dict')
     call map(recursive_dict, 'map(v:val, "''\\''.v:val")')
@@ -718,4 +752,44 @@ if exists('recursive_dict')
 endif
 return self
 endfunction "}}}1
+
+if exists('##CompleteDone')
+    fun! ATPCompleteDone()
+	if !exists('g:atp_completion_method')
+	    return
+	endif
+	if g:atp_completion_method == 'package'
+	    let package = matchstr(getline(line('.')), '[^,{]*$')
+	    let package = matchstr(package, '\s*\zs.*\ze\s*')
+	    if index(g:atp_LatexPackages, package) != -1 && index(g:atp_packages, package) == -1
+		echom '[ATP:] '.package.' added to g:atp_packages.'
+		call add(g:atp_packages, package)
+	    endif
+	endif
+    endfun
+
+    augroup ATP_CompeletDone
+	au!
+	au CompleteDone * call ATPCompleteDone()
+    augroup END
+endif
+
+function! <SID>ReadPackageFiles() " {{{1
+    " Read Package/Documentclass Files
+    " This is run by an autocommand group ATP_Packages which is after ATP_LocalCommands
+    " b:atp_LocalColors are used in some package files.
+    let time=reltime()
+    let package_files = split(globpath(&rtp, "ftplugin/ATP_files/packages/*"), "\n")
+    let g:atp_packages = map(copy(package_files), 'fnamemodify(v:val, ":t:r")')
+    for file in package_files
+	" We cannot restrict here to not source some files - because the completion
+	" variables might be needed later. I need to find another way of using this files
+	" as additional scripts running syntax ... commands for example only if the
+	" packages are defined.
+	execute "source ".file
+    endfor
+    let g:source_time_package_files=reltimestr(reltime(time))
+endfunction
+call <SID>ReadPackageFiles()
+
 " vim:fdm=marker:tw=85:ff=unix:noet:ts=8:sw=4:fdc=1

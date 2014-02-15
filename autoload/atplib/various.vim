@@ -2,7 +2,7 @@
 " Descriptiion:	These are various editting tools used in ATP.
 " Note:	       This file is a part of Automatic Tex Plugin for Vim.
 " Language:    tex
-" Last Change: Sun Sep 16, 2012 at 11:13:59  +0100
+" Last Change: Sun Jan 27, 2013 at 11:38:49  +0000
 
 let s:sourced 	= exists("s:sourced") ? 1 : 0
 
@@ -11,7 +11,17 @@ let s:sourced 	= exists("s:sourced") ? 1 : 0
 function! atplib#various#WrapSelection(...)
 
     let wrapper		= ( a:0 >= 1 ? a:1 : '{' )
-    let end_wrapper 	= ( a:0 >= 2 ? a:2 : '}' )
+    if a:0 >= 2
+	let end_wrapper = a:2
+    else
+	let wrapper_dict = { '(' : ')', '[' : ']', '{' : '}', '<' : '>' }
+	if len(wrapper) >= 2 && wrapper[len(wrapper)-2] == '\' && has_key(wrapper_dict, wrapper[len(wrapper)-1])
+	    let end_wrapper = '\' . get(wrapper_dict, wrapper[len(wrapper)-1], '}')
+	else
+	    let end_wrapper = get(wrapper_dict, wrapper[len(wrapper)-1], '}')
+	endif
+    endif
+
     if a:0 >=6 && a:6 || a:0 <= 5
 	if a:0 <= 5 || a:6 == 1 
 	    let s:lastwrapper_begin	= [ wrapper, wrapper ]
@@ -218,7 +228,7 @@ function! atplib#various#WrapSelection_compl(ArgLead, CmdLine, CursorPos)
 " 	    call add(variables, "g:atp_tikz_commands")
 " 	endif
 "     endif
-    if atplib#search#DocumentClass(b:atp_MainFile) == "beamer"
+    if atplib#search#DocumentClass(atplib#FullPath(b:atp_MainFile)) == "beamer"
 	call add(variables, "g:atp_package_beamer_commands")
     endif
     if atplib#search#SearchPackage("mathtools")
@@ -288,7 +298,7 @@ function! atplib#various#WrapEnvironment(...)
 	    call search('\\end{'.env_name.'}', 'e')
 	endif
     else
-	let envs=sort(filter(EnvCompletion("","",""), "v:val !~ '\*$' && v:val != 'thebibliography'"))
+	let envs=sort(filter(atplib#various#EnvCompletion("","",""), "v:val !~ '\*$' && v:val != 'thebibliography'"))
 	" adjust the list - it is too long.
 	let envs_a=copy(envs)
 	call map(envs_a, "index(envs_a, v:val)+1.'. '.v:val")
@@ -372,12 +382,12 @@ endfunction "}}}
 " Inteligent Aling
 " TexAlign {{{
 " This needs Aling vim plugin.
-function! atplib#various#TexAlign(bang)
+function! atplib#various#TexAlign(bang, s_line, e_line)
     let save_pos = getpos(".")
     let winsaveview = winsaveview()
     let synstack = map(synstack(line("."), col(".")), 'synIDattr( v:val, "name")')
 
-    let barray=searchpair('\\begin\s*{\s*array\s*}', '', '\\end\s*{\s*array\s*}', 'bnW', '',max([1,line('.')-500]))
+    let barray=searchpair('\\begin\s*{\s*\%(array\|split\)\s*}', '', '\\end\s*{\s*\%(array\|split\)\s*}', 'bnW', '',max([1,line('.')-500]))
     let bsmallmatrix=searchpair('\\begin\s*{\s*smallmatrix\s*}', '', '\\end\s*{\s*smallmatrix\s*}', 'bnW', '',max([1,line('.')-500]))
 "     let [bmatrix, bmatrix_col]=searchpairpos('\\matrix\s*\%(\[[^]]*\]\s*\)\=\zs{', '', '}', 'bnW', '', max([1, (line(".")-g:atp_completion_limits[2])]))
     let [bmatrix, bmatrix_col]=searchpos('^\%([^%]\|\\%\)*\\matrix\s*\%(\[[^]]*\]\s*\)\=\zs{', 'bW', max([1, (line(".")-g:atp_completion_limits[2])]))
@@ -394,9 +404,9 @@ function! atplib#various#TexAlign(bang)
 	let AlignSep = '&\|\\pgfmatrixnextcell'
 	let env = "matrix"
     elseif barray
-	let bpat = '\\begin\s*{\s*array\s*}'
+	let bpat = '\\begin\s*{\s*\%(array\|split\)\s*}'
 	let bline = barray+1
-	let epat = '\\end\s*{\s*array\s*}'
+	let epat = '\\end\s*{\s*\%(array\|split\)\s*}'
 	let AlignCtr = 'l+'
 	let AlignSep = '&'
 	let env = "array"
@@ -466,21 +476,26 @@ function! atplib#various#TexAlign(bang)
 	return
     endif
 
-    if !exists("bline")
-	let bline = search(bpat, 'cnb') + 1
-    endif
-    if env != "matrix"
-	let eline = searchpair(bpat, '', epat, 'cn')  - 1
+    if a:s_line == a:e_line
+	if !exists("bline")
+	    let bline = search(bpat, 'cnb') + 1
+	endif
+	if env != "matrix"
+	    let eline = searchpair(bpat, '', epat, 'cn')  - 1
+	else
+	    let saved_pos = getpos(".")
+	    call cursor(bmatrix, bmatrix_col)
+	    let eline = searchpair('{', '', '}', 'n')  - 1
+	    call cursor(saved_pos[1], saved_pos[2])
+	endif
     else
-	let saved_pos = getpos(".")
-	call cursor(bmatrix, bmatrix_col)
-	let eline = searchpair('{', '', '}', 'n')  - 1
-	call cursor(saved_pos[1], saved_pos[2])
+	let bline = a:s_line
+	let eline = a:e_line
     endif
 
-    if a:bang == "!" && eline-1 > bline
+    if a:bang == "!" && eline-1 > bline && a:s_line == a:e_line
 	" Join lines (g:atp_TexAlign_join_lines)
-	execute 'keepjumps silent! '.(bline).','.(eline-1).'g/\%(\\\\\s*\%(\[[^\]]*\]\|\\hline\|\\hrule\)*\s*\|\\intertext.*\)\@<!\n/s/\n//'
+	execute 'keepjumps silent! '.(bline).','.(eline-1).'g/\%(\\\\\s*\%(\[[^\]]*\]\|\\hline\|\\\w\+rule\)*\s*\|\\intertext.*\)\@<!\n/s/\n//'
 	call histdel("search", -1)
 	let @/ = histget("search", -1)
 	if env != "matrix"
@@ -499,6 +514,7 @@ function! atplib#various#TexAlign(bang)
 	    call Align#AlignCtrl('v '.AlignCtrV)
 	endif
 	execute bline . ',' . eline . 'Align ' .AlignSep
+	let g:cmd = bline . ',' . eline . 'Align ' .AlignSep
 	if exists("AlignCtrV")
 	    AlignCtrl v
 	endif
@@ -793,7 +809,14 @@ function! atplib#various#F_compl(ArgLead, CmdLine, CursorPos) "{{{
 	let env_list=atplib#Extend(env_list, g:atp_amsmath_environments)
     endif
     call filter(env_list+['math'], "v:val !~ '\*$'")
-    return join(env_list, "\n")
+    let env_listcpy = copy(env_list)
+    call filter(env_list, 'v:val =~ ''^''.a:ArgLead')
+    if !empty(env_list)
+	return env_list
+    else
+	call filter(env_listcpy, 'v:val =~ a:ArgLead')
+	return env_listcpy
+    endif
 endfunction "}}}
 " TexDoc commanand and its completion
 " {{{ TexDoc 
@@ -801,11 +824,11 @@ endfunction "}}}
 " But it simulates it with a nice command completion (Ctrl-D, <Tab>)
 " based on alias files for texdoc.
 function! atplib#various#TexDoc(...)
-    let texdoc_arg	= ""
-    for i in range(1,a:0)
-	let texdoc_arg.=" " . a:{i}
-    endfor
+    let texdoc_arg = join(a:000)
     if texdoc_arg == ""
+	if !exists("g:atp_TeXdocDefault")
+	    let g:atp_TeXdocDefault = '-I lshort'
+	endif
 	let texdoc_arg 	= g:atp_TeXdocDefault
     endif
     " If the file is a text file texdoc is 'cat'-ing it into the terminal,
@@ -848,7 +871,6 @@ endfunction
 function! atplib#various#Delete(delete_output)
 
     let atp_MainFile	= atplib#FullPath(b:atp_MainFile)
-    call atplib#outdir()
 
     let atp_tex_extensions=deepcopy(g:atp_tex_extensions)
 
@@ -865,7 +887,7 @@ function! atplib#various#Delete(delete_output)
     " Be sure that we are not deleting outputs:
     for ext in atp_tex_extensions
 	if ext != "pdf" && ext != "dvi" && ext != "ps"
-	    let files=split(globpath(fnamemodify(atp_MainFile, ":h"), "*.".ext), "\n")
+	    let files=split(globpath(expand(b:atp_OutDir), "*.".ext), "\n")
 	    if files != []
 		echo "Removing *.".ext
 		for f in files
@@ -874,7 +896,7 @@ function! atplib#various#Delete(delete_output)
 	    endif
 	else
 	    " Delete output file (pdf|dvi|ps) (though ps is not supported by ATP).
-	    let f=fnamemodify(atplib#FullPath(b:atp_MainFile), ":r").".".ext
+	    let f=fnamemodify(atplib#joinpath(expand(b:atp_OutDir), fnamemodify(b:atp_MainFile, ":t:r").".".ext), ":p")
 	    echo "Removing ".f
 	    call delete(f)
 	endif
@@ -1190,15 +1212,6 @@ if &buftype == 'quickfix'
 	setlocal modifiable
 	setlocal autoread
 endif	
-function! atplib#various#TexLog(...)
-    if executable("texloganalyser")
-       let cmd="texloganalyser ".( a:0 ? a:1 : "")." ".shellescape(fnamemodify(atplib#FullPath(b:atp_MainFile),":r").".log")
-       echo system(cmd)
-    else	
-       echo "Please install 'texloganalyser' to have this functionality. The perl program written by Thomas van Oudenhove."  
-    endif
-endfunction
-
 function! atplib#various#PdfFonts()
     if executable("pdffonts")
 	echo system("pdffonts " . fnameescape(fnamemodify(atplib#FullPath(b:atp_MainFile),":r")) . ".pdf")
@@ -1228,8 +1241,6 @@ endfunction
 " 				the variable g:printingoptions)
  function! atplib#various#SshPrint(...)
 
-    call atplib#outdir()
-
     " set the extension of the file to print
     " if prining the tex output file.
     if a:0 == 0 || a:0 >= 1 && a:1 == ""
@@ -1250,7 +1261,7 @@ endfunction
     endif
 
     " set the file to print
-    let pfile		= ( a:0 == 0 || (a:0 >= 1 && a:1 == "" ) ? b:atp_OutDir . fnamemodify(expand("%"),":t:r") . ext : a:1 )
+    let pfile		= ( a:0 == 0 || (a:0 >= 1 && a:1 == "" ) ? atplib#joinpath(expand(b:atp_OutDir), expand("%:t:r") . ext) : a:1 )
 
     " set the printing command
     if a:0 >= 2
@@ -1283,8 +1294,6 @@ endfunction
 endfunction
 
 function! atplib#various#Lpr(...)
-    call atplib#outdir()
-
     " set the extension of the file to print
     " if prining the tex output file.
     if a:0 == 0 || a:0 >= 1 && a:1 == ""
@@ -1305,7 +1314,7 @@ function! atplib#various#Lpr(...)
     endif
 
     " set the file to print
-    let pfile		= ( a:0 == 0 || (a:0 >= 1 && a:1 == "" ) ? b:atp_OutDir . fnamemodify(expand("%"),":t:r") . ext : a:1 )
+    let pfile		= ( a:0 == 0 || (a:0 >= 1 && a:1 == "" ) ? atplib#joinpath(expand(b:atp_OutDir), expand("%:t:r") . ext) : a:1 )
     
     " set the printing command
     if a:0 >= 1
@@ -1444,6 +1453,9 @@ EOF
 	endif
     else
 	" Reload all functions and variables, 
+	if exists("b:did_ftplugin")
+	    unlet b:did_ftplugin
+	endif
 	let tex_atp_file = split(globpath(&rtp, 'ftplugin/tex_atp.vim'), "\n")[0]
 	execute "source " . tex_atp_file
 
@@ -1489,17 +1501,27 @@ function! atplib#various#Preamble(...)
 
 	    exe "keepalt edit " . b:atp_MainFile 
 	endif
-	if !return_preamble
-	    exe "1," . (linenr-1) . "print"
-	else
-	    let preamble = getbufline(bufnr("%"), 1, linenr-1)
-	endif
+	let preamble = getbufline(bufnr("%"), 1, linenr-1)
 	if exists("cfile")
 	    exe "keepalt edit " . cfile
 	endif
 	call winrestview(winview)
 	if return_preamble
 	    return preamble
+	else
+	    if exists('*ViewPort')
+		let projectVarDict 	= SaveProjectVariables()
+		exe 'split '.fnameescape(b:atp_MainFile)
+		call ViewPort('edit', 1, linenr-1)
+		call RestoreProjectVariables(projectVarDict)
+	    else
+		exe 'split +set\ buftype=nofile\ bufhidden=delete [scratch:\ preamble]'
+		setl syntax=tex
+		setl ma noro
+		call append(0, preamble)
+		normal ddgg
+		setl ma! ro!
+	    endif
 	endif
     else	
 	echomsg "[ATP:] not found \begin{document}."
@@ -1566,14 +1588,10 @@ function! atplib#various#GetAMSRef(what, bibfile)
 	let begin = min(linenumbers)
 	let end	= max(linenumbers)
 
-	let bufnr = bufnr(atpbib_WgetOutputFile)
-	" To use getbufline() buffer must be loaded. It is enough to use :buffer
-	" command because vimgrep loads buffer and then unloads it. 
-	execute "buffer " . bufnr
-	let bibdata = getbufline(bufnr, begin, end)
-	execute "bdelete " . bufnr 
+	let bibdata = readfile(atpbib_WgetOutputFile, '', end)[(begin-1):]
 	let type = matchstr(bibdata[0], '@\%(article\|book\%(let\)\=\|conference\|inbook\|incollection\|\%(in\)\=proceedings\|manual\|masterthesis\|misc\|phdthesis\|techreport\|unpublished\)\ze\s*\%("\|{\|(\)')
         " Suggest Key:
+	redraw!
 	let bibkey = input("Provide a key (Enter for the AMS bibkey): ")
 	if !empty(bibkey)
 	    let bibdata[0] = type . '{' . bibkey . ','
@@ -1712,13 +1730,13 @@ function! atplib#various#Dictionary(word)
     for line in entry_list
 	if i == 0
 	    echoh Title
-	elseif line =~ '\[see also:'
+	elseif line =~ '^\%(\d*\s*\)\?\['
 	    echohl WarningMsg
 	else
 	    let line=substitute(line, '^\s*', '', '')
 	endif
 	echo line
-	if line =~ '\[see also:' || i == 0
+	if line =~  '^\%(\d*\s*\)\?\[' || i == 0
 	    echohl None
 	endif
 	let i+=1
@@ -2491,7 +2509,9 @@ endfunction "}}}
 "{{{ atplib#various#GetTimeStamp
 function! atplib#various#GetTimeStamp(file)
 python << END
-import vim, tarfile, re
+import vim
+import tarfile
+import re
 
 file_name	=vim.eval('a:file')
 tar_file	=tarfile.open(file_name, 'r:gz')
@@ -2518,7 +2538,9 @@ endfunction "}}}
 "{{{ atplib#various#Tar
 function! atplib#various#Tar(file, path)
 python << END
-import tarfile, vim
+import tarfile
+import vim
+
 file_n=vim.eval("a:file")
 path=vim.eval("a:path")
 file_o=tarfile.open(file_n, "r:gz")
@@ -2591,7 +2613,14 @@ endfunction
 function! atplib#various#FormatLines()
     " This function is not using winsaveview() since this might change the
     " cursor position in the text.
+    let cb = &clipboard
+    let s = getpos("'<")
+    let e = getpos("'>")
+    set clipboard-=autoselect
     normal m`vipgq``
+    call setpos("'<", s)
+    call setpos("'>", e)
+    let &clipboard=cb
 endfunction
 " }}}
 " vim:fdm=marker:tw=85:ff=unix:noet:ts=8:sw=4:fdc=1

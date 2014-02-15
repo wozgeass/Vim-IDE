@@ -22,8 +22,6 @@ function! atplib#compiler#ViewOutput(bang,tex_file,xpdf_server,...)
 
     let fwd_search	= ( a:bang == "!" ? 1 : 0 )
 
-    call atplib#outdir()
-
     " Set the correct output extension (if nothing matches set the default '.pdf')
     let ext		= get(g:atp_CompilersDict, matchstr(b:atp_TexCompiler, '^\s*\zs\S\+\ze'), ".pdf") 
 
@@ -33,10 +31,10 @@ function! atplib#compiler#ViewOutput(bang,tex_file,xpdf_server,...)
 
     " Follow the symbolic link
     let link=resolve(tex_file)
-    if link != ""
-	let outfile	= fnamemodify(link,":r") . ext
+    if link != tex_file
+	let outfile	= fnamemodify(link, ":r") . ext
     else
-	let outfile	= fnamemodify(tex_file,":r"). ext 
+	let outfile	= atplib#joinpath(expand(b:atp_OutDir), fnamemodify(a:tex_file, ':t:r') . ext)
     endif
 
     if b:atp_Viewer == "xpdf"	
@@ -51,22 +49,32 @@ function! atplib#compiler#ViewOutput(bang,tex_file,xpdf_server,...)
 	let g:local_options  = local_options
 	let g:viewer         = viewer
 	let g:outfile	     = outfile
+	let g:tex_file = a:tex_file
     endif
-    let view_cmd	= viewer." ".global_options." ".local_options." ".shellescape(outfile)." &"
+    let view_cmd	= viewer." ".global_options." ".local_options." ".shellescape(outfile)
+    if !(has('win16') || has('win32') || has('win64') || has('win95'))
+	let view_cmd.=' &'
+    endif
+
+
 
     if g:atp_debugV
 	let g:view_cmd	= view_cmd
     endif
 
     if filereadable(outfile)
-	if b:atp_Viewer == "xpdf"
-	    call system(view_cmd)
+	if !(has('win16') || has('win32') || has('win64') || has('win95'))
+	    if b:atp_Viewer == "xpdf"
+		call system(view_cmd)
+	    else
+		call system(view_cmd)
+		redraw!
+	    endif
 	else
-	    call system(view_cmd)
-	    redraw!
+	    silent exe '!start '.view_cmd
 	endif
     else
-	echomsg "[ATP:] output file do not exists. Calling " . b:atp_TexCompiler
+	echomsg "[ATP:] output file does not exist. Calling " . b:atp_TexCompiler
 	if fwd_search
 	    if g:atp_Compiler == 'python'
 		call atplib#compiler#PythonCompiler( 0, 2, 1, 'silent' , "AU" , tex_file, "")
@@ -94,7 +102,7 @@ function! atplib#compiler#ViewOutput(bang,tex_file,xpdf_server,...)
 	endwhile
 	exe "sleep ".g:atp_OpenAndSyncSleepTime
 	if i<=max
-	    call atplib#compiler#SyncTex("", 0, a:tex_file, a:xpdf_server)
+	    call atplib#compiler#SyncTex("", 0, fnamemodify(a:tex_file, ':t'), a:xpdf_server)
 	else
 	    echohl WarningMsg
 	    echomsg "[SyncTex:] viewer is not running"
@@ -107,21 +115,22 @@ endfunction
 " {{{ atplib#compiler#GetSyncData
 function! atplib#compiler#GetSyncData(line, col, file)
 
-    let g:file = a:file
-     	if !filereadable(fnamemodify(atplib#FullPath(a:file), ":r").'.synctex.gz') 
+     	if !filereadable(atplib#joinpath(expand(b:atp_OutDir), fnamemodify(a:file, ":t:r").'.synctex.gz'))
 	    redraw!
-	    let cmd=b:atp_TexCompiler." ".join(split(b:atp_TexOptions, ','), " ")." ".shellescape(atplib#FullPath(a:file))
+	    " We use "system(cmd)" rather than ATP :Tex command, since we
+	    " don't want to background.
+	    let cmd=b:atp_TexCompiler." -output-directory=".shellescape(expand(b:atp_OutDir))." ".join(split(b:atp_TexOptions, ','), " ")." ".shellescape(atplib#FullPath(a:file))
 	    if b:atp_TexOptions !~ '\%(-synctex\s*=\s*1\|-src-specials\>\)'
 		echomsg "[SyncTex:] b:atp_TexOptions does not contain -synctex=1 or -src-specials switches!"
 		return
 	    else
 		echomsg "[SyncTex:] calling ".get(g:CompilerMsg_Dict, b:atp_TexCompiler, b:atp_TexCompiler)." to generate synctex data. Wait a moment..."
 	    endif
- 	    call system(cmd) 
+	    call system(cmd)
  	endif
 	" Note: synctex view -i line:col:tex_file -o output_file
 	" tex_file must be full path.
-	let synctex_cmd="synctex view -i ".a:line.":".a:col.":'".expand("%:p"). "' -o '".fnamemodify(atplib#FullPath(a:file), ":r").".pdf'"
+	let synctex_cmd="synctex view -i ".a:line.":".a:col.":'".expand("%:p")."' -o '".atplib#joinpath(expand(b:atp_OutDir), fnamemodify(a:file,":r").".pdf'")
 
 	" SyncTex is fragile for the file name: if it is file name or full path, it
 	" must agree literally with what is written in .synctex.gz file
@@ -210,7 +219,7 @@ function! atplib#compiler#SyncTex(bang, mouse, main_file, xpdf_server, ...)
     let [ line, col ] 	= [ line("."), col(".") ]
     let main_file	= atplib#FullPath(a:main_file)
     let ext		= get(g:atp_CompilersDict, matchstr(b:atp_TexCompiler, '^\s*\zs\S\+\ze'), ".pdf")
-    let output_file	= fnamemodify(main_file,":r") . ext
+    let output_file	= atplib#joinpath(expand(b:atp_OutDir), fnamemodify(main_file,":t:r") . ext)
     if !filereadable(output_file) && output_check
 	" Here should be a test if viewer is running, this can be made with python.
 	" this is way viewer starts not well when using :SyncTex command while Viewer
@@ -225,22 +234,14 @@ function! atplib#compiler#SyncTex(bang, mouse, main_file, xpdf_server, ...)
        echohl None
        return 2
     endif
-    let main_file         = atplib#FullPath(a:main_file)
-    let ext		  = get(g:atp_CompilersDict, matchstr(b:atp_TexCompiler, '^\s*\zs\S\+\ze'), ".pdf")
-    let link=resolve(main_file)
-    if link != ""
-        let outfile     = fnamemodify(link,":r") . ext
-    else
-        let outfile     = fnamemodify(main_file,":r"). ext 
-    endif
 
     if IsRunning_check
-	if (!atplib#compiler#IsRunning(b:atp_Viewer, atplib#FullPath(outfile), a:xpdf_server) && output_check) 
+	if (!atplib#compiler#IsRunning(b:atp_Viewer, output_file, a:xpdf_server) && output_check) 
 	    "Note: I should test here if Xpdf is not holding a file (it might be not
 	    "visible through cmdline arguments -> this happens if file is opened in
 	    "another server. We can use: xpdf -remote a:xpdf_server "run('echo %f')"
 	    echohl WarningMsg
-	    echomsg "[SyncTex:] please open the file first. (if file is opend add bang \"!\")"
+	    echomsg "[SyncTex:] please open the file (".output_file.") first. (if the file is opened use the bang \"!\")"
 	    echohl None
 	    return
 	endif
@@ -259,10 +260,11 @@ function! atplib#compiler#SyncTex(bang, mouse, main_file, xpdf_server, ...)
 	    call system(sync_cmd)
 	    call atplib#compiler#SyncShow(page_nr, y_coord)
 	endif
-    elseif b:atp_Viewer == "evince"
+    elseif b:atp_Viewer == "okular"
 	let [ page_nr, y_coord, x_coord ] = atplib#compiler#GetSyncData(line, col, a:main_file)
-	" This will not work in project files. (so where it is mostly needed.) 
-	let sync_cmd = "okular --unique ".shellescape(fnamemodify(main_file, ":p:r").".pdf")."\\#src:".line.shellescape(expand("%:p"))." &"
+	let outpath = atplib#joinpath(b:atp_OutDir,fnamemodify(main_file, ":t:r").".pdf")
+	let sync_cmd = "okular --unique ".shellescape(output_file)
+		    \."\\#src:".line.shellescape(expand("%:p"))." &"
 	if !dryrun
 	    call system(sync_cmd)
 	    call atplib#compiler#SyncShow(page_nr, y_coord)
@@ -517,7 +519,11 @@ function! atplib#compiler#IsRunning(program, file, ...)
 
 let s:return_is_running=0
 python << EOF
-import vim, psutil, os, pwd
+import vim
+import psutil
+import os
+import pwd
+import re
 from psutil import NoSuchProcess
 x=0
 program =vim.eval("a:program")
@@ -580,6 +586,10 @@ endfunction
 " Function Arguments:
 function! atplib#compiler#MakeLatex(bang, mode, start)
 
+    if fnamemodify(&l:errorfile, ":p") != atplib#joinpath(expand(b:atp_OutDir),fnamemodify(b:atp_MainFile, ":t:r").".".(g:atp_ParseLog ? "_" : "")."log")
+	exe "setl errorfile=".atplib#joinpath(expand(b:atp_OutDir),fnamemodify(b:atp_MainFile, ":t:r").".".(g:atp_ParseLog ? "_" : "")."log")
+    endif
+
     if a:mode =~# '^s\%[ilent]$'
 	let mode = 'silent'
     elseif a:mode =~# '^d\%[ebug]$'
@@ -618,7 +628,7 @@ function! atplib#compiler#MakeLatex(bang, mode, start)
 		\ " --cmd ".b:atp_TexCompiler.
 		\ " --bibcmd ".b:atp_BibCompiler.
 		\ " --bibliographies ".shellescape(bibliographies).
-		\ " --outdir ".shellescape(b:atp_OutDir).
+		\ " --outdir ".shellescape(expand(b:atp_OutDir)).
 		\ " --keep ". shellescape(join(g:atp_keep, ',')).
 		\ " --tex-options ".tex_options.
 		\ " --servername ".v:servername.
@@ -627,6 +637,7 @@ function! atplib#compiler#MakeLatex(bang, mode, start)
 		\ " --viewer-options ".shellescape(viewer_options).
 		\ " --progname ".v:progname.
 		\ " --logdir ".shellescape(g:atp_TempDir).
+		\ " --tempdir ".shellescape(b:atp_TempDir).
 		\ (g:atp_callback ? "" : " --no-callback ").
 		\ (t:atp_DebugMode=='verbose'||mode=='verbose'?' --env ""': " --env ".shellescape(b:atp_TexCompilerVariable)).
 		\ reload_viewer . reload_on_error
@@ -655,8 +666,8 @@ endfunction
 function! atplib#compiler#PythonCompiler(bibtex, start, runs, verbose, command, filename, bang, ...)
     " a:1	= b:atp_XpdfServer (default value)
 
-    if fnamemodify(&l:errorfile, ":p") != fnamemodify(a:filename, ":p:r").".".(g:atp_ParseLog ? "_" : "")."log"
-	exe "setl errorfile=".fnameescape(fnamemodify(a:filename, ":p:r").".".(g:atp_ParseLog ? "_" : "")."log")
+    if fnamemodify(&l:errorfile, ":p") != atplib#joinpath(expand(b:atp_OutDir),fnamemodify(a:filename, ":t:r").".".(g:atp_ParseLog ? "_" : "")."log")
+	exe "setl errorfile=".fnameescape(atplib#joinpath(expand(b:atp_OutDir),fnamemodify(a:filename, ":t:r").".".(g:atp_ParseLog ? "_" : "")."log"))
     endif
 
     " Kill comiple.py scripts if there are too many of them.
@@ -769,6 +780,7 @@ function! atplib#compiler#PythonCompiler(bibtex, start, runs, verbose, command, 
     let cmd=g:atp_Python." ".g:atp_PythonCompilerPath." --command ".b:atp_TexCompiler
 		\ ." --tex-options ".shellescape(tex_options)
 		\ ." --tempdir ".shellescape(b:atp_TempDir)
+		\ ." --output-dir ".shellescape(expand(b:atp_OutDir))
 		\ ." --verbose ".a:verbose
 		\ ." --file ".shellescape(atplib#FullPath(a:filename))
 		\ ." --bufnr ".bufnr("%")
@@ -813,8 +825,9 @@ function! atplib#compiler#PythonCompiler(bibtex, start, runs, verbose, command, 
 	exe ":!".cmd
     elseif g:atp_debugPythonCompiler && has("unix") 
 	call system(cmd." 2".g:atp_TempDir."/PythonCompiler.log &")
-    elseif has("win16") || has("win32") || has("win64")
-	call system(cmd)
+    elseif has("win16") || has("win32") || has("win64") || has("win95")
+	" call system(cmd)
+	silent exe '!start '.cmd
     else
 	call system(cmd." &")
     endif
@@ -836,7 +849,11 @@ function! atplib#compiler#LocalCompiler(mode, runs, ...)
 	" if subfiles package is used.
 	" compilation is done in the current directory.
 python << ENDPYTHON
-import vim, os, os.path, shutil, re
+import vim
+import os
+import os.path
+import shutil
+import re
 
 file = vim.eval("file")
 basename = os.path.splitext(file)[0]
@@ -855,7 +872,7 @@ if os.path.exists(basename+".aux"):
         main_aux_file.close()
     else:
         main_aux = []
-# There is no sens of comparing main_aux and local_aux!
+    # There is no sens of comparing main_aux and local_aux!
     pattern = re.compile('^\\\\newlabel.*$', re.M)
     local_labels = re.findall(pattern, "".join(local_aux))
     def get_labels(line):
@@ -867,12 +884,6 @@ if os.path.exists(basename+".aux"):
         match = re.search('^\\\\newlabel\s*{'+re.escape(label)+'}.*', "\n".join(main_aux), re.M)
         if not match:
             main_aux.append(local_labels_dict[label]+"\n")
-#     elif match.group(0) != local_labels_dict[label]:
-#         print("A "+match.group(0))
-#         print("A "+local_labels_dict[label])
-#         print("\n".join(main_aux))
-#         main_aux.remove(match.group(0))
-#         main_aux.append(local_labels_dict[label])
     main_aux_file  = open(mainfile_base+".aux", "w")
     main_aux_file.write("".join(main_aux))
     main_aux_file.close()
@@ -908,8 +919,8 @@ endfunction
 function! atplib#compiler#Compiler(bibtex, start, runs, verbose, command, filename, bang, ...)
 	" a:1	= b:atp_XpdfServer (default value)
 	let XpdfServer = ( a:0 >= 1 ? a:1 : b:atp_XpdfServer )
-	if fnamemodify(&l:errorfile, ":p") != fnamemodify(a:filename, ":p:r").".".(g:atp_ParseLog ? "_" : "")."log"
-	    exe "setl errorfile=".fnamemodify(a:filename, ":p:r").".".(g:atp_ParseLog ? "_" : "")."log"
+	if fnamemodify(&l:errorfile, ":p") != atplib#joinpath(expand(b:atp_OutDir),fnamemodify(a:filename, ":t:r").".".(g:atp_ParseLog ? "_" : "")."log")
+	    exe "setl errorfile=".atplib#joinpath(fnameescape(expand(b:atp_OutDir),fnamemodify(a:filenamt, ":t:r").".".(g:atp_ParseLog ? "_" : "")."log"))
 	endif
     
 	" Set biber setting on the fly
@@ -932,7 +943,6 @@ function! atplib#compiler#Compiler(bibtex, start, runs, verbose, command, filena
 	if has('clientserver') && !empty(v:servername) && g:atp_callback && a:verbose != 'verbose'
 	    let b:atp_running+=1
 	endif
-	call atplib#outdir()
     	" IF b:atp_TexCompiler is not compatible with the viewer
 	" ToDo: (move this in a better place). (luatex can produce both pdf and dvi
 	" files according to options so this is not the right approach.) 
@@ -986,22 +996,22 @@ function! atplib#compiler#Compiler(bibtex, start, runs, verbose, command, filena
 	endif
 
 	" finally, set the output file names. 
-	let outfile 	= b:atp_OutDir . fnamemodify(basename,":t:r") . ext
-	let outaux  	= b:atp_OutDir . fnamemodify(basename,":t:r") . ".aux"
-	let outbbl  	= b:atp_OutDir . fnamemodify(basename,":t:r") . ".bbl"
+	let outfile 	= atplib#joinpath(expand(b:atp_OutDir), fnamemodify(basename,":t:r") . ext)
+	let outaux  	= atplib#joinpath(expand(b:atp_OutDir), fnamemodify(basename,":t:r") . ".aux")
+	let outbbl  	= atplib#joinpath(expand(b:atp_OutDir), fnamemodify(basename,":t:r") . ".bbl")
 	let tmpaux  	= fnamemodify(tmpfile, ":r") . ".aux"
 	let tmpbbl  	= fnamemodify(tmpfile, ":r") . ".bbl"
 	let tmptex  	= fnamemodify(tmpfile, ":r") . ".tex"
-	let outlog  	= b:atp_OutDir . fnamemodify(basename,":t:r") . ".log"
-	let syncgzfile 	= b:atp_OutDir . fnamemodify(basename,":t:r") . ".synctex.gz"
-	let syncfile 	= b:atp_OutDir . fnamemodify(basename,":t:r") . ".synctex"
+	let outlog  	= atplib#joinpath(expand(b:atp_OutDir), fnamemodify(basename,":t:r") . ".log")
+	let syncgzfile 	= atplib#joinpath(expand(b:atp_OutDir), fnamemodify(basename,":t:r") . ".synctex.gz")
+	let syncfile 	= atplib#joinpath(expand(b:atp_OutDir), fnamemodify(basename,":t:r") . ".synctex")
 
 "	COPY IMPORTANT FILES TO TEMP DIRECTORY WITH CORRECT NAME 
 "	except log and aux files.
 	let list	= copy(g:atp_keep)
 	call filter(list, 'v:val != "log"')
 	for i in list
-	    let ftc	= b:atp_OutDir . fnamemodify(basename,":t:r") . "." . i
+	    let ftc	= atplib#joinpath(expand(b:atp_OutDir), fnamemodify(basename,":t:r") . "." . i)
 	    if filereadable(ftc)
 		call atplib#compiler#copy(ftc,tmpfile . "." . i)
 	    endif
@@ -1115,7 +1125,7 @@ function! atplib#compiler#Compiler(bibtex, start, runs, verbose, command, filena
 	" copy output file (.pdf\|.ps\|.dvi)
 " 	let cpoptions	= "--remove-destination"
 	let cpoptions	= ""
-	let cpoutfile	= g:atp_cpcmd." ".cpoptions." ".shellescape(atplib#append(tmpdir,"/"))."*".ext." ".shellescape(atplib#append(b:atp_OutDir,"/"))." ; "
+	let cpoutfile	= g:atp_cpcmd." ".cpoptions." ".shellescape(atplib#append(tmpdir,"/"))."*".ext." ".shellescape(atplib#append(expand(b:atp_OutDir),"/"))." ; "
 
 	if a:start
 	    let command	= "(" . texcomp . " ; (" . catchstatus_cmd . " " . cpoutfile . " " . Reload_Viewer . " ) || ( ". catchstatus_cmd . " " . cpoutfile . ") ; " 
@@ -1125,15 +1135,15 @@ function! atplib#compiler#Compiler(bibtex, start, runs, verbose, command, filena
 	    " 	server for other viewers it simply doesn't copy the out file.
 	    if b:atp_ReloadOnError || a:bang == "!"
 		if a:bang == "!"
-		    let command="( ".texcomp." ; ".catchstatus_cmd." ".g:atp_cpcmd." ".cpoptions." ".shellescape(tmpaux)." ".shellescape(b:atp_OutDir)." ; ".cpoutfile." ".Reload_Viewer 
+		    let command="( ".texcomp." ; ".catchstatus_cmd." ".g:atp_cpcmd." ".cpoptions." ".shellescape(tmpaux)." ".shellescape(expand(b:atp_OutDir))." ; ".cpoutfile." ".Reload_Viewer 
 		else
-		    let command="( (".texcomp." && ".g:atp_cpcmd." ".cpoptions." ".shellescape(tmpaux)." ".shellescape(b:atp_OutDir)." ) ; ".catchstatus_cmd." ".cpoutfile." ".Reload_Viewer 
+		    let command="( (".texcomp." && ".g:atp_cpcmd." ".cpoptions." ".shellescape(tmpaux)." ".shellescape(expand(b:atp_OutDir))." ) ; ".catchstatus_cmd." ".cpoutfile." ".Reload_Viewer 
 		endif
 	    else
 		if b:atp_Viewer =~ '\<xpdf\>'
-		    let command="( ".texcomp." && (".catchstatus_cmd.cpoutfile." ".Reload_Viewer." ".g:atp_cpcmd." ".cpoptions." ".shellescape(tmpaux)." ".shellescape(b:atp_OutDir)." ) || (".catchstatus_cmd." ".cpoutfile.") ; " 
+		    let command="( ".texcomp." && (".catchstatus_cmd.cpoutfile." ".Reload_Viewer." ".g:atp_cpcmd." ".cpoptions." ".shellescape(tmpaux)." ".shellescape(expand(b:atp_OutDir))." ) || (".catchstatus_cmd." ".cpoutfile.") ; " 
 		else
-		    let command="(".texcomp." && (".catchstatus_cmd.cpoutfile." ".Reload_Viewer." ".g:atp_cpcmd." ".cpoptions." ".shellescape(tmpaux)." ".shellescape(b:atp_OutDir)." ) || (".catchstatus_cmd.") ; " 
+		    let command="(".texcomp." && (".catchstatus_cmd.cpoutfile." ".Reload_Viewer." ".g:atp_cpcmd." ".cpoptions." ".shellescape(tmpaux)." ".shellescape(expand(b:atp_OutDir))." ) || (".catchstatus_cmd.") ; " 
 		endif
 	    endif
 	endif
@@ -1153,10 +1163,10 @@ function! atplib#compiler#Compiler(bibtex, start, runs, verbose, command, filena
 " ToDo: this can be done using internal vim functions.
 	    if i != "aux"
 		let copycmd=g:atp_cpcmd." ".cpoptions." ".shellescape(atplib#append(tmpdir,"/")).
-			    \ "*.".i." ".shellescape(atplib#append(b:atp_OutDir,"/")) 
+			    \ "*.".i." ".shellescape(atplib#append(expand(b:atp_OutDir),"/")) 
 	    else
 		let copycmd=g:atp_cpcmd." ".cpoptions." ".shellescape(atplib#append(tmpdir,"/")).
-			    \ "*.".i." ".shellescape(atplib#append(b:atp_OutDir,"/".fnamemodify(b:atp_MainFile, ":t:r")."_aux")) 
+			    \ "*.".i." ".shellescape(atplib#append(expand(b:atp_OutDir),"/".fnamemodify(b:atp_MainFile, ":t:r")."_aux")) 
 	    endif
 
 	    if j == 1
@@ -1351,9 +1361,20 @@ function! atplib#compiler#ThreadedCompiler(bibtex, start, runs, verbose, command
     let keep                    = join(g:atp_keep, ',')
 
 python << ENDPYTHON
-import vim, threading
-import sys, errno, os.path, shutil, subprocess, psutil, re, tempfile, optparse, glob
-import traceback, atexit
+import vim
+import threading
+import sys
+import errno
+import os.path
+import shutil
+import subprocess
+import psutil
+import re
+import tempfile
+import optparse
+import glob
+import traceback
+import atexit
 
 from os import chdir, mkdir, putenv, devnull
 from collections import deque
@@ -1401,9 +1422,9 @@ def latex_progress_bar(cmd):
                 stack.popleft()
             match = re.match('\[(\n?\d(\n|\d)*)({|\])',str(''.join(stack)))
             if match:
-                vim.eval("atplib#callback#ProgressBar("+match.group(1)[match.start():match.end()]+","+str(pid)+")")
+		vim.eval("atplib#callback#ProgressBar(%s,%s,%s)" % (match.group(1)[match.start():match.end()], pid, bufnr))
     child.wait()
-    vim.eval("atplib#callback#ProgressBar('end',"+str(pid)+")")
+    vim.eval("atplib#callback#ProgressBar('end',%s,%s)" % (pid, bufnr))
     vim.eval("atplib#callback#PIDsRunning(\"b:atp_LatexPIDs\")")
     return child
 
@@ -1456,6 +1477,7 @@ else:
     aucommand="COM"
 command_opt     = list(filter(nonempty,re.split('\s*,\s*', vim.eval("tex_options"))))
 mainfile_fp     = vim.eval("file")
+bufnr		= vim.eval("bufnr('%')")
 output_format   = vim.eval("ext")
 if output_format == "pdf":
     extension = ".pdf"
@@ -1657,7 +1679,10 @@ class LatexThread( threading.Thread ):
 # Link local bibliographies:
             for bib in bibliographies:
                 if os.path.exists(os.path.join(mainfile_dir,os.path.basename(bib))):
-                    os.symlink(os.path.join(mainfile_dir,os.path.basename(bib)),os.path.join(tmpdir,os.path.basename(bib)))
+                    if hasattr(os, 'symlink'):
+                        os.symlink(os.path.join(mainfile_dir,os.path.basename(bib)),os.path.join(tmpdir,os.path.basename(bib)))
+                    else:
+                        shutil.copyfile(os.path.join(mainfile_dir,os.path.basename(bib)),os.path.join(tmpdir,os.path.basename(bib)))
 
 ####################################
 #
@@ -1864,8 +1889,18 @@ function! atplib#compiler#tex()
 " E121: Undefined variable: a:var 
 " and other similar errors. Mainly (if not only) errors E121.
 python << ENDPYTHON
-import vim, threading
-import sys, errno, os.path, shutil, subprocess, psutil, re, tempfile, optparse, glob
+import vim
+import threading
+import sys
+import errno
+import os.path
+import shutil
+import subprocess
+import psutil
+import re
+import tempfile
+import optparse
+import glob
 import traceback, atexit
 
 from os import chdir, mkdir, putenv, devnull
@@ -2016,11 +2051,11 @@ function! atplib#compiler#auTeX(...)
 " 	if atplib#compiler#NewCompare()
 	    if g:atp_Compiler == 'python'
 		if b:atp_autex == 1
-" 		    if g:atp_devversion == 0
+		    " if g:atp_devversion == 0
 			call atplib#compiler#PythonCompiler(0, 0, b:atp_auruns, mode, "AU", atp_MainFile, "")
-" 		    else
-" 			call atplib#compiler#ThreadedCompiler(0, 0, b:atp_auruns, mode, "AU", atp_MainFile, "")
-" 		    endif
+		    " else
+			" call atplib#compiler#ThreadedCompiler(0, 0, b:atp_auruns, mode, "AU", atp_MainFile, "")
+		    " endif
 		else
 		    call atplib#compiler#LocalCompiler("n", 1)
 		endif
@@ -2162,13 +2197,12 @@ function! atplib#compiler#SimpleBibtex()
     " directory and they should no be given with full path:
     "  		p (paranoid)   : as `r' and disallow going to parent directories, and
     "                  		 restrict absolute paths to be under $TEXMFOUTPUT.
-    let saved_cwd	= getcwd()
-    exe "lcd " . fnameescape(b:atp_OutDir)
-    let g:cwd = getcwd()
+    let saved_cwd = getcwd()
+    exe "lcd " . fnameescape(expand(b:atp_OutDir))
     if filereadable(auxfile)
-	let command	= bibcommand . shellescape(file)
-	let b:atp_BibtexOutput=system(command)
-	let b:atp_BibtexReturnCode=v:shell_error
+	let command = bibcommand . shellescape(file)
+	let b:atp_BibtexOutput = system(command)
+	let b:atp_BibtexReturnCode = v:shell_error
 	echo b:atp_BibtexOutput
     else
 	echo "[ATP:] aux file " . auxfile . " not readable."
@@ -2193,8 +2227,7 @@ function! atplib#compiler#Bibtex(bang, ...)
 	return
     endif
 
-    let atp_MainFile	= atplib#FullPath(b:atp_MainFile)
-    let g:a=a:0
+    let atp_MainFile = atplib#FullPath(b:atp_MainFile)
 
     if a:0 >= 1
 	let mode = ( a:1 != 'default' ? a:1 : t:atp_DebugMode )
@@ -2215,11 +2248,7 @@ function! atplib#compiler#Bibtex(bang, ...)
     endif
 
     if g:atp_Compiler == 'python'
-"         if g:atp_devversion == 0
-            call atplib#compiler#PythonCompiler(1, 0, 0, mode, "COM", atp_MainFile, "")
-"         else
-"             call atplib#compiler#ThreadedCompiler(1, 0, 0, mode, "COM", atp_MainFile, "")
-"         endif
+	call atplib#compiler#PythonCompiler(1, 0, 0, mode, "COM", atp_MainFile, "")
     else
 	call atplib#compiler#Compiler(1, 0, 0, mode, "COM", atp_MainFile, "")
     endif
@@ -2547,14 +2576,14 @@ function! atplib#compiler#ShowErrors(bang,...)
     let show_message = ( a:0 >= 3 ? a:3 : 1 )
 
     if local_errorfile
-	if !exists("s:errorfile")
-	    let s:errorfile = &l:errorfile
+	if !exists("errorfile")
+	    let errorfile = &l:errorfile
 	endif
-	let &l:errorfile = expand("%:p:r")."._log"
+	let &l:errorfile = atplib#joinpath(expand(b:atp_OutDir), expand("%:t:r")."._log")
     else
-	if exists("s:errorfile")
-	    let &l:errorfile = s:errorfile
-	    unlet s:errorfile
+	if exists("errorfile")
+	    let &l:errorfile = errorfile
+	    unlet errorfile
 	endif
     endif
 
@@ -2585,8 +2614,6 @@ function! atplib#compiler#ShowErrors(bang,...)
 	call writefile(log, errorfile)
     endif
     
-    " set errorformat 
-
     if l:arg =~# 'o'
 	OpenLog
 	return

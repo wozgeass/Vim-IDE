@@ -2,7 +2,7 @@
 " Description: 	This file contains all the options defined on startup of ATP
 " Note:		This file is a part of Automatic Tex Plugin for Vim.
 " Language:	tex
-" Last Change: Tue Sep 25, 2012 at 20:52:55  +0100
+" Last Change: Thu Feb 07, 2013 at 17:50:18  +0000
 
 " NOTE: you can add your local settings to ~/.atprc.vim or
 " ftplugin/ATP_files/atprc.vim file
@@ -175,7 +175,7 @@ if !exists("g:atp_debugBabel")
 endif
 "}}}
 
-" vim options
+" Vim Options:
 " {{{ Vim options
 
 " undo_ftplugin
@@ -183,18 +183,13 @@ let b:undo_ftplugin = "setlocal nrformats< complete< keywordprg< suffixes< comme
 
 " Make CTRL-A, CTRL-X work over alphabetic characters:
 setl nrformats=alpha
-setl  backupskip+=*.tex.project.vim
+setl backupskip+=*.tex.project.vim
 
 " The vim option 'iskeyword' is adjust just after g:atp_separator and
 " g:atp_no_separator variables are defined.
-setl keywordprg=texdoc\ -m
-if maparg("K", "n") != ""
-    try
-	nunmap <buffer> K
-    catch E31:
-	nunmap K
-    endtry
-endif
+
+nmap <buffer> <silent> K :exe ':Texdoc' expand('<cword>')<cr>
+" This works better than setting the keywordprg option.
 
 exe "setlocal complete+=".
 	    \ "k".split(globpath(&rtp, "ftplugin/ATP_files/dictionaries/greek"), "\n")[0].
@@ -215,43 +210,50 @@ endif
 " The suffixes option is also set after g:atp_tex_extensions is set.
 
 " Borrowed from tex.vim written by Benji Fisher:
-    " Set 'comments' to format dashed lists in comments
-    setl comments=sO:%\ -,mO:%\ \ ,eO:%%,:%
+" Set 'comments' to format dashed lists in comments
+setl comments=sO:%\ -,mO:%\ \ ,eO:%%,:%
 
-    " Set 'commentstring' to recognize the % comment character:
-    " (Thanks to Ajit Thakkar.)
-    setl commentstring=%%s
+" Set 'commentstring' to recognize the % comment character:
+" (Thanks to Ajit Thakkar.)
+setl commentstring=%%s
 
-    " Allow "[d" to be used to find a macro definition:
-    " Recognize plain TeX \def as well as LaTeX \newcommand and \renewcommand .
-    " I may as well add the AMS-LaTeX DeclareMathOperator as well.
-    let &l:define='\\\([egx]\|char\|mathchar\|count\|dimen\|muskip\|skip\|toks\)\=def'
-	    \ .	'\|\\font\|\\\(future\)\=let'
-	    \ . '\|\\new\(count\|dimen\|skip\|muskip\|box\|toks\|read\|write\|fam\|insert\)'
-	    \ .	'\|\\definecolor{'
-	    \ . '\|\\\(re\)\=new\(boolean\|command\|counter\|environment\|font'
-	    \ . '\|if\|length\|savebox\|theorem\(style\)\=\)\s*\*\=\s*{\='
-	    \ . '\|DeclareMathOperator\s*{\=\s*'
-	    \ . '\|DeclareFixedFont\s*{\s*'
-    if &l:filetype != "plaintex"
-	if atplib#search#SearchPackage('subfiles')
-	    setl include=^[^%]*\\%(\\\\input\\(\\s*{\\)\\=\\\\|\\\\include\\s*{\\\\|\\\\subfile\\s*{\\)
-	else
-	    setl include=^[^%]*\\%(\\\\input\\(\\s*{\\)\\=\\\\|\\\\include\\s*{\\)
-	endif
+" Allow "[d" to be used to find a macro definition:
+" Recognize plain TeX \def as well as LaTeX \newcommand and \renewcommand .
+" I may as well add the AMS-LaTeX DeclareMathOperator as well.
+let &l:define='\\\([egx]\|char\|mathchar\|count\|dimen\|muskip\|skip\|toks\)\=def'
+	\ .	'\|\\font\|\\\(future\)\=let'
+	\ . '\|\\new\(count\|dimen\|skip\|muskip\|box\|toks\|read\|write\|fam\|insert\)'
+	\ .	'\|\\definecolor{'
+	\ . '\|\\\(re\)\=new\(boolean\|command\|counter\|environment\|font'
+	\ . '\|if\|length\|savebox\|theorem\(style\)\=\)\s*\*\=\s*{\='
+	\ . '\|DeclareMathOperator\s*{\=\s*'
+	\ . '\|DeclareFixedFont\s*{\s*'
+if &l:filetype != "plaintex"
+    if atplib#search#SearchPackage('subfiles')
+	setl include=^[^%]*\\%(\\\\input\\(\\s*{\\)\\=\\\\|\\\\include\\s*{\\\\|\\\\subfile\\s*{\\)
     else
-	setlocal include=^[^%]*\\\\input
+	setl include=^[^%]*\\%(\\\\input\\(\\s*{\\)\\=\\\\|\\\\include\\s*{\\)
     endif
-    setl suffixesadd=.tex
+else
+    setlocal include=^[^%]*\\\\input
+endif
+setl suffixesadd=.tex
 
-    setl includeexpr=substitute(v:fname,'\\%(.tex\\)\\?$','.tex','')
-    " TODO set define and work on the above settings, these settings work with [i
-    " command but not with [d, [D and [+CTRL D (jump to first macro definition)
-    
-    " AlignPlugin settings
-    if !exists("g:Align_xstrlen") && v:version >= 703 && &conceallevel 
-	let g:Align_xstrlen="ATP_strlen"
-    endif
+setl includeexpr=substitute(v:fname,'\\%(.tex\\)\\?$','.tex','')
+" TODO set define and work on the above settings, these settings work with [i
+" command but not with [d, [D and [+CTRL D (jump to first macro definition)
+
+" AlignPlugin settings
+if !exists("g:Align_xstrlen") && v:version >= 703 && &conceallevel 
+    let g:Align_xstrlen="ATP_strlen"
+endif
+
+" The two options below format lists, but they clash with indentation script.
+setl formatlistpat=^\\s*\\\\item\\s*
+" setl formatoptions+=n
+
+" setl formatexpr=TexFormat
+setl cinwords=
 " }}}
 
 " BUFFER LOCAL VARIABLES:
@@ -263,12 +265,12 @@ function! <SID>TexCompiler()
     if exists("b:atp_TexCompiler")
 	return b:atp_TexCompiler
     elseif buflisted(atplib#FullPath(b:atp_MainFile))
-	let line = get(getbufline(atplib#FullPath(b:atp_MainFile), 1), 0, "")
+	let line = get(getbufline(atplib#FullPath(b:atp_MainFile), "", 1), 0, "")
 	if line =~ '^%&\w*tex\>'
 	    return matchstr(line, '^%&\zs\w\+')
 	endif
     elseif filereadable(atplib#FullPath(b:atp_MainFile))
-	let line = get(readfile(atplib#FullPath(b:atp_MainFile)), 0, "")
+	let line = get(readfile(atplib#FullPath(b:atp_MainFile), "", 1), 0, "")
 	if line =~ '^%&\w*tex\>'
 	    return matchstr(line, '^%&\zs\w\+')
 	endif
@@ -292,7 +294,7 @@ let s:optionsDict= {
 		\ "atp_XpdfServer" 		: fnamemodify(b:atp_MainFile,":t:r"), 
 		\ "atp_LocalXpdfServer" 	: expand("%:t:r"), 
 		\ "atp_okularOptions"		: ["--unique"],
-		\ "atp_TempDir"			: substitute(b:atp_OutDir . "/.tmp", '\/\/', '\/', 'g'),
+		\ "atp_TempDir"			: substitute(fnamemodify(atplib#FullPath(b:atp_MainFile), ':h') . "/.tmp", '\/\/', '\/', 'g'),
 		\ "atp_OutDir"			: ( exists("b:atp_ProjectScriptFile") ? fnamemodify(b:atp_ProjectScriptFile, ":h") : fnamemodify(resolve(expand("%:p")), ":h") ),
 		\ "atp_TexCompiler" 		: <SID>TexCompiler(),
 		\ "atp_BibCompiler"		: ( getline(atplib#search#SearchPackage('biblatex')) =~ '\<backend\s*=\s*biber\>' ? 'biber' : "bibtex" ),
@@ -313,7 +315,7 @@ let s:optionsDict= {
 		\ "atp_MakeidxReturnCode"	: 0,
 		\ "atp_BibtexOutput"		: "",
 		\ "atp_MakeidxOutput"		: "",
-		\ "atp_DocumentClass"		: atplib#search#DocumentClass(b:atp_MainFile),
+		\ "atp_DocumentClass"		: atplib#search#DocumentClass(atplib#FullPath(b:atp_MainFile)),
 		\ "atp_statusCurSection"	: 1,
 		\ }
 
@@ -352,7 +354,7 @@ function! s:SetOptions()
     if string(get(s:optionsinuseDict,"atp_autex", 'optionnotset')) == string('optionnotset')
 	let atp_texinputs=split(substitute(substitute(system("kpsewhich -show-path tex"),'\/\/\+','\/','g'),'!\|\n','','g'),':')
 	call remove(atp_texinputs, index(atp_texinputs, '.'))
-	call filter(atp_texinputs, 'b:atp_OutDir =~# v:val')
+	call filter(atp_texinputs, 'expand(b:atp_OutDir) =~# v:val')
 	let b:atp_autex = ( len(atp_texinputs) ? 0 : s:optionsDict['atp_autex'])  
     endif
     let g:source_time_INPUTS=reltimestr(reltime(time))
@@ -661,9 +663,16 @@ if !exists("g:atp_imap_enumerate")
 	let g:atp_imap_enumerate="enu"
     endif
 endif
+if !exists("g:atp_imap_description")
+    if g:atp_imap_ShortEnvIMaps
+	let g:atp_imap_description="D"
+    else
+	let g:atp_imap_description="descr"
+    endif
+endif
 if !exists("g:atp_imap_tabular")
     if g:atp_imap_ShortEnvIMaps
-	let g:atp_imap_tabular="T"
+	let g:atp_imap_tabular="u"
     else
 	let g:atp_imap_tabular="tab"
     endif
@@ -694,6 +703,20 @@ if !exists("g:atp_imap_align")
 	let g:atp_imap_align="a"
     else
 	let g:atp_imap_align="ali"
+    endif
+endif
+if !exists("g:atp_imap_gather")
+    if g:atp_imap_ShortEnvIMaps
+	let g:atp_imap_gather="g"
+    else
+	let g:atp_imap_gather="gat"
+    endif
+endif
+if !exists("g:atp_imap_split")
+    if g:atp_imap_ShortEnvIMaps
+	let g:atp_imap_split="s"
+    else
+	let g:atp_imap_split="spl"
     endif
 endif
 if !exists("g:atp_imap_multiline")
@@ -772,32 +795,13 @@ endif
 if !exists("g:texmf")
     let g:texmf = substitute(system("kpsewhich -expand-var='$TEXMFHOME'"), '\n', '', 'g')
 endif
-if exists("g:atp_LatexPackages")
+if !exists("g:atp_LatexPackages")
     " Rescan the $TEXMFHOME directory for sty and tex files.
-    let time = reltime()
-    let sty_files = atplib#search#KpsewhichGlobPath('tex', g:texmf."/**", '*.\(sty\|tex\)', ':p')
-    for file in sty_files
-	if index(g:atp_LatexPackages, file) == -1
-	    call add(g:atp_LatexPackages, file)
-	endif
-    endfor
-    let g:time_UpdateStyFiles = reltimestr(reltime(time))
+    let g:atp_LatexPackages = atplib#search#KpsewhichGlobPath('tex', g:texmf."/**", '*.\(sty\|tex\)', ':p')
 endif
-if exists("g:atp_LatexClasses")
+if !exists("g:atp_LatexClasses")
     " Rescan the $TEXMFHOME directory for cls files.
-    let time = reltime()
-    let cls_files = atplib#search#KpsewhichGlobPath('tex', g:texmf."/**", '*.cls', ':p')
-    for file in cls_files
-	if index(g:atp_LatexClasses, file) == -1
-	    call add(g:atp_LatexClasses, file)
-	endif
-    endfor
-    let g:time_UpdateClsFiles = reltimestr(reltime(time))
-endif
-if exists("g:atp_latexclasses")
-    " Transition to nicer name:
-    let g:atp_LatexClasses = g:atp_latexclasses
-    unlet g:atp_latexclasses
+    let g:atp_LatexClasses = atplib#search#KpsewhichGlobPath('tex', g:texmf."/**", '*.cls', ':p')
 endif
 if !exists("g:atp_Python")
     " Also set in atplib#various#GetLatestSnapshot() and atplib#various#UpdateATP()
@@ -822,7 +826,7 @@ if !exists("g:atp_CommentLeader")
     let g:atp_CommentLeader="% "
 endif
 if !exists("g:atp_MapCommentLines")
-    let g:atp_MapCommentLines = empty(globpath(&rtp, 'plugin/EnhancedCommentify.vim').globpath(&rtp,'NERD_commenter.vim').globpath(&rtp, 'commenter.vim'))
+    let g:atp_MapCommentLines = empty(globpath(&rtp, 'plugin/EnhancedCommentify.vim').globpath(&rtp,'plugin/NERD_commenter.vim').globpath(&rtp, 'commenter.vim'))
 endif
 if !exists("g:atp_XpdfSleepTime")
     let g:atp_XpdfSleepTime = "0"
@@ -902,6 +906,9 @@ if !exists("g:atp_EnvOptions_enumerate")
     " options of enumitem to make enumerate more condenced.
     let g:atp_EnvOptions_enumerate=""
 endif
+if !exists("g:atp_EnvOptions_description")
+    let g:atp_EnvOptions_description=""
+endif
 if !exists("g:atp_EnvOptions_itemize")
     " Similar to g:atp_enumerate_options.
     let g:atp_EnvOptions_itemize=""
@@ -958,10 +965,10 @@ if !exists("g:atp_vmap_big_bracket_leader")
     let g:atp_vmap_big_bracket_leader='<LocalLeader>b'
 endif
 if !exists("g:atp_map_forward_motion_leader")
-    let g:atp_map_forward_motion_leader=']'
+    let g:atp_map_forward_motion_leader='}'
 endif
 if !exists("g:atp_map_backward_motion_leader")
-    let g:atp_map_backward_motion_leader='['
+    let g:atp_map_backward_motion_leader='{'
 endif
 if !exists("g:atp_RelativePath")
     " This is here only for completness, the default value is set in project.vim
@@ -1017,7 +1024,7 @@ if !exists("g:atp_OpenTypeDict")
 		\ "pdf" 	: "xpdf",		"ps" 	: "evince",
 		\ "djvu" 	: "djview",		"txt" 	: "split" ,
 		\ "tex"		: "edit",		"dvi"	: "xdvi -s 5" }
-    " for txt type files supported viewers: cat, gvim = vim = tabe, split, edit
+    " for txt type files supported viewers are: cat, gvim = vim = tabe, split, edit
 endif
 if !exists("g:atp_LibraryPath")
     let g:atp_LibraryPath	= 0
@@ -1042,7 +1049,7 @@ endif
 "ToDo: to doc.
 "ToDo: luatex! (can produce both!)
 if !exists("g:atp_CompilersDict")
-    let g:atp_CompilersDict 	= { 
+    let g:atp_CompilersDict	= { 
 		\ "pdflatex" 	: ".pdf", 	"pdftex" 	: ".pdf", 
 		\ "xetex" 	: ".pdf", 	"latex" 	: ".dvi", 
 		\ "tex" 	: ".dvi",	"elatex"	: ".dvi",
@@ -1144,7 +1151,8 @@ if !exists("g:atp_algorithmic_dict")
     let g:atp_algorithmic_dict = { 'IF' : 'ENDIF', 'FOR' : 'ENDFOR', 'WHILE' : 'ENDWHILE' }
 endif
 if !exists("g:atp_bracket_dict")
-    let g:atp_bracket_dict = { '(' : ')', '{' : '}', '[' : ']', '\lceil' : '\rceil', '\lfloor' : '\rfloor', '\langle' : '\rangle', '\lgroup' : '\rgroup', '<' : '>', '\begin' : '\end' }
+    let g:atp_bracket_dict = { '(' : ')', '{' : '}', '[' : ']', '\(': '\)', '\{': '\}', '\[': '\]', '\lceil' : '\rceil', '\lfloor' : '\rfloor', '\langle' : '\rangle', '\lgroup' : '\rgroup', '\begin' : '\end' }
+    " <:> is not present since < (and >) are used in math.
 endif
 if !exists("g:atp_LatexBox")
     let g:atp_LatexBox		= 1
@@ -1161,7 +1169,7 @@ endif
 if !exists("g:atp_amsmath")
     let g:atp_amsmath=atplib#search#SearchPackage('ams')
 endif
-if atplib#search#SearchPackage('amsmath') || g:atp_amsmath != 0 || atplib#search#DocumentClass(b:atp_MainFile) =~ '^ams'
+if atplib#search#SearchPackage('amsmath') || g:atp_amsmath != 0 || atplib#search#DocumentClass(atplib#FullPath(b:atp_MainFile)) =~ '^ams'
     exe "setl complete+=k".split(globpath(&rtp, "ftplugin/ATP_files/dictionaries/ams_dictionary"), "\n")[0]
 endif
 if !exists("g:atp_no_math_command_completion")
@@ -1183,7 +1191,7 @@ if !exists("g:atp_delete_output")
     let g:atp_delete_output	= 0
 endif
 if !exists("g:atp_keep")
-    " Files with this extensions will be compied back and forth to/from temporary
+    " Files with this extensions will be copied back and forth to/from temporary
     " directory in which compelation happens.
     let g:atp_keep=[ "log", "aux", "toc", "bbl", "ind", "idx", "synctex.gz", "blg", "loa", "toc", "lot", "lof", "thm", "out", "nav" ]
     " biber stuff is added before compelation, this makes it possible to change 
@@ -1262,7 +1270,8 @@ if !exists("g:atp_statusNotifHi")
 endif
 if !exists("g:atp_callback")
     if exists("g:atp_statusNotif") && g:atp_statusNotif == 1 &&
-		\ has('clientserver') && !empty(v:servername)
+		\ has('clientserver') && !empty(v:servername) &&
+		\ !(has('win16') || has('win32') || has('win64') || has('win95'))
 	let g:atp_callback	= 1
     else
 	let g:atp_callback	= 0
@@ -1273,13 +1282,26 @@ if !exists("g:atp_ProgressBarFile")
     let g:atp_ProgressBarFile = tempname()
 endif
 if !exists("g:atp_iskeyword")
-    let g:atp_iskeyword = '65-90,97-122,\'
+    let g:atp_iskeyword = '65-90,97-122'
 endif
 if !exists("g:atp_HighlightMatchingPair")
     let g:atp_HighlightMatchingPair = 1
 endif
 if !exists("g:atp_SelectInlineMath_withSpace")
     let g:atp_SelectInlineMath_withSpace = 0
+endif
+if !exists("g:atp_splitright")
+    let g:atp_splitright = &splitright
+endif
+if !exists("g:atp_StatusLine")
+    " If non 0, a new value will be assigned and used fot the statusline
+    " option (common.vim)
+    let g:atp_StatusLine = 1
+endif
+if !exists("g:atp_cpoptions")
+    " Possible entries:
+    " w - remap iw in visual and operator mode
+    let g:atp_cpoptions = ""
 endif
 " }}}
 
@@ -1288,14 +1310,15 @@ endif
 if !exists("g:atp_ProjectLocalVariables")
     " This is a list of variable names which will be preserved in project files
     let g:atp_ProjectLocalVariables = [
-		\ "b:atp_MainFile", 	"g:atp_mapNn", 		"b:atp_autex",
-		\ "b:atp_TexCompiler", 	"b:atp_TexOptions", 	"b:atp_TexFlavor", 
-		\ "b:atp_auruns", 	"b:atp_ReloadOnError",
-		\ "b:atp_OpenViewer", 	"b:atp_XpdfServer",
-		\ "b:atp_Viewer", 	"b:TreeOfFiles",	"b:ListOfFiles",
-		\ "b:TypeDict", 	"b:LevelDict", 		"b:atp_BibCompiler",
-		\ "b:atp_StarEnvDefault", 	"b:atp_StarMathEnvDefault",
-		\ "b:atp_updatetime_insert", 	"b:atp_updatetime_normal",
+		\ "b:atp_MainFile",	     "g:atp_mapNn",		"b:atp_autex",
+		\ "b:atp_TexCompiler",	     "b:atp_TexOptions",	"b:atp_TexFlavor", 
+		\ "b:atp_auruns",	     "b:atp_ReloadOnError",	"b:atp_OutDir",
+		\ "b:atp_OpenViewer",	     "b:atp_XpdfServer",
+		\ "b:atp_Viewer",	     "b:TreeOfFiles",		"b:ListOfFiles",
+		\ "b:TypeDict",		     "b:LevelDict",		"b:atp_BibCompiler",
+		\ "b:atp_StarEnvDefault",    "b:atp_StarMathEnvDefault",
+		\ "b:atp_updatetime_insert", "b:atp_updatetime_normal",
+		\ "b:atp_LocalCommands",     "b:atp_LocalEnvironments", "b:atp_LocalColors",
 		\ ] 
     if !has("python")
 	call extend(g:atp_ProjectLocalVariables, ["b:atp_LocalCommands", "b:atp_LocalEnvironments", "b:atp_LocalColors"])
@@ -1303,16 +1326,17 @@ if !exists("g:atp_ProjectLocalVariables")
 endif
 " This variable is used by atplib#motion#GotoFile (atp-:Edit command):c
 let g:atp_SavedProjectLocalVariables = [
-		\ "b:atp_MainFile", 	"g:atp_mapNn", 		"b:atp_autex",
-		\ "b:atp_TexCompiler", 	"b:atp_TexOptions", 	"b:atp_TexFlavor", 
-		\ "b:atp_ProjectDir", 	"b:atp_auruns", 	"b:atp_ReloadOnError",
-		\ "b:atp_OutDir",	"b:atp_OpenViewer", 	"b:atp_XpdfServer",
-		\ "b:atp_Viewer", 	"b:TreeOfFiles",	"b:ListOfFiles",
-		\ "b:TypeDict", 	"b:LevelDict", 		"b:atp_BibCompiler",
-		\ "b:atp_StarEnvDefault", 	"b:atp_StarMathEnvDefault",
-		\ "b:atp_updatetime_insert", 	"b:atp_updatetime_normal", 
-		\ "b:atp_ErrorFormat", 	"b:atp_LastLatexPID",	"b:atp_LatexPIDs",
-		\ "b:atp_LatexPIDs",	"b:atp_BibtexPIDs",	"b:atp_MakeindexPIDs",
+                \ "b:atp_MainFile",          "g:atp_mapNn",             "b:atp_autex",
+                \ "b:atp_TexCompiler",       "b:atp_TexOptions",        "b:atp_TexFlavor", 
+                \ "b:atp_ProjectDir",        "b:atp_auruns",            "b:atp_ReloadOnError",
+                \ "b:atp_OutDir",            "b:atp_OpenViewer",        "b:atp_XpdfServer",
+                \ "b:atp_Viewer",            "b:TreeOfFiles",           "b:ListOfFiles",
+                \ "b:TypeDict",              "b:LevelDict",             "b:atp_BibCompiler",
+                \ "b:atp_StarEnvDefault",    "b:atp_StarMathEnvDefault",
+                \ "b:atp_updatetime_insert", "b:atp_updatetime_normal", 
+                \ "b:atp_ErrorFormat",       "b:atp_LastLatexPID",      "b:atp_LatexPIDs",
+                \ "b:atp_LatexPIDs",         "b:atp_BibtexPIDs",        "b:atp_MakeindexPIDs",
+                \ "b:atp_LocalCommands",     "b:atp_LocalEnvironments", "b:atp_LocalColors",
 		\ ]
 
 " }}}1
@@ -1446,19 +1470,21 @@ function! <SID>Babel()
     endif
     let atp_MainFile	= atplib#FullPath(b:atp_MainFile)
 
-    let saved_loclist = getloclist(0)
     try
-	execute '1lvimgrep /^[^%]*\\usepackage.*{babel}/j ' . fnameescape(atp_MainFile)
-	" Find \usepackage[babel_options]{babel} - this is the only way that one can
-	" pass options to babel.
-    catch /E480:/
-	return
-    catch /E683:/ 
-	return
+	let mf_lines = readfile(atp_MainFile)
+    catch /E484:/
+	let mf_lines = []
     endtry
-    let babel_line 	= get(get(getloclist(0), 0, {}), 'text', '')
-    call setloclist(0, saved_loclist) 
-    let languages	= split(matchstr(babel_line, '\[\zs[^]]*\ze\]'), ',')
+    let babel_line = ""
+    for line in mf_lines
+	if line =~ '^[^%]*\\usepackage.*{babel}'
+	    let babel_line = line
+	    break
+	elseif line =~ '\\begin\s*{\s*document\s*}'
+	    break
+	endif
+    endfor
+    let languages = split(matchstr(babel_line, '\[\zs[^]]*\ze\]'), ',')
     if len(languages) == 0
 	return
     endif
@@ -1483,9 +1509,9 @@ function! <SID>Babel()
 endfunction
 command! -buffer Babel	:call <SID>Babel()
 " {{{1 start up
-if g:atp_babel
-    call <SID>Babel()
-endif
+" if g:atp_babel
+    " call <SID>Babel()
+" endif
 "  }}}1
 
 " These are two functions which sets options for Xpdf and Xdvi. 
@@ -1502,7 +1528,7 @@ function! <SID>SetXdvi()
 	    let compiler = ""
 	endif
     else
-	let line = readfile(atplib#FullPath(b:atp_MainFile))[0] 
+	let line = readfile(atplib#FullPath(b:atp_MainFile), "", 1)[0] 
 	if line =~ '^%&\w*tex\>'
 	    let compiler = matchstr(line, '^%&\zs\w\+')
 	else
@@ -1519,10 +1545,11 @@ function! <SID>SetXdvi()
     let Compiler		= get(g:CompilerMsg_Dict, matchstr(b:atp_TexCompiler, '^\s*\S*'), 'Compiler')
     let Viewer			= get(g:ViewerMsg_Dict, matchstr(b:atp_Viewer, '^\s*\S*'), 'View\ Output')
     try
-	execute "aunmenu LaTeX.".Compiler
-	execute "aunmenu LaTeX.".Compiler."\\ debug"
-	execute "aunmenu LaTeX.".Compiler."\\ twice"
-	execute "aunmenu LaTeX.View\\ with\\ ".Viewer
+	execute "aunmenu Latex.".Compiler
+	execute "aunmenu Latex.".Compiler."\\ debug"
+	execute "aunmenu Latex.".Compiler."\\ twice"
+	execute "aunmenu Latex.View\\ with\\ ".Viewer
+	execute "aunmenu Latex.View\\Output"
     catch /E329:/
     endtry
 
@@ -1552,19 +1579,13 @@ function! <SID>SetXdvi()
 	endif
     endif
 
-    map <buffer> <LocalLeader>rs				:call RevSearch()<CR>
-    try
-	nmenu 550.65 &LaTeX.Reverse\ Search<Tab>:map\ <LocalLeader>rs	:RevSearch<CR>
-    catch /E329:/
-    endtry
-
     " Put new menu entries:
     let Compiler	= get(g:CompilerMsg_Dict, matchstr(b:atp_TexCompiler, '^\s*\zs\S*'), 'Compile')
     let Viewer		= get(g:ViewerMsg_Dict, matchstr(b:atp_Viewer, '^\s*\zs\S*'), "View\\ Output")
     execute "nmenu 550.5 &Latex.&".Compiler."<Tab>:TEX			:TEX<CR>"
     execute "nmenu 550.6 &Latex.".Compiler."\\ debug<Tab>:TEX\\ debug 	:DTEX<CR>"
     execute "nmenu 550.7 &Latex.".Compiler."\\ &twice<Tab>:2TEX		:2TEX<CR>"
-    execute "nmenu 550.10 Latex.&View\\ with\\ ".Viewer."<Tab>:ViewOutput 		:ViewOutput<CR>"
+    execute "nmenu 550.10 Latex.&View\\ with\\ ".Viewer."<Tab>:View 	:View<CR>"
 endfunction
 command! -buffer SetXdvi			:call <SID>SetXdvi()
 nnoremap <silent> <buffer> <Plug>SetXdvi	:call <SID>SetXdvi()<CR>
@@ -1595,7 +1616,7 @@ function! <SID>SetPdf(viewer)
 	    let compiler = ""
 	endif
     else
-	let line = readfile(atplib#FullPath(b:atp_MainFile))[0] 
+	let line = readfile(atplib#FullPath(b:atp_MainFile), "", 1)[0] 
 	if line =~ '^%&\w*tex\>'
 	    let compiler = matchstr(line, '^%&\zs\w\+')
 	else
@@ -1643,7 +1664,7 @@ function! <SID>SetPdf(viewer)
     execute "nmenu 550.5 &Latex.&".Compiler.	"<Tab>:TEX			:TEX<CR>"
     execute "nmenu 550.6 &Latex." .Compiler.	"\\ debug<Tab>:TEX\\ debug 	:DTEX<CR>"
     execute "nmenu 550.7 &Latex." .Compiler.	"\\ &twice<Tab>:2TEX		:2TEX<CR>"
-    execute "nmenu 550.10 Latex.&View\\ with\\ ".Viewer.	"<Tab>:ViewOutput 		:ViewOutput<CR>"
+    execute "nmenu 550.10 Latex.&View\\ with\\ ".Viewer.	"<Tab>:View 	:View<CR>"
 endfunction
 command! -buffer SetXpdf			:call <SID>SetPdf('xpdf')
 command! -buffer SetOkular			:call <SID>SetPdf('okular')
@@ -1655,17 +1676,19 @@ nnoremap <silent> <buffer> <Plug>SetEvince	:call <SID>SetPdf('evince')<CR>
 function! <SID>Kill_Evince_Sync()
 python << EOF
 try:
-    import psutil, vim, os, signal
-    from psutil import NoSuchProcess
+    import psutil
+    import vim
+    import os
+    import signal
+    import re
+    from psutil import NoSuchProcess, AccessDenied
     for pid in psutil.get_pid_list():
         try:
             process = psutil.Process(pid)
             cmdline = process.cmdline
             if len(cmdline) > 1 and re.search('evince_sync\.py$', cmdline[1]):
                 os.kill(pid, signal.SIGTERM)
-        except psutil.error.NoSuchProcess:
-            pass
-        except psutil.error.AccessDenied:
+        except (NoSuchProcess, AccessDenied):
             pass
 except ImportError:
     vim.command("echomsg '[ATP:] Import error. You will have to kill evince_sync.py script yourself'")
@@ -2048,32 +2071,15 @@ nnoremap <silent> <buffer> 	<Plug>ToggleTab		:call ATP_ToggleTab()<CR>
 inoremap <silent> <buffer> 	<Plug>ToggleTab		<C-O>:call ATP_ToggleTab()<CR>
 "}}}
 
-" Read Package/Documentclass Files {{{
-" This is run by an autocommand group ATP_Packages which is after ATP_LocalCommands
-" b:atp_LocalColors are used in some package files.
-function! <SID>ReadPackageFiles()
-    let time=reltime()
-    let package_files = split(globpath(&rtp, "ftplugin/ATP_files/packages/*"), "\n")
-    let g:atp_packages = map(copy(package_files), 'fnamemodify(v:val, ":t:r")')
-    for file in package_files
-	" We cannot restrict here to not source some files - because the completion
-	" variables might be needed later. I need to find another way of using this files
-	" as additional scripts running syntax ... commands for example only if the
-	" packages are defined.
-	execute "source ".file
-    endfor
-    let g:source_time_package_files=reltimestr(reltime(time))
-endfunction
-
-" }}}
 
 " AUTOCOMMANDS:
 " Some of the autocommands (Status Line, LocalCommands, Log File):
-" {{{ Autocommands:
+" {{{1 Autocommands:
 
 if !s:did_options
     
 
+    " {{{2 SwapExists (not used)
     let g:atp_DoSwapExists = 0
     fun! <SID>SwapExists(swapfile)
 	if g:atp_DoSwapExists
@@ -2084,34 +2090,33 @@ if !s:did_options
 	endif
     endfun
 
-"     augroup ATP_SwapExists
-" 	au!
-" 	au SwapExists	:call <SID>SwapExists(v:swapname)
-"     augroup END
-    augroup ATP_changedtick
+    " augroup ATP_SwapExists
+	" au!
+	" au SwapExists	:call <SID>SwapExists(v:swapname)
+    " augroup END
+
+    augroup ATP_changedtick " {{{2
 	au!
 	au BufEnter,BufWritePost 	*.tex 	:let b:atp_changedtick = b:changedtick
     augroup END 
 
-    augroup ATP_auTeX
+    augroup ATP_auTeX " {{{2
 	au!
 	au CursorHold 	*.tex call atplib#compiler#auTeX()
 	au CursorHoldI 	*.tex call atplib#compiler#auTeX()
     augroup END 
-    " {{{ Setting ErrorFormat
+    " {{{2 Setting ErrorFormat
     " Is done using autocommands, if the opened file belongs to the same
     " project as the previous file, then just copy the variables
     " b:atp_ErrorFormat, other wise read the error file and set error format
     " to g:atp_DefaultErrorFormat (done with
     " atplib#compiler#SetErrorFormat()).
     "
-    " Todo: still :copen changes &efm to sth from tex.vim.
-    "
     " For sty and cls files, always pretend they belong to the same project.
     function! ATP_BufLeave()
 	let s:error_format = ( exists("b:atp_ErrorFormat") ? b:atp_ErrorFormat : 'no_error_format' )
 	let s:ef = &l:ef
-" 	echomsg "PFILE ".s:previous_file." EFM ".s:error_format
+	" echomsg "PFILE ".s:previous_file." EFM ".s:error_format
     endfunction
     let s:error_format = ( exists("b:atp_ErrorFormat") ? b:atp_ErrorFormat : 'no_error_format' )
     let s:ef = &l:ef
@@ -2119,18 +2124,16 @@ if !s:did_options
 	if !( &l:filetype == 'tex' || &l:ef == s:ef  )
 	    " buftype option is not yet set when this function is executed,
 	    " but errorfile option is already set.
-" 	    echomsg "FILETYPE RETURN"
 	    return
 	endif
-" 	if exists("s:previous_file")
 	if exists("s:ef")
 	    let same_project= ( &l:ef == s:ef )
 	    if !same_project
-" 		echomsg "OTHER PROJECT ".g:atp_DefaultErrorFormat . " " . expand("%:p")
+		" other project:
 		let errorflags = exists("b:atp_ErrorFormat") ? b:atp_ErrorFormat : g:atp_DefaultErrorFormat
 		call atplib#compiler#SetErrorFormat(1, errorflags)
 	    else
-" 		echomsg "SAME PROJECT ".s:error_format . " " . expand("%:p")
+		" the same project:
 		if s:error_format != 'no_error_format'
 		    call atplib#compiler#SetErrorFormat(0, s:error_format)
 		else
@@ -2138,29 +2141,29 @@ if !s:did_options
 		endif
 	    endif
 	else
-" 	    echomsg "INIT ".g:atp_DefaultErrorFormat . " " . expand("%:p")
+	    " init:
 	    call atplib#compiler#SetErrorFormat(1, g:atp_DefaultErrorFormat)
-	    let &efm=&l:efm
 	endif
     endfunction
 
-" This augroup sets the efm on startup:
+    " This augroup sets the efm on startup:
     augroup ATP_ErrorFormat
 	au!
 	au BufLeave * :call ATP_BufLeave()
 	au BufEnter * :call <SID>BufEnter()
     augroup END
-    "}}}
+    "}}}2
 
-    augroup ATP_UpdateToCLine
+    augroup ATP_UpdateToCLine " {{{2
 	au!
 	au CursorHold *.tex nested :call atplib#motion#UpdateToCLine()
     augroup END
 
+    " Redraw ToC {{{2
     function! RedrawToC()
 	if bufwinnr(bufnr("__ToC__")) != -1
 	    let winnr = winnr()
-	    TOC
+	    Toc
 	    exe winnr." wincmd w"
 	endif
     endfunction
@@ -2170,6 +2173,7 @@ if !s:did_options
 	au TabEnter *.tex	:call RedrawToC()
     augroup END
 
+    " InsertLeave_InsertEnter {{{2
     let g:atp_eventignore		= &l:eventignore
     let g:atp_eventignoreInsertEnter 	= 0
     function! <SID>InsertLeave_InsertEnter()
@@ -2183,39 +2187,38 @@ if !s:did_options
 	au InsertLeave *.tex 	:call <SID>InsertLeave_InsertEnter()
     augroup END
 
-"     augroup ATP_Cmdwin
-" 	au!
-" 	au CmdwinLeave / if expand("<afile>") == "/"|:call ATP_CmdwinToggleSpace(0)|:endif
-" 	au CmdwinLeave ? if expand("<afile>") == "/"|:call ATP_CmdwinToggleSpace(0)|:endif
-"     augroup END
+    " augroup ATP_Cmdwin " {{{2
+	" au!
+	" au CmdwinLeave / if expand("<afile>") == "/"|:call ATP_CmdwinToggleSpace(0)|:endif
+	" au CmdwinLeave ? if expand("<afile>") == "/"|:call ATP_CmdwinToggleSpace(0)|:endif
+    " augroup END
 
-    augroup ATP_cmdheight
+    augroup ATP_cmdheight " {{{2
 	" update g:atp_cmdheight when user writes the buffer
 	au!
 	au BufWrite *.tex :let g:atp_cmdheight = &l:cmdheight
     augroup END
 
-function! <SID>Rmdir(dir)
-if executable("rmdir")
-    call system("rmdir ".shellescape(a:dir))
-elseif has("python")
+    function! <SID>Rmdir(dir) "{{{2
+    if executable("rmdir")
+	call system("rmdir ".shellescape(a:dir))
+    elseif has("python")
 python << EOF
-import shutil, errno
+import os, errno
 dir=vim.eval('a:dir')
 try:
-    shutil.rmtree(dir)
+    os.rmdir(dir)
 except OSError, e:
     if errno.errorcode[e.errno] == 'ENOENT':
         pass
 EOF
-else
-    echohl ErrorMsg
-    echo "[ATP:] the directory ".a:dir." is not removed."
-    echohl None
-endif
-endfunction
-
-    function! ErrorMsg(type)
+    else
+	echohl ErrorMsg
+	echo "[ATP:] the directory ".a:dir." is not removed."
+	echohl None
+    endif
+    endfunction "}}}2
+    function! ErrorMsg(type) "{{{2
 	let errors		= len(filter(getqflist(),"v:val['type']==a:type"))
 	if errors > 1
 	    let type		= (a:type == 'E' ? 'errors' : 'warnings')
@@ -2227,9 +2230,8 @@ endfunction
 	    let msg.=" ".errors." ".type
 	endif
 	return msg
-    endfunction
-
-    augroup ATP_QuickFix_2
+    endfunction " }}}2
+    augroup ATP_QuickFix_2 " {{{2
 	au!
 	au FileType qf command! -bang -buffer -nargs=? -complete=custom,DebugComp DebugMode	:call <SID>SetDebugMode(<q-bang>,<f-args>)
 	au FileType qf let w:atp_qf_errorfile=&l:errorfile
@@ -2237,7 +2239,7 @@ endfunction
 	au FileType qf exe "resize ".min([atplib#qflength(), g:atp_DebugModeQuickFixHeight])
     augroup END
 
-    function! <SID>BufEnterCgetfile()
+    function! <SID>BufEnterCgetfile() "{{{2
 	if !exists("b:atp_ErrorFormat")
 	    return
 	endif
@@ -2259,47 +2261,48 @@ endfunction
 	    catch /E40:/ 
 	    endtry
 	endif
-    endfunction
-    function! <SID>BufLeave()
+    endfunction " }}}2
+    function! <SID>BufLeave() " {{{2
 	if &buftype == 'quickfix'
 	    let s:leaving_buffer='quickfix'
 	else
 	    let s:leaving_buffer=expand("%:p")
 	endif
-    endfunction
-if (v:version < 703 || v:version == 703 && !has("patch468"))
-    augroup ATP_QuickFix_cgetfile
-"     When using cgetfile the position in quickfix-window is lost, which is
-"     annoying when changing windows. 
-	au!
-	au BufLeave *		:call <SID>BufLeave()
-	au BufEnter *.tex 	:call <SID>BufEnterCgetfile()
-    augroup END
-else
-    function! <SID>Latex_Log() 
-	if exists("b:atp_MainFile")
-	    let log_file  = fnamemodify(atplib#FullPath(b:atp_MainFile), ":r").".log"
-	    let _log_file = fnamemodify(atplib#FullPath(b:atp_MainFile), ":r")."._log"
-	    if !filereadable(log_file)
-		return
+    endfunction "}}}2
+    " {{{2
+    if (v:version < 703 || v:version == 703 && !has("patch468"))
+	augroup ATP_QuickFix_cgetfile
+	" When using cgetfile the position in quickfix-window is lost, which is
+	" annoying when changing windows. 
+	    au!
+	    au BufLeave *		:call <SID>BufLeave()
+	    au BufEnter *.tex 	:call <SID>BufEnterCgetfile()
+	augroup END
+    else
+	function! <SID>Latex_Log() " {{{3
+	    if exists("b:atp_MainFile")
+		let log_file  = fnamemodify(atplib#FullPath(b:atp_MainFile), ":r").".log"
+		let _log_file = fnamemodify(atplib#FullPath(b:atp_MainFile), ":r")."._log"
+		if !filereadable(log_file)
+		    return
+		endif
+		" Run latex_log.py only if log_file is newer than _log_file. 
+		" This is only if the user run latex manualy, since ATP calles
+		" latex_log.py after compilation.
+		if !filereadable(_log_file) || !exists("*getftime") || getftime(log_file) > getftime(_log_file)
+		    call system("python ".shellescape(split(globpath(&rtp, "ftplugin/ATP_files/latex_log.py"), "\n")[0])." ".shellescape(fnamemodify(atplib#FullPath(b:atp_MainFile), ":r").".log"))
+		endif
 	    endif
-	    " Run latex_log.py only if log_file is newer than _log_file. 
-	    " This is only if the user run latex manualy, since ATP calles
-	    " latex_log.py after compilation.
-	    if !filereadable(_log_file) || !exists("*getftime") || getftime(log_file) > getftime(_log_file)
-		call system("python ".shellescape(split(globpath(&rtp, "ftplugin/ATP_files/latex_log.py"), "\n")[0])." ".shellescape(fnamemodify(atplib#FullPath(b:atp_MainFile), ":r").".log"))
-	    endif
-	endif
-    endfunction
-    augroup ATP_QuickFix_cgetfile
-	au QuickFixCmdPre cgetfile,cfile,cfileadd 	:call <SID>Latex_Log()
-	au QuickFixCmdPost cgetfile,cfile,cfileadd 	:call atplib#compiler#FilterQuickFix()
-    augroup END
-endif
+	endfunction " }}}3
+	augroup ATP_QuickFix_cgetfile
+	    au QuickFixCmdPre cgetfile,cfile,cfileadd 	:call <SID>Latex_Log()
+	    au QuickFixCmdPost cgetfile,cfile,cfileadd 	:call atplib#compiler#FilterQuickFix()
+	augroup END
+    endif 
 
-    augroup ATP_VimLeave
+    augroup ATP_VimLeave " {{{2
 	au!
-	" Remove b:atp_TempDir (where compelation is done).
+	" Remove b:atp_TempDir (where compilation is done).
 	au VimLeave *.tex :call <SID>Rmdir(b:atp_TempDir)
 	" Remove TempDir for debug files.
 	au VimLeave *     :call <SID>RmTempDir()
@@ -2307,6 +2310,7 @@ endif
 	au VimLeave *.tex :Kill!
     augroup END
 
+    " UpdateTime {{{2
     function! <SID>UpdateTime(enter)
 	if a:enter	== "Enter" && b:atp_updatetime_insert != 0
 	    let &l:updatetime	= b:atp_updatetime_insert
@@ -2321,37 +2325,10 @@ endif
 	au InsertLeave *.tex :call <SID>UpdateTime("Leave")
     augroup END
 
-    if (exists("g:atp_StatusLine") && g:atp_StatusLine == '1') || !exists("g:atp_StatusLine")
-	" Note: ctoc doesn't work in include files (and it is slow there).
-	if b:atp_statusCurSection 
-	    if exists("b:TypeDict")
-		let b:atp_statusCurSection = !( len(filter(copy(b:TypeDict), 'v:val == "input"')) )
-	    else
-		let b:atp_statusCurSection = atplib#FullPath(b:atp_MainFile) != expand("%:p")
-	    endif
-	endif
-	augroup ATP_Status
-	    au!
-	    au BufEnter,BufWinEnter,TabEnter *.tex 	:call ATPStatus(0,b:atp_statusCurSection)
-	augroup END
-    endif
-
-    if g:atp_local_completion == 2
-	augroup ATP_LocalCommands
-	    au!
-	    au BufEnter *.tex 	call LocalCommands(0)
-	augroup END
-    endif
-
-    augroup ATP_Packages
-	au!
-	au BufEnter *.tex call <SID>ReadPackageFiles()
-    augroup END
-
-    augroup ATP_TeXFlavor
+    augroup ATP_TeXFlavor " {{{2
 	au!
 	au FileType *tex 	let b:atp_TexFlavor = &filetype
-    augroup END
+    augroup END "}}}2
 
     " Idea:
     " au 		*.log if LogBufferFileDiffer | silent execute '%g/^\s*$/d' | w! | endif
@@ -2384,7 +2361,40 @@ endif
 "     au CursorMoved  *.tex let g:atp_synstack	= map(synstack(line('.'), col('.')), "synIDattr(v:val, 'name')")
     
 endif
-" }}}
+
+    " Quit {{{2
+    if exists('##QuitPre')
+	fun! <sid>ATP_Quit(cmd) 
+	    let blist = tabpagebuflist()
+	    let cbufnr = bufnr("%")
+	    if index(['__ToC__', '__Labels__'],bufname(cbufnr)) == -1
+		call remove(blist, index(blist, cbufnr))
+	    endif
+	    let bdict = {}
+	    for buf in blist
+		let bdict[buf]=bufname(buf)
+	    endfor
+	    let l=0
+	    let l+= (index(values(bdict), '__ToC__') != -1)
+	    let l+= (index(values(bdict), '__Labels__') != -1)
+	    call filter(bdict, 'bdict[v:key] == "__ToC__" || bdict[v:key] == "__Labels__"')
+	    if !empty(bdict)
+		for i in keys(bdict)
+		    if a:cmd == 'quit'
+			quit
+		    else
+			exe a:cmd i
+		    endif
+		endfor
+	    endif
+	endfun
+	augroup ATP_Quit
+	    au!
+	    au QuitPre * :call <sid>ATP_Quit('quit')
+	    au BufUnload * :call <sid>ATP_Quit('bw')
+	augroup END
+    endif
+" }}}1
 
 " This function and the following autocommand toggles the textwidth option if
 " editing a math mode. Currently, supported are $:$, \(:\), \[:\] and $$:$$.
@@ -2396,8 +2406,7 @@ endif
 
 if !exists("g:atp_MathVimOptions")
 "     { 'option_name' : [ val_in_math, normal_val], ... }
-    let g:atp_MathVimOptions 		=  { 'textwidth' 	: [ 0, 	&textwidth],
-						\ }
+    let g:atp_MathVimOptions		= {}
 endif
 
 if !exists("g:atp_MathZones")
@@ -2424,9 +2433,9 @@ endif
 " a:0 	= 0 check if in math mode
 " a:1   = 0 assume cursor is not in math
 " a:1	= 1 assume cursor stands in math  
-function! SetMathVimOptions(...)
+function! SetMathVimOptions(event,...)
 
-	if !g:atp_SetMathVimOptions
+	if !g:atp_SetMathVimOptions || len(keys(g:atp_MathVimOptions)) == 0
 	    return "no setting to toggle" 
 	endif
 
@@ -2443,16 +2452,38 @@ function! SetMathVimOptions(...)
 " 	let check	= a:0 == 0 ? atplib#complete#CheckSyntaxGroups(MathZones) + atplib#complete#CheckSyntaxGroups(MathZones, line("."), max([ 1, col(".")-3])) : a:1
 	let check	= a:0 == 0 ? atplib#IsInMath() : a:1
 
-	if check
+	let when = -1
+	if a:event == 'InsertEnter' && check
+	    let when = 0
 	    for option_name in keys(MathVimOptions)
 		execute "let &l:".option_name. " = " . MathVimOptions[option_name][0]
 	    endfor
+	elseif a:event == 'CursorMovedI'
+	    if check
+		let when = 1
+		for option_name in keys(MathVimOptions)
+		    execute "let &l:".option_name. " = " . MathVimOptions[option_name][0]
+		endfor
+	    else
+		let when = 2
+		for option_name in keys(MathVimOptions)
+		    execute "let &l:".option_name. " = " . MathVimOptions[option_name][1]
+		endfor
+	    endif
 	else
 	    for option_name in keys(MathVimOptions)
-		execute "let &l:".option_name. " = " . MathVimOptions[option_name][1]
+                if a:event == 'InsertLeave'
+		    let when = 3
+                    execute "let &l:".option_name. " = " . MathVimOptions[option_name][1]
+                elseif a:event == 'InsertEnter'
+		    let when = 4
+		    execute "let g:atp_MathVimOptions[option_name][1] = &l:".option_name
+                endif
 	    endfor
 	endif
-
+	if exists("g:debug")
+	    call add(g:debug, [a:event, check, when, deepcopy(MathVimOptions)])
+	endif
 endfunction
 
 if !s:did_options
@@ -2460,13 +2491,13 @@ if !s:did_options
     augroup ATP_SetMathVimOptions
 	au!
 	" if leaving the insert mode set the non-math options
-	au InsertLeave 	*.tex 	:call SetMathVimOptions(0)
+	au InsertLeave 	*.tex 	:call SetMathVimOptions('InsertLeave', 0)
 	" if entering the insert mode or in the insert mode check if the cursor is in
 	" math or not and set the options acrodingly
-	au InsertEnter	*.tex 	:call SetMathVimOptions()
+	au InsertEnter	*.tex 	:call SetMathVimOptions('InsertEnter')
 " This is done by atplib#ToggleIMap() function, which is run only when cursor
 " enters/leaves LaTeX math mode:
-" 	au CursorMovedI *.tex 	:call s:SetMathVimOptions()
+	" au CursorMovedI *.tex 	:call s:SetMathVimOptions('CursorMovedI')
     augroup END
 
 endif
@@ -2475,7 +2506,7 @@ endif
 " SYNTAX GROUPS:
 " {{{1 ATP_SyntaxGroups
 function! <SID>ATP_SyntaxGroups()
-    if &filetype == ""
+    if &filetype != "tex" || &syntax != "tex"
 	" this is important for :Dsearch window
 	return
     endif
@@ -2499,10 +2530,11 @@ function! <SID>ATP_SyntaxGroups()
 	endtry
     endif
 endfunction
-
 augroup ATP_SyntaxGroups
     au!
-    au BufEnter *.tex :call <SID>ATP_SyntaxGroups()
+    " This should be run on Syntax, but it needs setting done in FileType
+    " (Syntax group runs first).
+    au FileType tex :call <SID>ATP_SyntaxGroups()
 augroup END
 
 augroup ATP_Devel
@@ -2547,13 +2579,13 @@ function! <SID>Viewer(...)
     silent! execute "aunmenu Latex.View\\ with\\ ".oldViewer
     silent! execute "aunmenu Latex.View\\ Output"
     if Viewer != ""
-	execute "menu 550.10 LaTe&X.&View\\ with\\ ".Viewer."<Tab>:ViewOutput 		:<C-U>ViewOutput<CR>"
-	execute "cmenu 550.10 LaTe&X.&View\\ with\\ ".Viewer."<Tab>:ViewOutput 		<C-U>ViewOutput<CR>"
-	execute "imenu 550.10 LaTe&X.&View\\ with\\ ".Viewer."<Tab>:ViewOutput 		<Esc>:ViewOutput<CR>a"
+	execute "menu 550.10 LaTe&X.&View\\ with\\ ".Viewer."<Tab>:View 		:<C-U>View<CR>"
+	execute "cmenu 550.10 LaTe&X.&View\\ with\\ ".Viewer."<Tab>:View 		<C-U>View<CR>"
+	execute "imenu 550.10 LaTe&X.&View\\ with\\ ".Viewer."<Tab>:View 		<Esc>:View<CR>a"
     else
-	execute "menu 550.10 LaTe&X.&View\\ Output\\ <Tab>:ViewOutput 		:<C-U>ViewOutput<CR>"
-	execute "cmenu 550.10 LaTe&X.&View\\ Output\\ <Tab>:ViewOutput 		<C-U>ViewOutput<CR>"
-	execute "imenu 550.10 LaTe&X.&View\\ Output\\ <Tab>:ViewOutput 		<Esc>:ViewOutput<CR>a"
+	execute "menu 550.10 LaTe&X.&View\\ Output\\ <Tab>:View 		:<C-U>View<CR>"
+	execute "cmenu 550.10 LaTe&X.&View\\ Output\\ <Tab>:View 		<C-U>View<CR>"
+	execute "imenu 550.10 LaTe&X.&View\\ Output\\ <Tab>:View 		<Esc>:View<CR>a"
     endif
 endfunction
 command! -buffer -nargs=? -complete=customlist,ViewerComp Viewer	:call <SID>Viewer(<q-args>)
@@ -2803,10 +2835,15 @@ exe "setlocal path+=".substitute(g:texmf."/tex,".join(filter(split(globpath(b:at
 
 " Some Commands:
 " {{{
-command! -buffer HelpMathIMaps 	:echo atplib#helpfunctions#HelpMathIMaps()
-command! -buffer HelpEnvIMaps 	:echo atplib#helpfunctions#HelpEnvIMaps()
-command! -buffer HelpVMaps 	:echo atplib#helpfunctions#HelpVMaps()
+command! -buffer HelpMathIMaps 	:call atplib#helpfunctions#HelpMathIMaps()
+command! -buffer HelpEnvIMaps 	:call atplib#helpfunctions#HelpEnvIMaps()
+command! -buffer HelpVMaps 	:call atplib#helpfunctions#HelpVMaps()
 " }}}
+
+" Status Line:
+if g:atp_StatusLine != 0
+    call ATPStatus(0)
+endif
 
 
 " Help:

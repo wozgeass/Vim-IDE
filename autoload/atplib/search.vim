@@ -1547,10 +1547,10 @@ function! atplib#search#BibSearch(bang,...)
 	let [ pattern, flag ] = [ "", ""] 
     endif
 
-    let b:atp_LastBibPattern 	= pattern
+    let b:atp_LastBibPattern = pattern
     "     This cannot be set here.  It is set later by atplib#bibsearch#showresults function.
     "     let b:atp_LastBibFlags	= flag
-    let @/			= pattern
+    let @/ = pattern
 
     if g:atp_debugBS
 	exe "redir! > ".g:atp_TempDir."/Bibsearch.log"
@@ -1564,24 +1564,27 @@ function! atplib#search#BibSearch(bang,...)
 	redir END
     endif
 
-    if !exists("s:bibdict") || a:bang == "!"
+    if !exists("s:bibdict")
 	let s:bibdict={}
 	if !exists("b:ListOfFiles") || !exists("b:TypeDict") || a:bang == "!"
 	    call TreeOfFiles(b:atp_MainFile)
 	endif
 	for file in b:ListOfFiles
 	    if b:TypeDict[file] == "bib"
-		let s:bibdict[file]=readfile(file)
+		if atplib#FullPath(file) != file
+		    let s:bibdict[file]=readfile(atplib#search#KpsewhichFindFile('bib', file))
+		else
+		    let s:bibdict[file]=readfile(file)
+		endif
 	    endif
 	endfor
     endif
     let b:atp_BibFiles=keys(s:bibdict)
-"     let g:bibdict=s:bibdict
 
     if has("python") && g:atp_bibsearch == "python"
-	call atplib#bibsearch#showresults( atplib#bibsearch#searchbib_py(pattern, keys(s:bibdict), a:bang), flag, pattern, s:bibdict)
+	call atplib#bibsearch#showresults(a:bang, atplib#bibsearch#searchbib_py(a:bang, pattern, keys(s:bibdict)), flag, pattern, s:bibdict)
     else
-	call atplib#bibsearch#showresults( atplib#bibsearch#searchbib(pattern, s:bibdict, a:bang), flag, pattern, s:bibdict)
+	call atplib#bibsearch#showresults("", atplib#bibsearch#searchbib(pattern, s:bibdict), flag, pattern, s:bibdict)
     endif
     let g:time_BibSearch=reltimestr(reltime(time))
 endfunction
@@ -1924,7 +1927,7 @@ endfunction
 "{{{1 atplib#search#GrepPreambule
 function! atplib#search#GrepPreambule(pattern, ...)
     let saved_loclist 	= getloclist(0)
-    let atp_MainFile	= ( a:0 >= 1 ? a:1 : b:atp_MainFile ) 
+    let atp_MainFile	= ( a:0 >= 1 ? a:1 : atplib#FullPath(b:atp_MainFile) ) 
     let winview = winsaveview()
     exe 'silent! 1lvimgrep /^[^%]*\\begin\s*{\s*document\s*}/j ' . fnameescape(atp_MainFile)
     let linenr = get(get(getloclist(0), 0, {}), 'lnum', 'nomatch')
@@ -1940,28 +1943,55 @@ endfunction
 
 " atplib#search#DocumentClass {{{1
 function! atplib#search#DocumentClass(file)
-
-    let saved_loclist	= getloclist(0)
-    " Note: lvimgrep command loads the buffer (as unlisted one),
-    " but doesn't warn if there is a swap file (this is not the only place where
-    " files are loaded on startup).
-    try
-	silent execute '1lvimgrep /^[^%]*\\documentclass/j ' . fnameescape(a:file)
-    catch /E480:/
-	return 0
-    catch /E680:/
-	return 0
-    catch /E683:/
-	return 0
-    endtry
-    let line		= get(get(getloclist(0), 0, { 'text' : "no_document_class"}), 'text')
-    call setloclist(0, saved_loclist)
-
-
-    if line != 'no_document_class'
-	return substitute(l:line,'.*\\documentclass\s*\%(\[.*\]\)\?{\(.*\)}.*','\1','')
+    if bufloaded(a:file)
+	let bufnr = bufnr(a:file)
+	let file = getbufline(bufnr, 1, 50)
+    elseif filereadable(a:file)
+	let file = readfile(a:file, 50)
+    else
+	return ''
     endif
- 
+    let lnr = -1
+    let documentclass = ''
+    for line in file
+	let lnr += 1
+	if line =~ '^[^%]*\\documentclass'
+	    let stream = matchstr(line, '^[^%]*\\documentclass\zs.*').join(file[(lnr+1):], "\n")
+	    let idx = -1
+	    while idx < len(stream)
+		let idx += 1
+		let chr = stream[idx]
+		if chr == '['
+		    " jump to ']'
+		    while idx < len(stream)
+			let idx += 1
+			let chr = stream[idx]
+			if chr == ']'
+			    break
+			endif
+		    endwhile
+		elseif chr == '%'
+		    while idx < len(stream)
+			let idx += 1
+			let chr = stream[idx]
+			if chr == "\n"
+			    break
+			endif
+		    endwhile
+		elseif chr == '{'
+		    while idx < len(stream)
+			let idx += 1
+			let chr = stream[idx]
+			if chr == '}'
+			    return matchstr(documentclass, '\s*\zs\S*')
+			else
+			    let documentclass .= chr
+			endif
+		    endwhile
+		endif
+	    endwhile
+	endif
+    endfor
     return 0
 endfunction
 " }}}1
@@ -2156,9 +2186,9 @@ function! atplib#search#TreeOfFiles_vim(main_file,...)
 		let saved_iname = iname
 		if iname != fnamemodify(iname, ":p")
 		    if type != "bib"
-			let iname	= atplib#search#KpsewhichFindFile('tex', iname, b:atp_OutDir . "," . g:atp_texinputs , 1, ':p', '^\%(\/home\|\.\)', '\(^\/usr\|texlive\|kpsewhich\|generic\|miktex\)')
+			let iname	= atplib#search#KpsewhichFindFile('tex', iname, expand(b:atp_OutDir) . "," . g:atp_texinputs , 1, ':p', '^\%(\/home\|\.\)', '\(^\/usr\|texlive\|kpsewhich\|generic\|miktex\)')
 		    else
-			let iname	= atplib#search#KpsewhichFindFile('bib', iname, b:atp_OutDir . "," . g:atp_bibinputs , 1, ':p')
+			let iname	= atplib#search#KpsewhichFindFile('bib', iname, expand(b:atp_OutDir) . "," . g:atp_bibinputs , 1, ':p')
 		    endif
 		endif
 
@@ -2282,7 +2312,7 @@ def bufnumber(file):
             os.chdir(cdir)
             return buf.number
     for buf in vim.buffers:
-        if os.path.basename(buf.name) == file:
+        if not buf.name is None and os.path.basename(buf.name) == file:
             os.chdir(cdir)
             return buf.number
     os.chdir(cdir)
@@ -2323,7 +2353,10 @@ def scan_file(file, fname, pattern, bibpattern):
                     for m in  match.split(','):
                         m=addext(m, "bib")
                         if not os.access(m, os.F_OK):
-                            m=kpsewhich_find(m, bib_path)[0]
+                            try:
+                                m=kpsewhich_find(m, bib_path)[0]
+                            except IndexError:
+                                pass
                         matches_d[m]=[m, fname,  nr, 'bib']
                         matches_l.append(m)
     return [ matches_d, matches_l ]
@@ -2344,9 +2377,16 @@ def tree(file, level, pattern, bibpattern):
             else:
                 path=tex_path
             try:
-                file=kpsewhich_find(file, path)[0]
-                with open(file) as fo:
-                    file_l = fo.read().splitlines(False)
+                k_list = kpsewhich_find(file, path)
+                if k_list:
+                    file = k_list[0]
+                else:
+                    file = None
+                if file:
+                    with open(file) as fo:
+                        file_l = fo.read().splitlines(False)
+                else:
+                    return [ {}, [], {}, {} ]
             except IOError:
                 return [ {}, [], {}, {} ]
             except IndexError:

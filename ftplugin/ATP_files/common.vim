@@ -2,7 +2,7 @@
 " Description: This script has functions which have to be called before ATP_files/options.vim 
 " Note:	       This file is a part of Automatic Tex Plugin for Vim.
 " Language:    tex
-" Last Change: Sun Sep 23, 2012 at 14:25:44  +0100
+" Last Change: Wed Nov 28, 2012 at 13:46:30  +0000
 
 " This file contains set of functions which are needed to set to set the atp
 " options and some common tools.
@@ -56,8 +56,8 @@ endif
 " }}}
 
 augroup ATP_SetErrorFile
+    au!
     au BufEnter 	*.tex 		call atplib#common#SetErrorFile()
-"     au BufEnter 	$l:errorfile 	setl autoread 
 augroup END
 
 " TreeOfFiles
@@ -76,125 +76,15 @@ function! TreeOfFiles(main_file,...) "{{{1
     return [ tree, list, types, levels ]
 endfunction "}}}1
 
-" All Status Line related things:
-"{{{ Status Line
-function! s:StatusOutDir() "{{{
-let status=""
-if exists("b:atp_OutDir")
-    if b:atp_OutDir != "" 
-	let status= status . "Output dir: " . pathshorten(substitute(b:atp_OutDir,"\/\s*$","","")) 
+" SetOutDir 
+fun! <sid>SetOutDir(...) "{{{1
+    if a:0 && !empty(a:1)
+	let b:atp_OutDir = fnamemodify(a:1, ':p')
+	call atplib#common#SetErrorFile()
     else
-	let status= status . "Please set the Output directory, b:atp_OutDir"
+	echo b:atp_OutDir
     endif
-endif	
-    return status
-endfunction 
-"}}}
-
-" There is a copy of this variable in compiler.vim
-function! ATPRunning() "{{{
-
-    if !g:atp_statusNotif
-	" Do not put any message if user dosn't want it. 
-	return ""
-    endif
-
-    if !exists("g:atp_DEV_no_check") || !g:atp_DEV_no_check
-    if g:atp_Compiler =~ '\<python' 
-        " For python compiler
-        for var in [ "Latex", "Bibtex", "Python" ] 
-	    if !exists("b:atp_".var."PIDs")
-		let b:atp_{var}PIDs = []
-	    endif
-	    call atplib#callback#PIDsRunning("b:atp_".var."PIDs")
-	endfor
-	if len(b:atp_LatexPIDs) > 0
-	    let atp_running= len(b:atp_LatexPIDs) 
-	elseif len(b:atp_BibtexPIDs) > 0
-	    let atp_running= len(b:atp_BibtexPIDs)
-	else
-	    return ''
-	endif
-    else
-	" for g:atp_Compiler='bash' 
-	let atp_running=b:atp_running
-
-	for cmd in keys(g:CompilerMsg_Dict) 
-	    if b:atp_TexCompiler =~ '^\s*' . cmd . '\s*$'
-		let Compiler = g:CompilerMsg_Dict[cmd]
-		break
-	    else
-		let Compiler = b:atp_TexCompiler
-	    endif
-	endfor
-	if atp_running >= 2
-	    return atp_running." ".Compiler
-	elseif atp_running >= 1
-	    return Compiler
-	else
-	    return ""
-	endif
-    endif
-    endif
-
-    for cmd in keys(g:CompilerMsg_Dict) 
-	if b:atp_TexCompiler =~ '^\s*' . cmd . '\s*$'
-	    let Compiler = g:CompilerMsg_Dict[cmd]
-	    break
-	else
-	    let Compiler = b:atp_TexCompiler
-	endif
-    endfor
-
-    " For g:atp_Compiler='python'
-    if exists("g:atp_callback") && g:atp_callback
-	if exists("b:atp_LatexPIDs") && len(b:atp_LatexPIDs)>0  
-
-
-	    if exists("g:atp_ProgressBarValues") && type(g:atp_ProgressBarValues) == 4 && get(g:atp_ProgressBarValues,bufnr("%"), {}) != {}
-		let max = max(values(get(g:atp_ProgressBarValues, bufnr("%"))))
-		let progress_bar="[".max."]".( g:atp_statusOutDir ? " " : "" )
-	    else
-		let progress_bar=""
-	    endif
-
-	    if atp_running >= 2
-		return atp_running." ".Compiler." ".progress_bar
-	    elseif atp_running >= 1
-		return Compiler." ".progress_bar
-	    else
-		return ""
-	    endif
-	elseif exists("b:atp_BibtexPIDs") && len(b:atp_BibtexPIDs)>0
-	    return b:atp_BibCompiler
-	elseif exists("b:atp_MakeindexPIDs") && len(b:atp_MakeindexPIDs)>0
-	    return "makeindex"
-	endif
-    else
-	if g:atp_ProgressBar
-	    try
-		let pb_file = readfile(g:atp_ProgressBarFile)
-	    catch /.*:/
-		let pb_file = []
-	    endtry
-	    if len(pb_file)
-		let progressbar = Compiler." [".get(pb_file, 0, "")."]"
-" 		let progressbar = Compiler
-	    else
-		let progressbar = ""
-	    endif
-	else
-	    let progressbar = ""
-	endif
-	return progressbar
-    endif
-    return ""
-endfunction "}}}
-
-" augroup ATP_RedrawStatus
-"     au!
-"     au CursorHoldI,CursorHold *	:let &ro=&ro
-" augroup END
+endfun "}}}1
 
 " {{{ Syntax and Hilighting
 " ToDo:
@@ -206,84 +96,10 @@ endfunction "}}}
 " hi 	link 	atp_statusoutdir 	String
 " }}}
 
-function! s:SetNotificationColor() "{{{
-    " use the value of the variable g:atp_notification_{g:colors_name}_guibg
-    " if it doesn't exists use the default value (the same as the value of StatusLine
-    " (it handles also the reverse option!)
-    let colors_name = exists("g:colors_name") ? g:colors_name : "default"
-"     let g:cname	= colors_name
-" 	Note: the names of variable uses gui but equally well it could be cterm. As
-" 	they work in gui and vim. 
-    if has("gui_running")
-	let notification_guibg = exists("g:atp_notification_".colors_name."_guibg") ?
-		    \ g:atp_notification_{colors_name}_guibg :
-		    \ ( synIDattr(synIDtrans(hlID("StatusLine")), "reverse") ?
-			\ synIDattr(synIDtrans(hlID("StatusLine")), "fg#") :
-			\ synIDattr(synIDtrans(hlID("StatusLine")), "bg#") )
-	let notification_guifg = exists("g:atp_notification_".colors_name."_guifg") ?
-		    \ g:atp_notification_{colors_name}_guifg :
-		    \ ( synIDattr(synIDtrans(hlID("StatusLine")), "reverse") ?
-			\ synIDattr(synIDtrans(hlID("StatusLine")), "bg#") :
-			\ synIDattr(synIDtrans(hlID("StatusLine")), "fg#") )
-	let notification_gui = exists("g:atp_notification_".colors_name."_gui") ?
-		    \ g:atp_notification_{colors_name}_gui :
-		    \ ( (synIDattr(synIDtrans(hlID("StatusLine")), "bold") ? "bold" : "" ) . 
-			\ (synIDattr(synIDtrans(hlID("StatusLine")), "underline") ? ",underline" : "" ) .
-			\ (synIDattr(synIDtrans(hlID("StatusLine")), "underculr") ? ",undercurl" : "" ) .
-			\ (synIDattr(synIDtrans(hlID("StatusLine")), "italic") ? ",italic" : "" ) )
-    else
-	let notification_guibg = exists("g:atp_notification_".colors_name."_ctermbg") ?
-		    \ g:atp_notification_{colors_name}_ctermbg :
-		    \ ( synIDattr(synIDtrans(hlID("StatusLine")), "reverse") ?
-			\ synIDattr(synIDtrans(hlID("StatusLine")), "fg#") :
-			\ synIDattr(synIDtrans(hlID("StatusLine")), "bg#") )
-	let notification_guifg = exists("g:atp_notification_".colors_name."_ctermfg") ?
-		    \ g:atp_notification_{colors_name}_ctermfg :
-		    \ ( synIDattr(synIDtrans(hlID("StatusLine")), "reverse") ?
-			\ synIDattr(synIDtrans(hlID("StatusLine")), "bg#") :
-			\ synIDattr(synIDtrans(hlID("StatusLine")), "fg#") )
-	let notification_gui = exists("g:atp_notification_".colors_name."_cterm") ?
-		    \ g:atp_notification_{colors_name}_cterm :
-		    \ ( (synIDattr(synIDtrans(hlID("StatusLine")), "bold") ? "bold" : "" ) . 
-			\ (synIDattr(synIDtrans(hlID("StatusLine")), "underline") ? ",underline" : "" ) .
-			\ (synIDattr(synIDtrans(hlID("StatusLine")), "underculr") ? ",undercurl" : "" ) .
-			\ (synIDattr(synIDtrans(hlID("StatusLine")), "italic") ? ",italic" : "" ) )
-    endif
-
-    if has("gui_running")
-	let g:notification_gui		= notification_gui
-	let g:notification_guibg	= notification_guibg
-	let g:notification_guifg	= notification_guifg
-    else
-	let g:notification_cterm	= notification_gui
-	let g:notification_ctermbg	= notification_guibg
-	let g:notification_ctermfg	= notification_guifg
-    endif
-    if has("gui_running")
-	let prefix = "gui"
-    else
-	let prefix = "cterm"
-    endif
-    let hi_gui	 = ( notification_gui   !=  "" && notification_gui   	!= -1 ? " ".prefix."="   . notification_gui   : "" )
-    let hi_guifg = ( notification_guifg !=  "" && notification_guifg 	!= -1 ? " ".prefix."fg=" . notification_guifg : "" )
-    let hi_guibg = ( notification_guibg !=  "" && notification_guibg 	!= -1 ? " ".prefix."bg=" . notification_guibg : "" )
-
-    if (notification_gui == -1 || notification_guifg == -1 || notification_guibg == -1)
-	return
-    endif
-    " Highlight command:
-    try
-    execute "hi User".g:atp_statusNotifHi ." ". hi_gui . hi_guifg . hi_guibg
-    catch /E418:/
-    endtry
-
-endfunction
 "}}}
 
 " The main status function, it is called via autocommand defined in 'options.vim'.
 let s:errormsg = 0
-" a:command = 1/0: 1 if run by a command, then a:1=bang, a:2=ctoc, 
-" if a:command = 0, then a:1=ctoc.
 function! ATPStatus(command,...) "{{{
     if expand("%") == "[Command Line]" || &l:filetype == "qf" || expand("%:e") != "tex"
 	" If one uses q/ or q? this status function should not be used.
@@ -293,7 +109,7 @@ function! ATPStatus(command,...) "{{{
     if a:command >= 1
 	" This is run be the command :Status (:ATPStatus)
 	if a:0 >= 1 && a:1
-	    let g:status_OutDir = s:StatusOutDir()
+	    let g:status_OutDir = atplib#StatusOutDir()
 	    let g:atp_statusOutDir = 1
 	else
 	    let g:status_OutDir = ""
@@ -303,16 +119,14 @@ function! ATPStatus(command,...) "{{{
     else
 	" This is run by the autocommand group ATP_Status
 	if g:atp_statusOutDir
-	    let g:status_OutDir = s:StatusOutDir()
+	    let g:status_OutDir = atplib#StatusOutDir()
 	else
 	    let g:status_OutDir = ""
 	endif
 	let b:atp_statusCurSection = ( a:0 >= 1 ? a:1 : 0 )
     endif
-    " There is a bug in CTOC() which prevents statusline option from being set right.
-    " This is a dirty workaround:
-"     silent echo CTOC("return")
-    let status_CTOC	= ( b:atp_statusCurSection && &l:filetype =~ '^\(ams\)\=tex' ? '%{CTOC("return")}' : '' )
+
+    let status_CurrentSection = ( b:atp_statusCurSection ? '%{atplib#CurrentSectionn()}' : '' )
     if g:atp_statusNotifHi > 9 || g:atp_statusNotifHi < 0
 	let g:atp_statusNotifHi = 9
 	if !s:errormsg
@@ -325,15 +139,15 @@ function! ATPStatus(command,...) "{{{
     let status_NotifHiPost =
 		\ ( g:atp_statusNotif && g:atp_statusNotifHi 	? '%*' 	: '' )
     let status_Notif	=
-		\ ( g:atp_statusNotif 			? '%{ATPRunning()}' 	: '' )
+		\ ( g:atp_statusNotif 			? '%{atplib#ProgressBar()}' 	: '' )
     let status_KeyMap	=
 		\ ( has("keymap") && g:atp_babel && exists("b:keymap_name") 	
 								\ ? b:keymap_name 	: '' )
-    let g:atp_StatusLine= '%<%f '.status_KeyMap.'%(%h%m%r%) '.status_NotifHi.status_Notif.status_NotifHiPost.'%= '.status_CTOC.' %{g:status_OutDir}'
+    let g:atp_StatusLine= '%<%f '.status_KeyMap.'%(%h%m%r%) '.status_NotifHi.status_Notif.status_NotifHiPost.'%= '.status_CurrentSection.' %{g:status_OutDir}'
     if &ruler
 	let g:atp_StatusLine.=' %-14.16(%l,%c%V%)%P'
     endif
-    set statusline=%!g:atp_StatusLine
+    setl statusline=%!g:atp_StatusLine
 endfunction
 try
     command -buffer -bang Status	:call ATPStatus(1,(<q-bang> == "")) 
@@ -346,8 +160,7 @@ endtry
 " (includes commands, and maps - all the things 
 " 		that must be sources for each file
 " 		+ sets g:atp_inputfile_pattern variable)
-" {{{1
-call atplib#common#SetProjectName()
+call atplib#common#SetProjectName() "{{{1
 
 " The pattern g:atp_inputfile_pattern should match till the begining of the file name
 " and shouldn't use \zs:\ze. 
@@ -376,20 +189,23 @@ if expand("%:e") == "tex"
     call atplib#common#SetErrorFile()
 endif "}}}1
 
+fun! <SID>InputFiles(bang)
+    call atplib#search#UpdateMainFile() 
+    call atplib#search#FindInputFiles(atplib#FullPath(b:atp_MainFile)) 
+    if a:bang == ""
+	WriteProjectScript local 1
+    endif
+    echo join([b:atp_MainFile]+b:ListOfFiles, "\n")
+endfun
+
 " Commands:
 "{{{1
 command! -buffer -bang SetProjectName	:call atplib#common#SetProjectName(<q-bang>, 0)
-command! -buffer SetErrorFile		:call atplib#common#SetErrorFile()
-command! -buffer SetOutDir		:call atplib#common#SetOutDir(1)
-command! -buffer InputFiles 		:call atplib#search#UpdateMainFile() | :call atplib#search#FindInputFiles(atplib#FullPath(b:atp_MainFile)) | echo join([b:atp_MainFile]+b:ListOfFiles, "\n")
+command! -buffer SetErrorFile		:echo atplib#common#SetErrorFile()
+command! -buffer -nargs=? -complete=dir SetOutDir :call <sid>SetOutDir(<f-args>)
+command! -buffer -bang InputFiles 	:call <SID>InputFiles(<q-bang>)
 
 " This should set the variables and run atplib#common#SetNotificationColor function
 command! -buffer SetNotificationColor :call atplib#common#SetNotificationColor()
-augroup ATP_SetStatusLineNotificationColor
-    au!
-    au VimEnter 		*.tex 	:call s:SetNotificationColor()
-    au BufEnter 		*.tex 	:call s:SetNotificationColor()
-    au ColorScheme 		* 	:call s:SetNotificationColor()
-augroup END
 "}}}
 " vim:fdm=marker:tw=85:ff=unix:noet:ts=8:sw=4:fdc=1
