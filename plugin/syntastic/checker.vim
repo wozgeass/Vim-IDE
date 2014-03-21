@@ -13,6 +13,10 @@ function! g:SyntasticChecker.New(args) " {{{2
     let newObj._filetype = a:args['filetype']
     let newObj._name = a:args['name']
     let newObj._exec = get(a:args, 'exec', newObj._name)
+<<<<<<< HEAD
+=======
+    let newObj._makeprgFunc = function('SyntasticCheckerMakeprgBuild')
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     if has_key(a:args, 'redirect')
         let [filetype, name] = split(a:args['redirect'], '/')
@@ -49,6 +53,7 @@ function! g:SyntasticChecker.getExec() " {{{2
         return expand(g:syntastic_{self._filetype}_{self._name}_exec)
     endif
 
+<<<<<<< HEAD
     return self._exec
 endfunction " }}}2
 
@@ -57,6 +62,17 @@ function! g:SyntasticChecker.getExecEscaped() " {{{2
 endfunction " }}}2
 
 function! g:SyntasticChecker.getLocListRaw() " {{{2
+=======
+function! g:SyntasticChecker.getExec()
+    if exists('g:syntastic_' . self._filetype . '_' . self._name . '_exec')
+        return expand(g:syntastic_{self._filetype}_{self._name}_exec)
+    endif
+
+    return self._exec
+endfunction
+
+function! g:SyntasticChecker.getLocListRaw()
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     let name = self._filetype . '/' . self._name
     try
         let list = self._locListFunc()
@@ -69,15 +85,24 @@ function! g:SyntasticChecker.getLocListRaw() " {{{2
     call syntastic#log#debug(g:SyntasticDebugLoclist, name . ' raw:', list)
     call self._quietMessages(list)
     return list
+<<<<<<< HEAD
 endfunction " }}}2
 
 function! g:SyntasticChecker.getLocList() " {{{2
     return g:SyntasticLoclist.New(self.getLocListRaw())
 endfunction " }}}2
+=======
+endfunction
+
+function! g:SyntasticChecker.getLocList()
+    return g:SyntasticLoclist.New(self.getLocListRaw())
+endfunction
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
 function! g:SyntasticChecker.makeprgBuild(opts) " {{{2
     let basename = self._filetype . '_' . self._name . '_'
 
+<<<<<<< HEAD
     let parts = []
     call extend(parts, self._getOpt(a:opts, basename, 'exe', self.getExecEscaped()))
     call extend(parts, self._getOpt(a:opts, basename, 'args', ''))
@@ -89,6 +114,13 @@ function! g:SyntasticChecker.makeprgBuild(opts) " {{{2
 endfunction " }}}2
 
 function! g:SyntasticChecker.isAvailable() " {{{2
+=======
+function! g:SyntasticChecker.makeprgBuild(opts)
+    return self._makeprgFunc(a:opts)
+endfunction
+
+function! g:SyntasticChecker.isAvailable()
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     return self._isAvailableFunc()
 endfunction " }}}2
 
@@ -96,6 +128,7 @@ endfunction " }}}2
 
 " Private methods {{{1
 
+<<<<<<< HEAD
 function! g:SyntasticChecker._quietMessages(errors) " {{{2
     " wildcard quiet_messages
     let quiet_filters = copy(syntastic#util#var('quiet_messages', {}))
@@ -123,6 +156,18 @@ endfunction " }}}2
 
 function! g:SyntasticChecker._populateHighlightRegexes(errors) " {{{2
     if has_key(self, '_highlightRegexFunc')
+=======
+function! g:SyntasticChecker._quietMessages(errors)
+    let filter = 'g:syntastic_' . self._filetype . '_' . self._name . '_quiet_messages'
+    if exists(filter) && type({filter}) == type({}) && !empty({filter})
+        call syntastic#util#dictFilter(a:errors, {filter})
+        call syntastic#log#debug(g:SyntasticDebugLoclist, 'filtered by ' . filter . ':', a:errors)
+    endif
+endfunction
+
+function! g:SyntasticChecker._populateHighlightRegexes(errors)
+    if !empty(self._highlightRegexFunc)
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
         for e in a:errors
             if e['valid']
                 let term = self._highlightRegexFunc(e)
@@ -132,6 +177,7 @@ function! g:SyntasticChecker._populateHighlightRegexes(errors) " {{{2
             endif
         endfor
     endif
+<<<<<<< HEAD
 endfunction " }}}2
 
 function! g:SyntasticChecker._getOpt(opts, basename, name, default) " {{{2
@@ -163,5 +209,26 @@ function! SyntasticCheckerIsAvailableDefault() dict " {{{2
 endfunction " }}}2
 
 " }}}1
+=======
+endfunction
+
+" Non-method functions {{{1
+
+function! SyntasticCheckerIsAvailableDefault() dict
+    return executable(self.getExec())
+endfunction
+
+function! SyntasticCheckerMakeprgBuild(opts) dict
+    let builder = g:SyntasticMakeprgBuilder.New(
+                \ get(a:opts, 'checker', self),
+                \ get(a:opts, 'exe', ''),
+                \ get(a:opts, 'args', ''),
+                \ get(a:opts, 'fname', ''),
+                \ get(a:opts, 'post_args', ''),
+                \ get(a:opts, 'tail', '') )
+
+    return builder.makeprg()
+endfunction
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
 " vim: set sw=4 sts=4 et fdm=marker:

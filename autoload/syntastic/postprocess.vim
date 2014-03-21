@@ -23,12 +23,21 @@ function! s:compareErrorItems(a, b) " {{{2
 endfunction " }}}2
 
 " natural sort
+<<<<<<< HEAD
 function! syntastic#postprocess#sort(errors) " {{{2
     return sort(copy(a:errors), 's:compareErrorItems')
 endfunction " }}}2
 
 " merge consecutive blanks
 function! syntastic#postprocess#compressWhitespace(errors) " {{{2
+=======
+function! syntastic#postprocess#sort(errors)
+    return sort(copy(a:errors), 's:compareErrorItems')
+endfunction
+
+" merge consecutive blanks
+function! syntastic#postprocess#compressWhitespace(errors)
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     for e in a:errors
         let e['text'] = substitute(e['text'], "\001", '', 'g')
         let e['text'] = substitute(e['text'], '\n', ' ', 'g')
@@ -36,7 +45,11 @@ function! syntastic#postprocess#compressWhitespace(errors) " {{{2
     endfor
 
     return a:errors
+<<<<<<< HEAD
 endfunction " }}}2
+=======
+endfunction
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
 " remove spurious CR under Cygwin
 function! syntastic#postprocess#cygwinRemoveCR(errors) " {{{2
@@ -47,16 +60,27 @@ function! syntastic#postprocess#cygwinRemoveCR(errors) " {{{2
     endif
 
     return a:errors
+<<<<<<< HEAD
 endfunction " }}}2
 
 " decode XML entities
 function! syntastic#postprocess#decodeXMLEntities(errors) " {{{2
+=======
+endfunction
+
+" decode XML entities
+function! syntastic#postprocess#decodeXMLEntities(errors)
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     for e in a:errors
         let e['text'] = syntastic#util#decodeXMLEntities(e['text'])
     endfor
 
     return a:errors
+<<<<<<< HEAD
 endfunction " }}}2
+=======
+endfunction
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
 " filter out errors referencing other files
 function! syntastic#postprocess#filterForeignErrors(errors) " {{{2
@@ -68,4 +92,8 @@ endfunction " }}}2
 let &cpo = s:save_cpo
 unlet s:save_cpo
 
+<<<<<<< HEAD
 " vim: set sw=4 sts=4 et fdm=marker:
+=======
+" vim: set et sts=4 sw=4:
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd

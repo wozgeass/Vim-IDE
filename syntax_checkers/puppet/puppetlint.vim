@@ -33,7 +33,11 @@ endfunction
 
 function! SyntaxCheckers_puppet_puppetlint_GetLocList() dict
     let makeprg = self.makeprgBuild({
+<<<<<<< HEAD
         \ 'args_after': '--log-format "%{KIND} [%{check}] %{message} at %{fullpath}:%{linenumber}"' })
+=======
+        \ 'post_args': '--log-format "%{KIND} [%{check}] %{message} at %{fullpath}:%{linenumber}"' })
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let errorformat = '%t%*[a-zA-Z] %m at %f:%l'
 

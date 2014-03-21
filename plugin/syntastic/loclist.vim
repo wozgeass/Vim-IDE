@@ -31,7 +31,11 @@ function! g:SyntasticLoclist.current() " {{{2
     return b:syntastic_loclist
 endfunction " }}}2
 
+<<<<<<< HEAD
 function! g:SyntasticLoclist.extend(other) " {{{2
+=======
+function! g:SyntasticLoclist.extend(other)
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     let list = self.copyRaw()
     call extend(list, a:other.copyRaw())
     return g:SyntasticLoclist.New(list)
@@ -41,6 +45,7 @@ function! g:SyntasticLoclist.isEmpty() " {{{2
     return empty(self._rawLoclist)
 endfunction " }}}2
 
+<<<<<<< HEAD
 function! g:SyntasticLoclist.copyRaw() " {{{2
     return copy(self._rawLoclist)
 endfunction " }}}2
@@ -101,6 +106,19 @@ function! g:SyntasticLoclist.getStatuslineFlag() " {{{2
 
     return self._stl_flag
 endfunction " }}}2
+=======
+function! g:SyntasticLoclist.isEmpty()
+    return empty(self._rawLoclist)
+endfunction
+
+function! g:SyntasticLoclist.copyRaw()
+    return copy(self._rawLoclist)
+endfunction
+
+function! g:SyntasticLoclist.getRaw()
+    return self._rawLoclist
+endfunction
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
 function! g:SyntasticLoclist.getFirstIssue() " {{{2
     return get(self._rawLoclist, 0, {})
@@ -120,7 +138,15 @@ function! g:SyntasticLoclist.decorate(tag) " {{{2
     endfor
 endfunction " }}}2
 
+<<<<<<< HEAD
 function! g:SyntasticLoclist.errors() " {{{2
+=======
+function! g:SyntasticLoclist.quietMessages(filters)
+    call syntastic#util#dictFilter(self._rawLoclist, a:filters)
+endfunction
+
+function! g:SyntasticLoclist.errors()
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     if !exists("self._cachedErrors")
         let self._cachedErrors = self.filter({'type': "E"})
     endif
@@ -139,6 +165,12 @@ endfunction " }}}2
 function! g:SyntasticLoclist.hasErrorsOrWarningsToDisplay() " {{{2
     return !self.isEmpty()
 endfunction " }}}2
+
+" Legacy function.  Syntastic no longer calls it, but we keep it
+" around because other plugins (f.i. powerline) depend on it.
+function! g:SyntasticLoclist.hasErrorsOrWarningsToDisplay()
+    return !self.isEmpty()
+endfunction
 
 " cache used by EchoCurrentError()
 function! g:SyntasticLoclist.messages(buf) " {{{2
@@ -170,14 +202,24 @@ endfunction " }}}2
 "would return all errors for buffer 10.
 "
 "Note that all comparisons are done with ==?
+<<<<<<< HEAD
 function! g:SyntasticLoclist.filter(filters) " {{{2
+=======
+function! g:SyntasticLoclist.filter(filters)
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     let conditions = values(map(copy(a:filters), 's:translate(v:key, v:val)'))
     let filter = len(conditions) == 1 ?
         \ conditions[0] : join(map(conditions, '"(" . v:val . ")"'), ' && ')
     return filter(copy(self._rawLoclist), filter)
+<<<<<<< HEAD
 endfunction " }}}2
 
 function! g:SyntasticLoclist.setloclist() " {{{2
+=======
+endfunction
+
+function! g:SyntasticLoclist.setloclist()
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     if !exists('w:syntastic_loclist_set')
         let w:syntastic_loclist_set = 0
     endif
@@ -185,6 +227,7 @@ function! g:SyntasticLoclist.setloclist() " {{{2
     call syntastic#log#debug(g:SyntasticDebugNotifications, 'loclist: setloclist ' . (replace ? '(replace)' : '(new)'))
     call setloclist(0, self.getRaw(), replace ? 'r' : ' ')
     let w:syntastic_loclist_set = 1
+<<<<<<< HEAD
 endfunction " }}}2
 
 "display the cached errors for this buf in the location list
@@ -192,6 +235,15 @@ function! g:SyntasticLoclist.show() " {{{2
     call syntastic#log#debug(g:SyntasticDebugNotifications, 'loclist: show')
     call self.setloclist()
 
+=======
+endfunction
+
+"display the cached errors for this buf in the location list
+function! g:SyntasticLoclist.show()
+    call syntastic#log#debug(g:SyntasticDebugNotifications, 'loclist: show')
+    call self.setloclist()
+
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     if !self.isEmpty()
         let num = winnr()
         execute "lopen " . syntastic#util#var('loc_list_height')
@@ -222,7 +274,11 @@ endfunction " }}}2
 
 " Non-method functions {{{1
 
+<<<<<<< HEAD
 function! g:SyntasticLoclistHide() " {{{2
+=======
+function! g:SyntasticLoclistHide()
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     call syntastic#log#debug(g:SyntasticDebugNotifications, 'loclist: hide')
     silent! lclose
 endfunction " }}}2
@@ -236,5 +292,11 @@ function! s:translate(key, val) " {{{2
 endfunction " }}}2
 
 " }}}1
+
+" Private functions {{{1
+
+function! s:translate(key, val)
+    return 'get(v:val, ' . string(a:key) . ', "") ==? ' . string(a:val)
+endfunction
 
 " vim: set sw=4 sts=4 et fdm=marker:

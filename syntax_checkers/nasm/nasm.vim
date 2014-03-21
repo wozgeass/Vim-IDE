@@ -19,8 +19,14 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! SyntaxCheckers_nasm_nasm_GetLocList() dict
+<<<<<<< HEAD
     let makeprg = self.makeprgBuild({
         \ 'args_after': '-X gnu -f elf' .
+=======
+    let wd = syntastic#util#shescape(expand("%:p:h") . "/")
+    let makeprg = self.makeprgBuild({
+        \ 'args': '-X gnu -f elf' .
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
         \       ' -I ' . syntastic#util#shescape(expand("%:p:h") . "/") .
         \       ' ' . syntastic#c#NullOutput() })
 

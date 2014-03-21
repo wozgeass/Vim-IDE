@@ -15,6 +15,13 @@ if exists("g:loaded_syntastic_ruby_mri_checker")
 endif
 let g:loaded_syntastic_ruby_mri_checker = 1
 
+<<<<<<< HEAD
+=======
+if !exists("g:syntastic_ruby_exec")
+    let g:syntastic_ruby_exec = "ruby"
+endif
+
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 let s:save_cpo = &cpo
 set cpo&vim
 
@@ -28,18 +35,26 @@ function! SyntaxCheckers_ruby_mri_GetHighlightRegex(i)
 endfunction
 
 function! SyntaxCheckers_ruby_mri_GetLocList() dict
+<<<<<<< HEAD
     if !exists('g:syntastic_ruby_exec')
         let g:syntastic_ruby_exec = self.getExec()
     endif
 
     let exe = syntastic#util#shexpand(g:syntastic_ruby_exec)
+=======
+    let exe = expand(g:syntastic_ruby_exec)
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     if !syntastic#util#isRunningWindows()
         let exe = 'RUBYOPT= ' . exe
     endif
 
     let makeprg = self.makeprgBuild({
         \ 'exe': exe,
+<<<<<<< HEAD
         \ 'args_after': '-w -T1 -c' })
+=======
+        \ 'args': '-w -T1 -c' })
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     "this is a hack to filter out a repeated useless warning in rspec files
     "containing lines like

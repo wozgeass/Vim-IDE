@@ -99,16 +99,19 @@ endfunction
 function! atplib#tools#GrepAuxFile(...)
     " Aux file to read:
 
-    let base = ( a:0 >= 1 ? fnamemodify(a:1, ":r") : fnamemodify(b:atp_MainFile, ":r") ) 
-    let aux_filename	= base."._aux"
+    let base = ( a:0 >= 1 ? fnamemodify(a:1, ":r") : atplib#joinpath(expand(b:atp_OutDir), fnamemodify(b:atp_MainFile, ":t:r"))) 
+    let aux_filename = base . "._aux"
     if !filereadable(aux_filename)
-	let aux_filename	= a:1
-	if !filereadable(a:1) && exists("b:atp_MainFile")
-	    let aux_filename = fnamemodify(atplib#FullPath(b:atp_MainFile), ":r") . "._aux"
+	let aux_filename = base . ".aux"
+	if !filereadable(aux_filename)
+	    let base = fnamemodify(atplib#FullPath(b:atp_MainFile), ":r")
+	    let aux_filename =  base . "._aux"
 	    if !filereadable(aux_filename)
-		let aux_filename = fnamemodify(atplib#FullPath(b:atp_MainFile), ":r") . ".aux"
+		let aux_filename = base . ".aux"
 	    else
-		echoerr "[ATP] aux file not found (atplib#tools#GrepAuxFile)."
+		echohl WarningMsg
+		echom "[ATP] aux file not found (atplib#tools#GrepAuxFile)."
+		echohl Normal
 	    endif
 	endif
     endif
@@ -239,7 +242,7 @@ function! atplib#tools#GrepAuxFile(...)
 	    endif
 
 	" aamas2010 class
-	elseif line =~ '\\newlabel{[^}]*}{{\d\%(\d\|.\)*{\d\%(\d\|.\)*}{[^}]*}}' && atplib#search#DocumentClass(b:atp_MainFile) =~? 'aamas20\d\d'
+	elseif line =~ '\\newlabel{[^}]*}{{\d\%(\d\|.\)*{\d\%(\d\|.\)*}{[^}]*}}' && atplib#search#DocumentClass(atplib#FullPath(b:atp_MainFile)) =~? 'aamas20\d\d'
 	    let label 	= matchstr(line, '\\newlabel{\zs[^}]*\ze}{{\d\%(\d\|.\)*{\d\%(\d\|.\)*}{[^}]*}}')
 	    let number 	= matchstr(line, '\\newlabel{\zs[^}]*\ze}{{\zs\d\%(\d\|.\)*{\d\%(\d\|.\)*\ze}{[^}]*}}')
 	    let number	= substitute(number, '{\|}', '', 'g')
@@ -262,7 +265,7 @@ function! atplib#tools#GrepAuxFile(...)
 	    let label	= "nolabel: " . line
 	endif
 
-	if label !~ '^nolabel:\>'
+	if stridx(label, 'nolabel: ') != 0
 	    let number = substitute(number, '{\|}', '', 'g')
 	    call add(labels, [ label, number, counter])
 	    if g:atp_debugGAF
@@ -302,7 +305,7 @@ function! atplib#tools#generatelabels(filename, ...)
     let time=reltime()
     let s:labels	= {}
     let bufname		= fnamemodify(a:filename, ':t')
-    let auxname		= fnamemodify(a:filename, ':r') . ".aux"
+    let auxname		= atplib#joinpath(expand(b:atp_OutDir), fnamemodify(a:filename, ':t:r') . ".aux")
     let return_ListOfFiles	= a:0 >= 1 ? a:1 : 1
 
     let true=1
@@ -531,12 +534,12 @@ function! atplib#tools#getlinenr(...) "{{{
     let labels 	=  a:0 >= 2 ? a:2 : expand("%") == "__Labels__" ? 1 : 0
 
     if labels == 0
-	let bnr = bufnr("__ToC__")
+	let bnr = ( bufname("%") == "__ToC__" ? bufnr("%") : bufnr("__ToC__"))
 	if len(getbufvar(bnr, "atp_Toc"))
 	    return get(getbufvar(bnr, "atp_Toc"), line, ["", ""])[0:1]
 	endif
     else
-	let bnr = bufnr("__Labels__")
+	let bnr = (bufname("%") == "__Labels__" ? bufnr("%") : bufnr("__Labels__"))
 	let dict=getbufvar(bnr, "atp_Labels")
 	if len(dict)
 	    return get(dict, line, ["", ""])[0:1]

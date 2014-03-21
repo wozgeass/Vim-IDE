@@ -49,8 +49,12 @@ function! SyntaxCheckers_javascript_closurecompiler_GetLocList() dict
 
     let makeprg = self.makeprgBuild({
         \ 'exe': 'java -jar ' . g:syntastic_javascript_closure_compiler_path,
+<<<<<<< HEAD
         \ 'args': g:syntastic_javascript_closure_compiler_options,
         \ 'args_after': '--js' ,
+=======
+        \ 'args': g:syntastic_javascript_closure_compiler_options . ' --js' ,
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
         \ 'fname': file_list })
 
     let errorformat =

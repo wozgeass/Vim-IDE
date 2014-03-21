@@ -3,10 +3,10 @@
 " Web Page: http://atp-vim.sourceforge.net
 " Mailing List:	atp-vim-list [AT] lists.sourceforge.net
 " Do NOT DELETE the line just below, it is used by :UpdateATP (':help atp-:UpdateATP')
-" Time Stamp: 26-09-12_19-33
+" Time Stamp: 25-01-14_09-51
 " (but you can edit, if there is a reason for doing this. The format is dd-mm-yy_HH-MM)
 " Language: tex
-" Last Change: Tue Sep 25, 2012 at 21:04:09  +0100
+" Last Change: Sat Oct 27, 2012 at 11:16:57  +0100
 " GetLatestVimScripts: 2945 62 :AutoInstall: tex_atp.vim
 " GetLatestVimScripts: 884 1 :AutoInstall: AutoAlign.vim
 " Copyright: © Marcin Szamotulski, 2012
@@ -34,18 +34,24 @@ if exists("g:no_atp") && g:no_atp || exists("b:did_ftplugin")
 elseif  stridx(expand("%"), 'fugitive:') == 0
     " Minimal settings for Gdiff (fugitive plugin):
     " [these are setting needed for autocommands that are runnign with *.tex]
+    let b:atp_MainFile = expand("")
+    let b:atp_ProjectDir = expand("/tmp") " some files might be written: :LatexTags run through BufWrite autocommand.
     let b:atp_ProjectScript = 0
     let b:atp_XpdfServer = 'fugitive'
+    let b:atp_StatusLine = ''
     let b:atp_statusCurSection = 0
     let b:TypeDict = {}
     let b:ListOfFiles = []
     let b:LevelDict = {}
+    let b:atp_autex = 0
+    let b:atp_updatetime_normal = 0
+    let b:atp_updatetime_insert = 0
     " Note: ATP could run, but in this way Gdiff is faster.
     finish
 endif
 
 let b:did_ftplugin	= 1
-let g:loaded_AutomaticLatexPlugin = "12.1"
+let g:loaded_AutomaticLatexPlugin = "12.4"
 
 if !exists("g:atp_reload_functions")
 	let g:atp_reload_functions = 0
@@ -83,11 +89,11 @@ endif
 	" Functions needed before setting options.
 	runtime ftplugin/ATP_files/common.vim
 
-	" Completion.
-	runtime ftplugin/ATP_files/complete.vim
-
 	" Options, global and local variables, autocommands.
 	runtime ftplugin/ATP_files/options.vim
+
+	" Completion.
+	runtime ftplugin/ATP_files/complete.vim
 
 	runtime ftplugin/ATP_files/tex-fold.vim
 

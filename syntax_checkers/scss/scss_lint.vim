@@ -16,6 +16,7 @@ let g:loaded_syntastic_scss_scss_lint_checker = 1
 
 let s:save_cpo = &cpo
 set cpo&vim
+<<<<<<< HEAD
 
 function! SyntaxCheckers_scss_scss_lint_IsAvailable() dict
     return
@@ -23,6 +24,8 @@ function! SyntaxCheckers_scss_scss_lint_IsAvailable() dict
         \ syntastic#util#versionIsAtLeast(syntastic#util#getVersion(
         \       self.getExecEscaped() . ' --version'), [0, 12])
 endfunction
+=======
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
 function! SyntaxCheckers_scss_scss_lint_GetLocList() dict
     let makeprg = self.makeprgBuild({})
@@ -30,8 +33,12 @@ function! SyntaxCheckers_scss_scss_lint_GetLocList() dict
     return SyntasticMake({
         \ 'makeprg': makeprg,
         \ 'errorformat': errorformat,
+<<<<<<< HEAD
         \ 'subtype': 'Style',
         \ 'returns': [0, 1, 65] })
+=======
+        \ 'subtype': 'Style'})
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({

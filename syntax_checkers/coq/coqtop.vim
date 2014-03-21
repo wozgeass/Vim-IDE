@@ -19,7 +19,11 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! SyntaxCheckers_coq_coqtop_GetLocList() dict
+<<<<<<< HEAD
     let makeprg = self.makeprgBuild({ 'args_after': '-noglob -batch -load-vernac-source' })
+=======
+    let makeprg = self.makeprgBuild({ 'args': '-noglob -batch -load-vernac-source' })
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let errorformat =
         \ '%AFile \"%f\"\, line %l\, characters %c\-%.%#\:,'.

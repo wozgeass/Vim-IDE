@@ -85,9 +85,12 @@ syn region markdownCode matchgroup=markdownCodeDelimiter start="`" end="`" keepe
 syn region markdownCode matchgroup=markdownCodeDelimiter start="`` \=" end=" \=``" keepend contains=markdownLineStart
 syn region markdownCode matchgroup=markdownCodeDelimiter start="^\s*```.*$" end="^\s*```\ze\s*$" keepend
 
+<<<<<<< HEAD
 syn match markdownFootnote "\[^[^\]]\]\s*$"
 syn match markdownFootnoteDefinition "^\[^[^\]]\]:"
 
+=======
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 if main_syntax ==# 'markdown'
   for s:type in g:markdown_fenced_languages
     exe 'syn region markdownHighlight'.substitute(matchstr(s:type,'[^=]*$'),'\..*','','').' matchgroup=markdownCodeDelimiter start="^\s*```\s*'.matchstr(s:type,'[^=]*').'\>.*$" end="^\s*```\ze\s*$" keepend contains=@markdownHighlight'.substitute(matchstr(s:type,'[^=]*$'),'\.','','g')
@@ -111,9 +114,12 @@ hi def link markdownListMarker            htmlTagName
 hi def link markdownBlockquote            Comment
 hi def link markdownRule                  PreProc
 
+<<<<<<< HEAD
 hi def link markdownFootnote              Typedef
 hi def link markdownFootnoteDefinition    Typedef
 
+=======
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 hi def link markdownLinkText              htmlLink
 hi def link markdownIdDeclaration         Typedef
 hi def link markdownId                    Type

@@ -27,8 +27,12 @@ function! SyntaxCheckers_scala_fsc_GetLocList() dict
     " working directory changing after being started
     " that's why we better pass an absolute path
     let makeprg = self.makeprgBuild({
+<<<<<<< HEAD
         \ 'args': g:syntastic_scala_options,
         \ 'args_after': '-Ystop-after:parser',
+=======
+        \ 'args': '-Ystop-after:parser ' . g:syntastic_scala_options,
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
         \ 'fname': syntastic#util#shexpand('%:p') })
 
     let errorformat =

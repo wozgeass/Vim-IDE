@@ -26,12 +26,20 @@ function! SyntaxCheckers_lex_flex_GetHighlightRegex(item)
             \ '\m^\(Definition value for\|undefined definition\) \zs{[^}]\+}\ze')
     endif
 
+<<<<<<< HEAD
     return term != '' ? '\V' . escape(term, '\') : ''
+=======
+    return term != '' ? '\V' . term : ''
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 endfunction
 
 function! SyntaxCheckers_lex_flex_GetLocList() dict
     let makeprg = self.makeprgBuild({
+<<<<<<< HEAD
         \ 'args_after': syntastic#c#NullOutput() })
+=======
+        \ 'exe': self.getExec() . ' ' . syntastic#c#NullOutput() })
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let errorformat = '%f:%l: %m'
 

@@ -24,7 +24,12 @@ function! SyntaxCheckers_slim_slimrb_GetLocList() dict
             \ self.getExecEscaped() . ' --version 2>'. syntastic#util#DevNull()), [1, 3, 1])
     endif
 
+<<<<<<< HEAD
     let makeprg = self.makeprgBuild({ 'args_after': '-c' })
+=======
+function! SyntaxCheckers_slim_slimrb_GetLocList() dict
+    let makeprg = self.makeprgBuild({ 'args': '-c' })
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     if s:slimrb_new
         let errorformat =

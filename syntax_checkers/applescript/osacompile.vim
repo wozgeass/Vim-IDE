@@ -34,7 +34,11 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! SyntaxCheckers_applescript_osacompile_GetLocList() dict
+<<<<<<< HEAD
     let makeprg = self.makeprgBuild({ 'args_after': '-o ' . tempname() . '.scpt' })
+=======
+    let makeprg = self.makeprgBuild({ 'args': '-o ' . tempname() . '.scpt' })
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     let errorformat = '%f:%l:%m'
     return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
 endfunction

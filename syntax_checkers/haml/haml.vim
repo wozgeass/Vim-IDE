@@ -18,17 +18,29 @@ let g:loaded_syntastic_haml_haml_checker = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
+<<<<<<< HEAD
 function! SyntaxCheckers_haml_haml_IsAvailable() dict
     if !exists('g:syntastic_haml_interpreter')
         let g:syntastic_haml_interpreter = self.getExec()
     endif
+=======
+let s:save_cpo = &cpo
+set cpo&vim
+
+function! SyntaxCheckers_haml_haml_IsAvailable() dict
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     return executable(expand(g:syntastic_haml_interpreter))
 endfunction
 
 function! SyntaxCheckers_haml_haml_GetLocList() dict
     let makeprg = self.makeprgBuild({
+<<<<<<< HEAD
         \ 'exe': syntastic#util#shexpand(g:syntastic_haml_interpreter),
         \ 'args_after': '-c' })
+=======
+        \ 'exe': expand(g:syntastic_haml_interpreter),
+        \ 'args': '-c' })
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let errorformat =
         \ 'Haml error on line %l: %m,' .

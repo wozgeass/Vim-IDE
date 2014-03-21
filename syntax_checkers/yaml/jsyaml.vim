@@ -24,10 +24,17 @@ set cpo&vim
 function! SyntaxCheckers_yaml_jsyaml_GetLocList() dict
     if !exists('s:js_yaml_new')
         let s:js_yaml_new =
+<<<<<<< HEAD
             \ syntastic#util#versionIsAtLeast(syntastic#util#getVersion(self.getExecEscaped() . ' --version'), [2])
     endif
 
     let makeprg = self.makeprgBuild({ 'args_after': (s:js_yaml_new ? '' : '--compact') })
+=======
+            \ syntastic#util#versionIsAtLeast(syntastic#util#getVersion(self.getExec() . ' --version'), [2])
+    endif
+
+    let makeprg = self.makeprgBuild({ 'args': s:js_yaml_new ? '' : '--compact' })
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let errorformat =
         \ 'Error on line %l\, col %c:%m,' .

@@ -21,7 +21,11 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! SyntaxCheckers_tcl_nagelfar_GetLocList() dict
+<<<<<<< HEAD
     let makeprg = self.makeprgBuild({ 'args_after': '-H' })
+=======
+    let makeprg = self.makeprgBuild({ 'args': '-H' })
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let errorformat =
         \ '%I%f: %l: N %m,'.

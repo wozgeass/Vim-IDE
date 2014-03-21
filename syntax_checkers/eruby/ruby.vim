@@ -18,15 +18,26 @@ let g:loaded_syntastic_eruby_ruby_checker = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
+<<<<<<< HEAD
 function! SyntaxCheckers_eruby_ruby_IsAvailable() dict
     if !exists("g:syntastic_ruby_exec")
         let g:syntastic_ruby_exec = self.getExec()
     endif
+=======
+let s:save_cpo = &cpo
+set cpo&vim
+
+function! SyntaxCheckers_eruby_ruby_IsAvailable() dict
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     return executable(expand(g:syntastic_ruby_exec))
 endfunction
 
 function! SyntaxCheckers_eruby_ruby_GetLocList() dict
+<<<<<<< HEAD
     let exe = syntastic#util#shexpand(g:syntastic_ruby_exec)
+=======
+    let exe = expand(g:syntastic_ruby_exec)
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     if !syntastic#util#isRunningWindows()
         let exe = 'RUBYOPT= ' . exe
     endif

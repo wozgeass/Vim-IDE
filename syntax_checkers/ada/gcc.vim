@@ -20,11 +20,20 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! SyntaxCheckers_ada_gcc_IsAvailable() dict
+<<<<<<< HEAD
     if !exists('g:syntastic_ada_compiler')
         let g:syntastic_ada_compiler = self.getExec()
     endif
     return executable(expand(g:syntastic_ada_compiler))
 endfunction
+=======
+    return executable(expand(g:syntastic_ada_compiler))
+endfunction
+
+if !exists('g:syntastic_ada_compiler_options')
+    let g:syntastic_ada_compiler_options = ''
+endif
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
 function! SyntaxCheckers_ada_gcc_GetLocList() dict
     return syntastic#c#GetLocList('ada', 'gcc', {

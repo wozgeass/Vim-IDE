@@ -1,7 +1,7 @@
 " Vim filetype plugin file
 " Language:    tex
 " Maintainer:  Marcin Szamotulski
-" Last Change: Fri Apr 20, 2012 at 09:36:46  +0100
+" Last Change: Tue Dec 11, 2012 at 18:53:41  +0000
 " Note:	       This file is a part of Automatic Tex Plugin for Vim.
 
 " if exists("b:did_ftplugin") | finish | endif
@@ -42,14 +42,15 @@ endfunction
 " 		(1) choose window with matching buffer name
 " 		(2) choose among those which were edited last
 " Solution:
-"        			       --N-> choose this window
+"        			       +-N-> choose this window
 "			 	       |
-"			     --N-> ----|
-"			     | 	       --Y-> choose that window		
-" --go from where you come-->|         Does there exist another open window 
-"  			     |	       with the right buffer name?
+"			     +-N-> ----+
+"			     | 	       |
+" -go from where you come-->-+         +-Y-> choose that window		     
+"  			     |	       Does there exist another open window  
+"			     |	       with the right buffer name?           
 "			     |	
-"  			     --Y-> use this window
+"  			     +-Y-> use this window
 "			   Does the window have
 "			   a correct name?
 "
@@ -64,7 +65,6 @@ function! s:gotowinnr()
 	" Find labels window to go in Labels window
 	let l:gotowinnr=bufwinnr(l:bufname)
     else
-	" Find labels window to go in ToC window
 	if t:atp_bufname == l:bufname
 	    " if t:atp_bufname agree with that found in ToC
 	    " if the t:atp_winnr is still open
@@ -117,14 +117,13 @@ function! GotoLine(closebuffer) "{{{
 	
     "if we were asked to close the window
     if a:closebuffer == 1
-	exe "bdelete " . tocbufnr
+        exe "silent! bdelete " . tocbufnr
     endif
 
     "finally, set the position
     call setpos("''", getpos("."))
     call setpos('.', [0, nr, 1, 0])
     exe "normal zt"
-    
 endfunction
 " }}}
 
@@ -384,7 +383,11 @@ function! EchoLine()
     endif
 
     let label		= matchstr(sec_line,'\\label\s*{\zs[^}]*\ze}')
-    let section		= strpart(sec_line,stridx(sec_line,'{')+1,stridx(sec_line,'}')-stridx(sec_line,'{')-1)
+    try
+        let section	= matchstr(sec_line, '{\zs\([^{}]*\|{\%([^{}]\|{[^{}]*}\)*}\)*\ze}')
+    catch /E363/
+        let section     = sec_line
+    endtry
     if section != "" && label != ""
 	echo sec_type . " : '" . section . "'\t label : " . label
     elseif section != ""
@@ -640,7 +643,7 @@ if expand("%") == "__ToC__" &&
 	    let g:atp_SectionBackup	= [[title, type, deleted_section, section_nr, expand("%:p")]]
 	endif
 	" return to toc 
-	TOC! 0
+	Toc! 0
 
 	" Update the stack of deleted sections
 	call extend(t:atp_SectionStack, [[title, type, deleted_section, section_nr, file_name]],0)
@@ -705,7 +708,7 @@ if expand("%") == "__ToC__" &&
 	call setpos(".", [0, begin_line, 1, 0])
 
 	" Regenerate the Table of Contents:
-	TOC!
+	Toc!
 
 	" Update the stack
 	call remove(t:atp_SectionStack, stack_number)
@@ -741,7 +744,7 @@ if expand("%") == "__ToC__" &&
 	let winnr	= s:gotowinnr()
 	exe winnr . " wincmd w"
 	exe "normal! " . cmd
-	TOC!
+	Toc!
     endfunction
     command! -buffer -nargs=? Undo 	:call <SID>Undo(<f-args>) 
     nnoremap <buffer> u			:call <SID>Undo('u')<CR>
@@ -779,11 +782,11 @@ augroup END
 " }}}1
 
 " Fold section
-" {{{1
+" CompareNumbers, Section2Nr {{{1
 func! CompareNumbers(i1, i2)
     return str2nr(a:i1) == str2nr(a:i2) ? 0 : str2nr(a:i1) > str2nr(a:i2) ? 1 : -1
 endfunc
-function! Section2Nr(section)
+function! <sid>Section2Nr(section)
     if a:section == 'part'
 	return 1
     elseif a:section == 'chapter'
@@ -801,45 +804,84 @@ function! Section2Nr(section)
     endif
 endfunction
 " }}}1
-function! FoldClose(...) " {{{1
-    let atp_toc	= deepcopy(t:atp_toc)
-    let f_line = (a:0 >= 1 ? a:1 : line(".") )
-    let l_line = (a:0 >= 2 ? a:2 : line(".") )
-    " This function is not working well with sections put into chapters. Then
-    " chapters are not folded with greater fold level.
-    for line in range(f_line, l_line)
-	let [beg_file,beg_line] = <sid>GetLineNr(line)
-	let type = <SID>Section2Nr(get(get(deepcopy(atp_toc), file, {}), beg_line, [''])[0])
-	let type_dict = get(deepcopy(atp_toc), beg_file, {})
-	call filter(map(type_dict, "<SID>Section2Nr(v:val[0])"), "str2nr(v:val) <= str2nr(type)")
-	let line_list = sort(filter(keys(type_dict), "str2nr(v:val) >= str2nr(beg_line)"), "<SID>CompareNumbers")
-	let [end_file,end_line] = <SID>GetLineNr(line(".")+1)
-	" Goto file
-	let winnr = s:gotowinnr()
-	let toc_winnr = winnr()
-	exe winnr."wincmd w"
-	let end_line = get(line_list, 1, "")
-	if end_line != ""
-	    let end_line = end_line-1
-	else
-	    let end_line = line("$")
-	endif
-	echomsg beg_line." ".end_line
-	execute beg_line.",".end_line."fold"
-	exe toc_winnr."wincmd w"
-    endfor
+" Get the file name and its path from the LABELS/ToC list.
+function! <sid>file() "{{{
+    let labels		= expand("%") == "__Labels__" ? 1 : 0
+
+    if labels == 0
+	return get(b:atp_Toc, line("."), ["", ""])[0]
+    else
+	return get(b:atp_Labels, line("."), ["", ""])[0]
+    endif
+endfunction
+"}}}
+function! <sid>Fold(cmd) " {{{1
+    if !g:atp_folding || (expand("%") != "__ToC__" ? 1 : 0)
+	return
+    endif
+    let [file,nr] = atplib#tools#getlinenr(line("."), 0)
+    let winnr = s:gotowinnr()
+    let toc_winnr = winnr()
+    exe winnr."wincmd w"
+    let pos_saved = getpos(".")
+    if a:cmd != 'zv'
+	call cursor(nr,1)
+    endif
+    exe "normal! ".a:cmd
+    if a:cmd != 'zv'
+	call cursor(pos_saved[1:2])
+    endif
+    exe toc_winnr."wincmd w"
 endfunction " }}}1
 
+" TocMotion
+fun! <sid>TocMotion(up)
+    if a:up
+	call search('^\%(\s\%(\d\+\|\*\|-\)\s\|>>\)', 'bW')
+    else
+	call search('^\%(\s\%(\d\+\|\*\|-\)\s\|>>\)', 'W')
+    endif
+endfun
+
+" Folding:
+fun! ATP_TocFold(linenr) " {{{1
+    " let pos = getpos(".")
+    " call cursor(a:linenr, 0)
+    " let help = searchpos('>> Help', 'nbW')[0]
+    " call cursor(pos[1], pos[2])
+    " if help
+        " return 0
+    " else
+    let line = getline(a:linenr)
+    if stridx(line, '>>') == 0
+        return '>1'
+    elseif line =~ '^"'
+	return 0
+    else
+        return 1
+    endif
+endfun
+setl foldexpr=ATP_TocFold(v:lnum)
 " Mappings:
+fun! ATP_ToCFoldText() " {{{1
+    return getline(v:foldstart)[3:]
+endfun
+setl fdt=ATP_ToCFoldText()
 " MAPPINGS {{{1
 if !exists("no_plugin_maps") && !exists("no_atp_toc_maps")
-    command! -range Fold		:call FoldClose(<q-line1>,<q-line2>)
-    nmap <silent> <buffer> zc		:call FoldClose()<CR>
-    vmap <silent> <buffer> zc		:<C-U>call FoldClose(line("'<"), line("'>"))<CR>
+
+    if (expand("%") == "__ToC__" ? 1 : 0)
+	nmap <silent> <buffer> Zv		:call <sid>Fold('zv')<CR>
+	nmap <silent> <buffer> Zc		:call <sid>Fold('zc')<CR>
+	nmap <silent> <buffer> ZC		:call <sid>Fold('zC')<CR>
+	nmap <silent> <buffer> Zo		:call <sid>Fold('zo')<CR>
+	nmap <silent> <buffer> ZO		:call <sid>Fold('zO')<CR>
+    endif
     map <silent> <buffer> q 		:bdelete<CR>
-    map <silent> <buffer> <CR> 		:call GotoLine(1)<CR>
-    map <silent> <buffer> <space> 	:call GotoLine(0)<CR>
+    map <silent> <buffer> <CR> 		:call GotoLine(0)<CR>
+    map <silent> <buffer> <space> 	:call GotoLine(1)<CR>
     map <silent> <buffer> <LeftRelease>   <LeftMouse><bar>:call GotoLine(0)<CR>
+    vmap <silent> <buffer> <LeftRelease>  <Esc><LeftMouse><bar>:call GotoLine(0)<CR>
     if expand("%") == "__ToC__"
 	map <silent> <buffer> _		:call GotoLine(0)<bar>wincmd w<CR>
     else
@@ -858,5 +900,27 @@ if !exists("no_plugin_maps") && !exists("no_atp_toc_maps")
     map <silent> <buffer> s 		:<C-U>call ShowLabelContext(v:count)<CR> 
     map <silent> <buffer> e 		:call EchoLine()<CR>
     map <silent> <buffer> <F1>		:call Help()<CR>
+
+    nnoremap <silent> <buffer> ]]	:call search('^\s*\zs\d\s', 'W')<cr>
+    nnoremap <silent> <buffer> [[	:call search('^\s*\zs\d\s', 'Wb')<cr>
+    nnoremap <silent> <buffer> <c-k> :call <sid>TocMotion(1)<cr>
+    nnoremap <silent> <buffer> <c-j> :call <sid>TocMotion(0)<cr>
+    nnoremap <silent> <buffer> K :call search('^>>', 'bW')<cr>
+    nnoremap <silent> <buffer> J :call search('^>>', 'W')<cr>
+
+    nnoremap <silent> <buffer> I <nop>
+    nnoremap <silent> <buffer> x <nop>
+    nnoremap <silent> <buffer> X <nop>
+    nnoremap <silent> <buffer> dd <nop>
+    nnoremap <silent> <buffer> d <nop>
+    nnoremap <silent> <buffer> D <nop>
+    nnoremap <silent> <buffer> A <nop>
+    nnoremap <silent> <buffer> a <nop>
+    nnoremap <silent> <buffer> S <nop>
+    nnoremap <silent> <buffer> u <nop>
+    nnoremap <silent> <buffer> U <nop>
+    nnoremap <silent> <buffer> o <nop>
+    nnoremap <silent> <buffer> O <nop>
+    nnoremap <silent> <buffer> P <nop>
 endif
 " vim:fdm=marker:tw=85:ff=unix:noet:ts=8:sw=4:fdc=1

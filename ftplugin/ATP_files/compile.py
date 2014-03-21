@@ -3,10 +3,19 @@
 # Author: Marcin Szamotulski <mszamot[@]gmail[.]com>
 # This file is a part of Automatic TeX Plugin for Vim.
 
-import sys, errno, os.path, shutil, subprocess, psutil, re, tempfile, optparse, glob
-import traceback, atexit
-
-from os import chdir, mkdir, putenv, devnull
+import sys
+import os
+import errno
+import os.path
+import shutil
+import subprocess
+import psutil
+import re
+import tempfile
+import optparse
+import glob
+import traceback
+import atexit
 
 from optparse import OptionParser
 from collections import deque
@@ -14,6 +23,9 @@ from collections import deque
 import latex_log
 import locale
 encoding = locale.getpreferredencoding()
+if not encoding:
+    encoding = 'UTF-8'
+PY3 = sys.version_info[0] == 3
 
 # readlink is not available on Windows.
 readlink=True
@@ -36,6 +48,7 @@ parser.add_option("--bibcommand",       dest="bibcommand",      default="bibtex"
 parser.add_option("--progname",         dest="progname",        default="gvim"                          )
 parser.add_option("--aucommand",        dest="aucommand",       default=False, action="store_true"      )
 parser.add_option("--tex-options",      dest="tex_options",     default="-synctex=1,-interaction=nonstopmode")
+parser.add_option("--output-dir",       dest="output_dir",      default=os.path.abspath(os.curdir)      )
 parser.add_option("--verbose",          dest="verbose",         default="silent"                        )
 parser.add_option("--file",             dest="mainfile",                                                )
 parser.add_option("--bufnr",            dest="bufnr",                                                   )
@@ -60,7 +73,7 @@ parser.add_option("--gui-running",      action="store_true",    default=False,  
 parser.add_option("--autex_wait",       action="store_true",    default=False,  dest="autex_wait"       )
 parser.add_option("--no-progress-bar",  action="store_false",   default=True,   dest="progress_bar"     )
 parser.add_option("--bibliographies",                           default="",     dest="bibliographies"   )
-parser.add_option("--tempdir",                                  default="",     dest="tempdir"        )
+parser.add_option("--tempdir",                                  default="",     dest="tempdir"          )
 
 (options, args) = parser.parse_args()
 
@@ -73,7 +86,7 @@ def nonempty(string):
     else:
         return True
 
-logdir          = options.logdir
+logdir          = os.path.abspath(options.logdir)
 script_logfile  = os.path.join(logdir, 'compile.log')
 debug_file      = open(script_logfile, 'w')
 
@@ -129,12 +142,14 @@ bang            = options.bang
 reload_on_error = options.reload_on_error
 gui_running     = options.gui_running
 progress_bar    = options.progress_bar
+options.output_dir = os.path.abspath(options.output_dir)
 
 debug_file.write("COMMAND "+command+"\n")
 debug_file.write("BIBCOMMAND "+bibcommand+"\n")
 debug_file.write("AUCOMMAND "+aucommand+"\n")
 debug_file.write("PROGNAME "+progname+"\n")
 debug_file.write("COMMAND_OPT "+str(command_opt)+"\n")
+debug_file.write("OUTPUT DIR %s\n" % options.output_dir)
 debug_file.write("MAINFILE_FP "+str(mainfile_fp)+"\n")
 debug_file.write("OUTPUT FORMAT "+str(output_format)+"\n")
 debug_file.write("EXT "+extension+"\n")
@@ -168,7 +183,7 @@ def write_pbf(string):
 
     cond = False
     try:
-        if sys.version_info.major < 3:
+        if not PY3:
             with open(pb_fname, 'r') as fobj:
                 pb_file = fobj.read().decode(encoding, errors="replace")
         else:
@@ -318,7 +333,7 @@ if os.path.islink(mainfile_fp):
 
 mainfile_dir    = os.path.normcase(mainfile_dir)
 [basename, ext] = os.path.splitext(mainfile)
-output_fp       = os.path.splitext(mainfile_fp)[0]+extension
+output_fp       = os.path.join(options.output_dir,basename+extension)
 
 try:
     # Send pid to ATP:
@@ -340,6 +355,10 @@ try:
     tmpdir  = tempfile.mkdtemp(dir=options.tempdir,prefix="")
     debug_file.write("TMPDIR: "+tmpdir+"\n")
     tmpaux  = os.path.join(tmpdir,basename+".aux")
+    dirs = filter(lambda d: os.path.isdir(d), os.listdir(os.path.dirname(mainfile_fp)))
+    dirs = map(lambda d: os.path.basename(d),dirs)
+    for d in dirs:
+        os.mkdir(os.path.join(tmpdir, d))
 
     command_opt.append('-output-directory='+tmpdir)
     latex_cmd      = [command]+command_opt+[mainfile_fp]
@@ -348,11 +367,20 @@ try:
 
     # Copy important files to output directory:
     # /except the log file/
-    os.chdir(mainfile_dir)
-    for ext in filter(lambda x: x != "log", keep):
+    # os.chdir(mainfile_dir)
+    os.chdir(options.output_dir)
+    for ext in filter(lambda x: x != "log" and x != "bib", keep):
         file_cp=basename+"."+ext
         if os.path.exists(file_cp):
             shutil.copy(file_cp, tmpdir)
+    if 'bib' in keep:
+        bibs = filter(lambda p: p.endswith('.bib'), os.listdir(mainfile_dir))
+        for bib in bibs:
+            if hasattr(os, 'symlink'):
+                os.symlink(os.path.join(mainfile_dir, bib), os.path.join(tmpdir, bib))
+            else:
+                shutil.copy(os.path.join(mainfile_dir, bib), tmpdir)
+    os.chdir(mainfile_dir)
 
     tempdir_list = os.listdir(tmpdir)
     debug_file.write("\nls tmpdir "+str(tempdir_list)+"\n")
@@ -365,7 +393,10 @@ try:
     # Link local bibliographies:
     for bib in bibliographies:
         if os.path.exists(os.path.join(mainfile_dir,os.path.basename(bib))):
-            os.symlink(os.path.join(mainfile_dir,os.path.basename(bib)),os.path.join(tmpdir,os.path.basename(bib)))
+            if hasattr(os, 'symlink'):
+                os.symlink(os.path.join(mainfile_dir,os.path.basename(bib)),os.path.join(tmpdir,os.path.basename(bib)))
+            else:
+                shutil.copyfile(os.path.join(mainfile_dir,os.path.basename(bib)),os.path.join(tmpdir,os.path.basename(bib)))
 
     ####################################
     #
@@ -478,17 +509,17 @@ try:
         file_cp=basename+"."+ext
         if os.path.exists(file_cp):
             debug_file.write(file_cp+' \n')
-            shutil.copy(file_cp, mainfile_dir)
+            shutil.copy(file_cp, options.output_dir)
 
     # Copy aux file if there were no compilation errors or if it doesn't exists in mainfile_dir.
     # copy aux file to _aux file (for atplib#tools#GrepAuxFile)
     if latex_returncode == 0 or not os.path.exists(os.path.join(mainfile_dir, basename+".aux")):
         file_cp=basename+".aux"
         if os.path.exists(file_cp):
-            shutil.copy(file_cp, mainfile_dir)
+            shutil.copy(file_cp, options.output_dir)
     file_cp=basename+".aux"
     if os.path.exists(file_cp):
-        shutil.copy(file_cp, os.path.join(mainfile_dir, basename+"._aux"))
+        shutil.copy(file_cp, os.path.join(options.output_dir, basename+"._aux"))
     os.chdir(cwd)
 
     ####################################
@@ -538,7 +569,7 @@ try:
             vim_remote_expr(servername, "atplib#SyncTex()")
 
     # Rewrite LaTeX log file
-    latex_log.rewrite_log(os.path.splitext(mainfile_fp)[0]+".log", check_path=True, project_dir=mainfile_dir, project_tmpdir=tmpdir)
+    latex_log.rewrite_log(os.path.splitext(output_fp)[0]+".log", check_path=True, project_dir=mainfile_dir, project_tmpdir=tmpdir)
 
 ####################################
 #

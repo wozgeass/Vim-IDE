@@ -18,7 +18,11 @@ function! g:SyntasticNotifiers.Instance() " {{{2
     return s:SyntasticNotifiersInstance
 endfunction " }}}2
 
+<<<<<<< HEAD
 function! g:SyntasticNotifiers.refresh(loclist) " {{{2
+=======
+function! g:SyntasticNotifiers.refresh(loclist)
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     call syntastic#log#debug(g:SyntasticDebugNotifications, 'notifiers: refresh')
     for type in self._enabled_types
         let class = substitute(type, '\m.*', 'Syntastic\u&Notifier', '')
@@ -28,7 +32,11 @@ function! g:SyntasticNotifiers.refresh(loclist) " {{{2
     endfor
 endfunction " }}}2
 
+<<<<<<< HEAD
 function! g:SyntasticNotifiers.reset(loclist) " {{{2
+=======
+function! g:SyntasticNotifiers.reset(loclist)
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     call syntastic#log#debug(g:SyntasticDebugNotifications, 'notifiers: reset')
     for type in self._enabled_types
         let class = substitute(type, '\m.*', 'Syntastic\u&Notifier', '')

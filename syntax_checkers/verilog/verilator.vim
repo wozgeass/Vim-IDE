@@ -17,12 +17,22 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! SyntaxCheckers_verilog_verilator_IsAvailable() dict
+<<<<<<< HEAD
     if !exists('g:syntastic_verilog_compiler')
         let g:syntastic_verilog_compiler = self.getExec()
     endif
     return executable(expand(g:syntastic_verilog_compiler))
 endfunction
 
+=======
+    return executable(expand(g:syntastic_verilog_compiler))
+endfunction
+
+if !exists('g:syntastic_verilog_compiler_options')
+    let g:syntastic_verilog_compiler_options = '-Wall'
+endif
+
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 function! SyntaxCheckers_verilog_verilator_GetLocList() dict
     return syntastic#c#GetLocList('verilog', 'verilator', {
         \ 'errorformat':

@@ -19,7 +19,11 @@ if !exists('g:syntastic_erlc_include_path')
     let g:syntastic_erlc_include_path = ''
 endif
 
+<<<<<<< HEAD
 let s:check_file = syntastic#util#shescape(expand('<sfile>:p:h') . syntastic#util#Slash() . 'erlang_check_file.erl')
+=======
+let s:check_file = expand('<sfile>:p:h') . syntastic#util#Slash() . 'erlang_check_file.erl'
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
 let s:save_cpo = &cpo
 set cpo&vim
@@ -38,9 +42,15 @@ function! SyntaxCheckers_erlang_escript_GetLocList() dict
         let post_args = g:syntastic_erlc_include_path
     endif
     let makeprg = self.makeprgBuild({
+<<<<<<< HEAD
         \ 'args_after': args,
         \ 'fname': syntastic#util#shexpand('%:p'),
         \ 'post_args_after': post_args })
+=======
+        \ 'args': args,
+        \ 'fname': syntastic#util#shexpand('%:p'),
+        \ 'post_args': post_args })
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let errorformat =
         \ '%W%f:%l: warning: %m,'.

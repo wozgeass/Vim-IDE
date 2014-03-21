@@ -20,13 +20,21 @@ set cpo&vim
 
 function! SyntaxCheckers_php_php_GetHighlightRegex(item)
     let term = matchstr(a:item['text'], "\\munexpected '\\zs[^']\\+\\ze'")
+<<<<<<< HEAD
     return term != '' ? '\V' . escape(term, '\') : ''
+=======
+    return term != '' ? '\V' . term : ''
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 endfunction
 
 function! SyntaxCheckers_php_php_GetLocList() dict
     let makeprg = self.makeprgBuild({
+<<<<<<< HEAD
         \ 'args': '-d error_reporting=E_ALL',
         \ 'args_after': '-l -d display_errors=1 -d log_errors=0 -d xdebug.cli_color=0' })
+=======
+        \ 'args': '-l -d error_reporting=E_ALL -d display_errors=1 -d log_errors=0 -d xdebug.cli_color=0' })
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let errorformat =
         \ '%-GNo syntax errors detected in%.%#,'.

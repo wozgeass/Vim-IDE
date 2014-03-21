@@ -30,8 +30,12 @@ set cpo&vim
 
 function! SyntaxCheckers_c_splint_GetLocList() dict
     let makeprg = self.makeprgBuild({
+<<<<<<< HEAD
         \ 'args': syntastic#c#ReadConfig(g:syntastic_splint_config_file),
         \ 'args_after': '-showfunc -hints +quiet' })
+=======
+        \ 'post_args': '-showfunc -hints +quiet ' . syntastic#c#ReadConfig(g:syntastic_splint_config_file) })
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let errorformat =
         \ '%-G%f:%l:%v: %[%#]%[%#]%[%#] Internal Bug %.%#,' .

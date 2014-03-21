@@ -24,8 +24,12 @@ set cpo&vim
 
 function! SyntaxCheckers_scala_scalac_GetLocList() dict
     let makeprg = self.makeprgBuild({
+<<<<<<< HEAD
         \ 'args': g:syntastic_scala_options,
         \ 'args_after': '-Ystop-after:parser' })
+=======
+        \ 'args': '-Ystop-after:parser ' . g:syntastic_scala_options })
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let errorformat =
         \ '%E%f:%l: %trror: %m,' .

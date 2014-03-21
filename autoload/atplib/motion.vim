@@ -261,9 +261,10 @@ main_dir = os.path.dirname(file_name)
 if main_dir != '':
     os.chdir(main_dir)
 
-section_pattern         = re.compile('^[^%]*\\\\(subsection|section|chapter|part)(\*)?\s*(?:\[|{)')
-shorttitle_pattern      = re.compile('^[^%]*\\\\(subsection|section|chapter|part)(\*)?\s*\[')
-subfile_pattern         = re.compile('^[^%]*\\\\(input|include|subfile)\s*{([^}]*)}')
+section_pattern         = re.compile(r'[^%]*\\(subsection|section|chapter|part)(\*)?\s*(?:\[|{)')
+shorttitle_pattern      = re.compile(r'[^%]*\\(subsection|section|chapter|part)(\*)?\s*\[')
+subfile_pattern         = re.compile(r'[^%]*\\(input|include|subfile)\s*{([^}]*)}')
+bib_pattern		= re.compile(r'[^%]*\\bibliography\s*{([^}]*)}')
 
 # the toc list:
 toc = []
@@ -304,22 +305,21 @@ def find_in_brackets(string, bra='{', ket='}'):
                 return match[:index]
 
 def scan_project(fname):
-# scan file for section units starting after line start_line,
+    # scan file for section units starting after line start_line,
 
     try:
         flines = readlines(file_path(fname))
         length = len(flines)
         for ind in xrange(length):
             line = flines[ind]
-            secu = re.search(section_pattern, line)
-            subf = re.search(subfile_pattern, line)
+            secu = re.match(section_pattern, line)
             if secu:
 		# Join lines (find titles if they are spread in more than one line):
                 i = 1
                 while i+ind < length and i < 6:
                     line += flines[ind+i]
                     i+=1
-                if re.search(shorttitle_pattern, line):
+                if re.match(shorttitle_pattern, line):
                     short_title = find_in_brackets(line, '[', ']')
                     short_title = re.sub('\s*\n\s*', ' ', short_title)
                 else:
@@ -332,9 +332,15 @@ def scan_project(fname):
                 # sec_nr is added afterwards.
                 add = [ file_path(fname), ind+1, secu.group(1), title, short_title, secu.group(2)]
                 toc.append(map(map_none,add))
-            if subf:
-                file_list.append(map(map_none,[file_path(fname), subf.group(2), ind+1]))
-                scan_project(subf.group(2))
+            else:
+                subf = re.match(subfile_pattern, line)
+                if subf:
+                    file_list.append(map(map_none,[file_path(fname), subf.group(2), ind+1]))
+                    scan_project(subf.group(2))
+                else:
+                    bibf = re.match(bib_pattern, line)
+                    if bibf:
+                        toc.append([file_path(fname), ind+1, 'bibliography', re.sub('\s*,\s*',' ',bibf.group(1)), '', '*'])
     except IOError:
         print("[ATP]: cannot open '%s' (cwd='%s')" % (file_path(fname), os.getcwd()))
 	pass
@@ -483,7 +489,7 @@ function! atplib#motion#RemoveFromToC(file)
     exe winnr."wincmd w"
 endfunction
 function! atplib#motion#RemoveFromToCComp(A, B, C)
-    return join(t:atp_toc_buflist,"\n")
+    return join(map(copy(t:atp_toc_buflist), 'fnamemodify(v:val, ":t")'),"\n")
 endfunction
 " {{{2 atplib#motion#showtoc
 function! atplib#motion#showtoc(toc)
@@ -516,8 +522,11 @@ function! atplib#motion#showtoc(toc)
 	endif
 	let toc_winnr=bufwinnr(bufnr("__ToC__"))
 	if toc_winnr == -1
-	    let openbuffer="keepalt " . (labels_winnr == -1 ? t:toc_window_width : ''). split_cmd." +setl\\ buftype=nofile\\ modifiable\\ noreadonly\\ noswapfile\\ bufhidden=delete\\ nobuflisted\\ tabstop=1\\ filetype=toc_atp\\ nowrap\\ nonumber\\ norelativenumber\\ winfixwidth\\ nobuflisted\\ nospell\\ cursorline __ToC__"
+	    let openbuffer="keepalt " . (labels_winnr == -1 ? t:toc_window_width : ''). split_cmd." +setl\\ buftype=nofile\\ modifiable\\ noreadonly\\ noswapfile\\ bufhidden=delete\\ nobuflisted\\ tabstop=1\\ filetype=toc_atp\\ nowrap\\ nonumber\\ norelativenumber\\ winfixwidth\\ nospell\\ cursorline __ToC__"
+	    let splitright = &splitright
+	    let &splitright = g:atp_splitright
 	    keepalt silent exe openbuffer
+	    let &splitright = splitright
 	else
 	    exe toc_winnr."wincmd w"
 	    setl modifiable noreadonly
@@ -552,9 +561,10 @@ function! atplib#motion#showtoc(toc)
 	let sorted	= sort(keys(a:toc[openfile]), "atplib#CompareNumbers")
 	let len		= len(sorted)
 	" write the file name in ToC (with a full path in paranthesis)
-	call setline(number,fnamemodify(openfile,":t") . " (" . fnamemodify(openfile,":p:h") . ")")
+	call setline(number, ">> ".fnamemodify(openfile,":t")." (".fnamemodify(openfile,":p:h").")")
 	call extend(b:atp_Toc, { number : [ openfile, 1 ]}) 
 	let number+=1
+	let showline = " "
 	for line in sorted
 	    call extend(b:atp_Toc,  { number : [ openfile, line ] })
 	    let lineidx=index(sorted,line)
@@ -564,25 +574,11 @@ function! atplib#motion#showtoc(toc)
 	    else
 		let nline=line("$")
 	    endif
-	    let lenght=len(line) 	
-	    if lenght == 0
-		let showline="     "
-	    elseif lenght == 1
-		let showline="    " . line
-	    elseif lenght == 2
-		let showline="   " . line
-	    elseif lenght == 3
-		let showline="  " . line
-	    elseif lenght == 4
-		let showline=" " . line
-	    elseif lenght>=5
-		let showline=line
-	    endif
 	    " Print ToC lines.
 	    if a:toc[openfile][line][0] == 'abstract' || a:toc[openfile][line][2] =~ '^\cabstract$'
-		call setline(number, showline . "\t" . "  " . "Abstract" )
+		call setline(number, showline . "- " . "Abstract" )
 	    elseif a:toc[openfile][line][0] =~ 'bibliography\|references'
-		call setline (number, showline . "\t" . "  " . a:toc[openfile][line][2])
+		call setline(number, showline . "- " . a:toc[openfile][line][2])
 	    elseif a:toc[openfile][line][0] == 'part'
 		let partnr=a:toc[openfile][line][1]
 		let nr=partnr
@@ -591,11 +587,9 @@ function! atplib#motion#showtoc(toc)
 		    let nr=substitute(nr,'.',' ','')
 		endif
 		if a:toc[openfile][line][4] != ''
-" 		    call setline (number, showline . "\t" . nr . " " . a:toc[openfile][line][4])
-		    call setline (number, showline . "\t" . " " . a:toc[openfile][line][4])
+		    call setline (number, " " . a:toc[openfile][line][4])
 		else
-" 		    call setline (number, showline . "\t" . nr . " " . a:toc[openfile][line][2])
-		    call setline (number, showline . "\t" . " " . a:toc[openfile][line][2])
+		    call setline (number, " " . a:toc[openfile][line][2])
 		endif
 	    elseif a:toc[openfile][line][0] == 'chapter'
 		let chnr=a:toc[openfile][line][1]
@@ -605,9 +599,9 @@ function! atplib#motion#showtoc(toc)
 		    let nr=substitute(nr,'.',' ','')
 		endif
 		if a:toc[openfile][line][4] != ''
-		    call setline (number, showline . "\t" . nr . " " . a:toc[openfile][line][4])
+		    call setline (number, showline . nr . " " . a:toc[openfile][line][4])
 		else
-		    call setline (number, showline . "\t" . nr . " " . a:toc[openfile][line][2])
+		    call setline (number, showline . nr . " " . a:toc[openfile][line][2])
 		endif
 	    elseif a:toc[openfile][line][0] == 'section' || a:toc[openfile][line][0] == 'frame'
 		let secnr=a:toc[openfile][line][1]
@@ -618,9 +612,9 @@ function! atplib#motion#showtoc(toc)
 			let nr=substitute(nr,'.',' ','g')
 		    endif
 		    if a:toc[openfile][line][4] != ''
-			call setline (number, showline . "\t\t" . nr . " " . a:toc[openfile][line][4])
+			call setline (number, showline . nr . " " . a:toc[openfile][line][4])
 		    else
-			call setline (number, showline . "\t\t" . nr . " " . a:toc[openfile][line][2])
+			call setline (number, showline . nr . " " . a:toc[openfile][line][2])
 		    endif
 		else
 		    let nr=secnr 
@@ -629,9 +623,9 @@ function! atplib#motion#showtoc(toc)
 			let nr=substitute(nr,'.',' ','g')
 		    endif
 		    if a:toc[openfile][line][4] != ''
-			call setline (number, showline . "\t" . nr . " " . a:toc[openfile][line][4])
+			call setline (number, showline . nr . " " . a:toc[openfile][line][4])
 		    else
-			call setline (number, showline . "\t" . nr . " " . a:toc[openfile][line][2])
+			call setline (number, showline . nr . " " . a:toc[openfile][line][2])
 		    endif
 		endif
 	    elseif a:toc[openfile][line][0] == 'subsection'
@@ -643,9 +637,9 @@ function! atplib#motion#showtoc(toc)
 			let nr=substitute(nr,'.',' ','g')
 		    endif
 		    if a:toc[openfile][line][4] != ''
-			call setline (number, showline . "\t\t\t" . nr . " " . a:toc[openfile][line][4])
+			call setline (number, showline . nr . " " . a:toc[openfile][line][4])
 		    else
-			call setline (number, showline . "\t\t\t" . nr . " " . a:toc[openfile][line][2])
+			call setline (number, showline . nr . " " . a:toc[openfile][line][2])
 		    endif
 		else
 		    let nr=secnr  . "." . ssecnr
@@ -654,9 +648,9 @@ function! atplib#motion#showtoc(toc)
 			let nr=substitute(nr,'.',' ','g')
 		    endif
 		    if a:toc[openfile][line][4] != ''
-			call setline (number, showline . "\t\t" . nr . " " . a:toc[openfile][line][4])
+			call setline (number, showline . nr . " " . a:toc[openfile][line][4])
 		    else
-			call setline (number, showline . "\t\t" . nr . " " . a:toc[openfile][line][2])
+			call setline (number, showline . nr . " " . a:toc[openfile][line][2])
 		    endif
 		endif
 	    elseif a:toc[openfile][line][0] == 'subsubsection'
@@ -668,9 +662,9 @@ function! atplib#motion#showtoc(toc)
 			let nr=substitute(nr,'.',' ','g')
 		    endif
 		    if a:toc[openfile][line][4] != ''
-			call setline(number, a:toc[openfile][line][0] . "\t\t\t" . nr . " " . a:toc[openfile][line][4])
+			call setline(number, showline . nr . " " . a:toc[openfile][line][4])
 		    else
-			call setline(number, a:toc[openfile][line][0] . "\t\t\t" . nr . " " . a:toc[openfile][line][2])
+			call setline(number, showline . nr . " " . a:toc[openfile][line][2])
 		    endif
 		else
 		    let nr=secnr  . "." . ssecnr . "." . sssecnr
@@ -679,9 +673,9 @@ function! atplib#motion#showtoc(toc)
 			let nr=substitute(nr,'.',' ','g')
 		    endif
 		    if a:toc[openfile][line][4] != ''
-			call setline (number, showline . "\t\t" . nr . " " . a:toc[openfile][line][4])
+			call setline (number, showline . nr . " " . a:toc[openfile][line][4])
 		    else
-			call setline (number, showline . "\t\t" . nr . " " . a:toc[openfile][line][2])
+			call setline (number, showline . nr . " " . a:toc[openfile][line][2])
 		    endif
 		endif
 	    else
@@ -710,22 +704,26 @@ function! atplib#motion#showtoc(toc)
     endfor
    
     " Help Lines:
-    if search('<Enter> jump and close', 'nW') == 0
+    if search('" <Enter> jump and close', 'nW') == 0
 	call append('$', [ '', 			
-		\ '_       set',
-		\ '<Space> jump', 
-		\ '<Enter> jump and close', 	
-		\ 's       jump and split', 
-		\ 'y or c  yank label', 	
-		\ 'p       paste label', 
-		\ 'q       close', 		
-		\ 'zc	     fold section[s]',
-		\ ":'<,'>Fold",
-		\ ':YankSection', 
-		\ ':DeleteSection', 
-		\ ':PasteSection[!]', 		
-		\ ':SectionStack', 
-		\ ':Undo' ])
+		\ '" _       set',
+		\ '" <Enter> jump', 
+		\ '" <Space> jump and close', 	
+		\ '" s       jump and split', 
+		\ '" y or c  yank label', 	
+		\ '" p       paste label', 
+		\ '" q       close', 		
+		\ '" zc	     fold section[s]',
+		\ '" ^j	     go to next chapter',
+		\ '" ^k	     go to previous chapter',
+		\ '" J	     go to next project',
+		\ '" K	     go to previous project',
+		\ '" :[range]Fold',
+		\ '" :YankSection', 
+		\ '" :DeleteSection', 
+		\ '" :PasteSection[!]', 		
+		\ '" :SectionStack', 
+		\ '" :Undo' ])
     endif
     setl nomodifiable
     lockvar 3 b:atp_Toc
@@ -773,7 +771,10 @@ function! atplib#motion#show_pytoc(toc)
 	let toc_winnr=bufwinnr(bufnr("__ToC__"))
 	if toc_winnr == -1
 	    let openbuffer="keepalt " . (labels_winnr == -1 ? t:toc_window_width : ''). split_cmd." +setl\\ buftype=nofile\\ modifiable\\ noreadonly\\ noswapfile\\ bufhidden=delete\\ nobuflisted\\ tabstop=1\\ filetype=toc_atp\\ nowrap\\ nonumber\\ norelativenumber\\ winfixwidth\\ nospell\\ cursorline __ToC__"
+	    let splitright = &splitright
+	    let &splitright = g:atp_splitright
 	    keepalt silent exe openbuffer
+	    let &splitright = splitright
 	else
 	    exe toc_winnr."wincmd w"
 	    setl modifiable noreadonly
@@ -792,7 +793,7 @@ function! atplib#motion#show_pytoc(toc)
     for openfile in keys(a:toc)
 	call extend(numberdict, { openfile : number })
 	" write the file name in ToC (with a full path in paranthesis)
-	call setline(number,fnamemodify(openfile,":t") . " (" . fnamemodify(openfile,":p:h") . ")")
+	call setline(number, ">> ".fnamemodify(openfile,":t")." (".fnamemodify(openfile,":p:h").")")
         " openfile is the project name
 	call extend(b:atp_Toc, { number : [ openfile, 1, openfile ]}) 
 	let number+=1
@@ -807,32 +808,19 @@ function! atplib#motion#show_pytoc(toc)
 	    else
 		let nline=line("$")
 	    endif
-	    let lenght=len(line)
-	    if lenght == 0
-		let showline="     "
-	    elseif lenght == 1
-		let showline="    " . line
-	    elseif lenght == 2
-		let showline="   " . line
-	    elseif lenght == 3
-		let showline="  " . line
-	    elseif lenght == 4
-		let showline=" " . line
-	    elseif lenght>=5
-		let showline=line
-	    endif
+	    let showline = ' '
 	    " Print ToC lines.
 	    if line_list[2] == 'abstract' || line_list[3] =~ '^\cabstract$'
-		call setline(number, showline . "\t" . "  " . "Abstract" )
+		call setline(number, showline . "- " . "Abstract" )
 	    elseif line_list[2] =~ 'bibliography\|references'
-		call setline (number, showline . "\t" . "  " . a:toc[openfile][line][2])
+		call setline (number, showline . "- bib:" . line_list[3])
 	    else
 		let secnr=get(line_list,6,"XXX") " there might not bee section number in the line_list
                 let nr=secnr 
                 if line_list[4] != ''
-                    call setline (number, showline . "\t" . nr . " " . line_list[4])
+                    call setline (number, showline . nr . " " . line_list[4])
                 else
-                    call setline (number, showline . "\t" . nr . " " . line_list[3])
+                    call setline (number, showline . nr . " " . line_list[3])
                 endif
 	    endif
 	    let number+=1
@@ -873,31 +861,37 @@ function! atplib#motion#show_pytoc(toc)
     if g:atp_python_toc
 	let num = max(num_list)+1
 	keepjumps call setpos('.', [0,0,0,0])
-	keepjumps call search('^'.escape(fnamemodify(MainFile, ":t"), '.\/').'\s\+(.*)\s*$', 'cW')
-	exe "normal! ".(num-1)."j"
+	keepjumps call search('^>> '.escape(fnamemodify(MainFile, ":t"), '.\/').'\s\+(.*)\s*$', 'cW')
+	call cursor(line(".")+(num-1),1)
     else
 	keepjumps call setpos('.',[bufnr(""),num,1,0])
     endif
    
     " Help Lines:
-    if search('<Enter> jump and close', 'nW') == 0
+    if search('"<Enter> jump and close', 'nW') == 0
 	call append('$', [ '', 			
-		\ '_       set',
-		\ '<Space> jump', 
-		\ '<Enter> jump and close', 	
-		\ 's       jump and split', 
-		\ 'y or c  yank label', 	
-		\ 'p       paste label', 
-		\ 'q       close', 		
-		\ ':YankSection', 
-		\ ':DeleteSection', 
-		\ ':PasteSection[!]', 		
-		\ ':SectionStack', 
-		\ ':Undo' ])
-" 		\ 'zc	     fold section[s]',
-" 		\ ":'<,'>Fold",
+		\ '" _       set',
+		\ '" <Enter> jump', 
+		\ '" <Space> jump and close', 	
+		\ '" s       jump and split', 
+		\ '" y or c  yank label', 	
+		\ '" p       paste label', 
+		\ '" q       close', 		
+		\ '" ^j	     go to next chapter',
+		\ '" ^k	     go to previous chapter',
+		\ '" J	     go to next project',
+		\ '" K	     go to previous project',
+		\ '" :YankSection', 
+		\ '" :DeleteSection', 
+		\ '" :PasteSection[!]', 		
+		\ '" :SectionStack', 
+		\ '" :Undo' ])
+" 		\ '" zc	     fold section[s]',
+" 		\ '" :[range]Fold',
     endif
     setl nomodifiable
+    setl fdm=expr
+    normal! zMzv
     lockvar 3 b:atp_Toc
 endfunction
 " {{{2 atplib#motion#ToCbufnr()
@@ -911,11 +905,24 @@ function! atplib#motion#ToCbufnr()
 	endif
     endfor
     if index(keys(tabpagebufdict), "__ToC__") != -1
-	let tocbufnr = tabpagebufdict["__ToC__"]
+	return tabpagebufdict["__ToC__"]
     else
-	let tocbufnr = -1
+	let bufnames = []
+	for bufnr in range(1,bufnr('$'))
+	    if bufexists(bufnr)
+		let bname = bufname(bufnr)
+		if !empty(bname)
+		    call add(bufnames, [fnamemodify(bname, ":t"), bufnr])
+		endif
+	    endif
+	endfor
+	call filter(bufnames, 'v:val[0] == "__ToC__"')
+	if !empty(bufnames)
+	    return bufnames[0][1]
+	else
+	    return -1
+	endif
     endif
-    return tocbufnr
 endfunction
 " atplib#motion#UpdateToCLine {{{2
 function! atplib#motion#UpdateToCLine(...)
@@ -923,33 +930,39 @@ function! atplib#motion#UpdateToCLine(...)
     if !g:atp_UpdateToCLine
 	return
     endif
-    let toc_bufnr	= atplib#motion#ToCbufnr()
+    let toc_bufnr = atplib#motion#ToCbufnr()
+    if index(tabpagebuflist(), toc_bufnr) == -1
+	return
+    endif
     let check_line 	= (a:0>=1 ? a:1 : -1) 
     if toc_bufnr == -1 || check_line != -1 && 
 		\ getline(line(".")+check_line) !~# '\\\%(part\|chapter\|\%(sub\)\{0,2}section\)\s*{'
 	return
     endif
     let cline  	= line(".")
-    let cbufnr 	= bufnr("")
-    let cwinnr	= bufwinnr("")
-    exe bufwinnr(toc_bufnr)."wincmd w"
+    let cbufnr 	= bufnr("%")
+    let cwinnr	= winnr()
+    exe "keepalt" bufwinnr(toc_bufnr)."wincmd w"
     let MainFile    = atplib#FullPath(getbufvar(bufnr(t:atp_bufname), "atp_MainFile"))
     if g:atp_python_toc
-        let num 	= get(s:numberdict, MainFile, 'no_number')
+        let num = get(s:numberdict, MainFile, 'no_number')
     else
-        let num 	= get(s:numberdict, t:atp_bufname, 'no_number')
+        let num = get(s:numberdict, t:atp_bufname, 'no_number')
     endif
     if num == 'no_number'
 	exe cwinnr."wincmd w"
 	return
     endif
+    let lazyredraw = &lazyredraw
+    let eventignore=&eventignore
+    set lazyredraw
+    set eventignore=all
     if g:atp_python_toc
-        let sorted	= t:atp_pytoc[MainFile]
+        let sorted = t:atp_pytoc[MainFile]
     else
-        let sorted	= sort(keys(t:atp_toc[t:atp_bufname]), "atplib#CompareNumbers")
+        let sorted = sort(keys(t:atp_toc[t:atp_bufname]), "atplib#CompareNumbers")
     endif
     let num_list = [0]
-    let g:sorted=deepcopy(sorted)
     let f_test = ( t:atp_bufname == atplib#FullPath(getbufvar(bufnr(t:atp_bufname), "atp_MainFile")) )
     for ind in range(0,len(sorted)-1)
 	let line_l = sorted[ind]
@@ -978,7 +991,7 @@ function! atplib#motion#UpdateToCLine(...)
 	let num = max(num_list)+1
 	keepjumps call setpos('.', [0,0,0,0])
 	keepjumps call search('^'.escape(fnamemodify(MainFile, ":t"), '.\/').'\s\+(.*)\s*$', 'cW')
-	exe "normal! ".(num-1)."j"
+	call cursor(line(".")+(num-1),1)
     else
 	keepjumps call setpos('.',[bufnr(""),num,1,0])
     endif
@@ -988,10 +1001,9 @@ function! atplib#motion#UpdateToCLine(...)
 
     call atplib#tools#CursorLine()
 
-    let eventignore=&eventignore
-    set eventignore+=BufEnter
     exe cwinnr."wincmd w"
-    let &eventignore=eventignore
+    let &eventignore = eventignore
+    let &lazyredraw = lazyredraw
     let g:time_UpdateTocLine = reltimestr(reltime(time))
 endfunction
 " This is User Front End Function 
@@ -1061,14 +1073,6 @@ endfunction
 " {{{2 atplib#motion#ctoc
 function! atplib#motion#ctoc()
     if &l:filetype != 'tex' || expand("%:e") != 'tex'
-" TO DO:
-" 	if  exists(g:tex_flavor)
-" 	    if g:tex_flavor != "latex"
-" 		echomsg "CTOC: Wrong 'filetype'. This function works only for latex documents."
-" 	    endif
-" 	endif
-	" Set the status line once more, to remove the CTOC() function.
-	call ATPStatus(0,0)
 	return []
     endif
     " resolve the full path:
@@ -1136,18 +1140,21 @@ function! atplib#motion#ctoc()
     let section_name=substitute(atplib#motion#NearestSection(section)[0],'\$\|\\(\|\\)','','g')
     let section_line=atplib#motion#NearestSection(section)[1]
     let section_nline=atplib#motion#NearestSection(section)[2]
-"     let b:section=atplib#motion#NearestSection(section)		" DEBUG
 
     let subsection_name=substitute(atplib#motion#NearestSection(subsection)[0],'\$\|\\(\|\\)','','g')
     let subsection_line=atplib#motion#NearestSection(subsection)[1]
     let subsection_nline=atplib#motion#NearestSection(subsection)[2]
-"     let b:ssection=atplib#motion#NearestSection(subsection)		" DEBUG
 
     let names	= [ chapter_name ]
-    if (section_line+0 >= chapter_line+0 && section_line+0 <= chapter_nline+0) || chapter_name == '' 
+    if (section_line+0 >= chapter_line+0 && section_line+0 <= chapter_nline+0)
 	call add(names, section_name) 
-    elseif subsection_line+0 >= section_line+0 && subsection_line+0 <= section_nline+0
+    else
+	call add(names, '')
+    endif
+    if subsection_line+0 >= section_line+0 && subsection_line+0 <= section_nline+0
 	call add(names, subsection_name)
+    else
+	call add(names, '')
     endif
     return names
 endfunction
@@ -1274,6 +1281,9 @@ endfunction
 " atplib#motion#LatexTags {{{1
 function! atplib#motion#LatexTags(bang,...)
     " a:1 == 1 :  silent
+    if stridx(expand("%"), 'fugitive://') == 0
+	return
+    endif
     let silent = ( ( a:0 ? a:1 : 0 ) ? ' --silent ' : ' ' )
     let hyperref_cmd = ( atplib#search#SearchPackage("hyperref") ? " --hyperref " : "" )
     if has("clientserver")
@@ -1309,7 +1319,7 @@ function! atplib#motion#LatexTags(bang,...)
 
     let cmd=g:atp_Python." ".shellescape(latextags).
 		\ " --files ".shellescape(files).
-		\ " --auxfile ".shellescape(fnamemodify(atplib#FullPath(b:atp_MainFile), ":r").".aux").
+		\ " --auxfile ".shellescape(atplib#joinpath(expand(b:atp_OutDir), fnamemodify(b:atp_MainFile, ":t:r").".aux")).
 		\ " --dir ".shellescape(dir).
 		\ bib . cite . silent .
 		\ hyperref_cmd . servername . progname . bibtags . " &"
@@ -1409,30 +1419,34 @@ function! atplib#motion#GotoEnvironment(flag,count,...)
     " Set the pattern : 
     if env_name == 'math'
 	let pattern = '\m\%(\(\\\@<!\\\)\@<!%.*\)\@<!\%(\%(\\begin\s*{\s*\%(\(displayed\)\?math\|\%(fl\)\?align\|eqnarray\|equation\|gather\|multline\|subequations\|xalignat\|xxalignat\)\s*\*\=\s*}\)\|\\\@<!\\\[\|\\\@<!\\(\|\\\@<!\$\$\=\)'
+	let pattern_zs = '\m\%(\(\\\@<!\\\)\@<!%.*\)\@<!\%(\%(\\begin\s*\zs{\s*\%(\(displayed\)\?math\|\%(fl\)\?align\|eqnarray\|equation\|gather\|multline\|subequations\|xalignat\|xxalignat\)\s*\*\=\s*}\)\|\\\@<!\\\[\|\\\@<!\\(\|\\\@<!\$\$\=\)'
     elseif env_name == 'displayedmath'
 	let pattern = '\m\%(\(\\\@<!\\\)\@<!%.*\)\@<!\%(\%(\\begin\s*{\s*\%(displayedmath\|\%(fl\)\?align\*\=\|eqnarray\*\=\|equation\*\=\|gather\*\=\|multline\*\=\|xalignat\*\=\|xxalignat\*\=\)\s*}\)\|\\\@<!\\\[\|\\\@!\$\$\)'
+	let pattern_zs = '\m\%(\(\\\@<!\\\)\@<!%.*\)\@<!\%(\%(\\begin\zs\s*{\s*\%(displayedmath\|\%(fl\)\?align\*\=\|eqnarray\*\=\|equation\*\=\|gather\*\=\|multline\*\=\|xalignat\*\=\|xxalignat\*\=\)\s*}\)\|\\\@<!\\\[\|\\\@!\$\$\)'
     elseif env_name == 'inlinemath'
 	let pattern = '\m\%(\(\\\@<!\\\)\@<!%.*\)\@<!\%(\\begin\s*{\s*math\s*}\|\\\@<!\\(\|\$\@<!\\\@<!\$\$\@!\)'
+	let pattern_zs = '\m\%(\(\\\@<!\\\)\@<!%.*\)\@<!\%(\\begin\s*\zs{\s*math\s*}\|\\\@<!\\(\|\$\@<!\\\@<!\$\$\@!\)'
     else
 	let pattern = '\m\%(\(\\\@<!\\\)\@<!%.*\)\@<!\\begin\s*{\s*' . env_name 
+	let pattern_zs = '\m\%(\(\\\@<!\\\)\@<!%.*\)\@<!\\begin\s*\zs{\s*' . env_name 
     endif
 
 
-    " Search (twise if needed)
+    " Search (twice if needed)
     for i in range(1, a:count)
 	if i > 1
 	    " the 's' flag should be used only in the first search. 
 	    let flag=substitute(flag, 's', '', 'g') 
 	endif
 	if g:atp_mapNn
-	    let search_cmd 	= "S /"
+	    let search_cmd = "S /"
 	    let search_cmd_e= "/ " . flag
 	else
-	    let search_cmd	= "silent! call search('"
+	    let search_cmd = "silent! call search('"
 	    let search_cmd_e= "','" . flag . "')"
 	endif
-	execute  search_cmd . pattern . search_cmd_e
 	if a:flag !~# 'b'
+            execute  search_cmd . pattern . search_cmd_e
 	    if getline(".")[col(".")-1] == "$" 
 		if ( get(split(getline("."), '\zs'), col(".")-1, '') == "$" && get(split(getline("."), '\zs'), col("."), '') == "$" )
 		    "check $$
@@ -1446,6 +1460,8 @@ function! atplib#motion#GotoEnvironment(flag,count,...)
 		endif
 	    endif
 	else " a:flag =~# 'b'
+            execute  search_cmd . pattern_zs . search_cmd_e
+            call search(pattern, 'bc', line("."))
 	    if getline(".")[col(".")-1] == "$" 
 		if ( get(split(getline("."), '\zs'), col(".")-1, '') == "$" && get(split(getline("."), '\zs'), col(".")-2, '') == "$" )
 		    "check $$
@@ -1455,7 +1471,8 @@ function! atplib#motion#GotoEnvironment(flag,count,...)
 		    let rerun = atplib#complete#CheckSyntaxGroups(['texMathZoneX', 'texMathZoneY'], line("."), col(".")-2 )
 		endif
 		if rerun
-		    silent! execute search_cmd . pattern . search_cmd_e
+		    silent! execute search_cmd . pattern_zs . search_cmd_e
+                    call search(pattern, 'bc', line("."))
 		endif
 	    endif
 	endif
@@ -1481,36 +1498,147 @@ endfunction
 nnoremap <Plug>NextFrame	:<C-U>call atplib#motion#GotoFrame('forward', v:count1)<CR>
 nnoremap <Plug>PreviousFrame	:<C-U>call atplib#motion#GotoFrame('backward', v:count1)<CR>
 " atplib#motion#JumptoEnvironment {{{1 
-" function! atplib#motion#GotoEnvironmentB(flag,count,...)
-"     let env_name 	= (a:0 >= 1 && a:1 != ""  ? a:1 : '[^}]*')
-"     for i in range(1,a:count)
-" 	let flag 	= (i!=1?substitute(a:flag, 's', '', 'g'):a:flag)
-" 	call atplib#motion#GotoEnvironment(flag,1,env_name)
-"     endfor
-" endfunction
-" Jump over current \begin and go to next one.
-" i.e. if on line =~ \begin => % and then search, else search
-function! atplib#motion#JumptoEnvironment(backward)
+" Good for going through all \begin:\end pairs in a given envionrment, without
+" visiting child nodes.
+function! atplib#motion#JumptoEnvironment(forward, ...)
+    let cnt = (a:0>=1 ? a:1 : 1)
+    k`
     call setpos("''", getpos("."))
     let lazyredraw=&l:lazyredraw
     set lazyredraw
-    if !a:backward
-	let col	= searchpos('\w*\>\zs', 'n')[1]-1
-	if strpart(getline(line(".")), 0, col) =~ '\\begin\>$' &&
-		    \ strpart(getline(line(".")), col) !~ '^\s*{\s*document\s*}'
-	    exe "normal g%"
-	endif
-	call search('^\%([^%]\|\\%\)*\zs\\begin\>', 'W')
+    if a:forward
+	" let min = max([0, col(".")-6])
+	" let max = min([col(".")+5, len(getline(line(".")))])
+	" if getline(line("."))[(min):(max)] =~ '\\begin\>'
+	    " If on \begin moved to the start of it.
+	    call search('\\begin\>\(.*\\end\>\)\@!', 'b', line('.'))
+	" endif
+	for i in range(cnt)
+	    if !i && getline(".")[col(".")-1:] !~ '^\\begin\s*{'
+		call search('^\%([^%]\|\\%\)*\zs\\begin\>', 'W')
+	    else
+		call searchpair('\\begin\s*{\s*\%(document\>\)\@!', '', '\\end\s*{\s*\%(document\>\)\@!', 'W')
+		call search('^\%([^%]\|\\%\)*\zs\\begin\>', 'W')
+	    endif
+	endfor
     else
-	let found =  search('^\%([^%]\|\\%\)*\\end\>', 'bcW')
-	if getline(line(".")) !~ '^\%([^%]\|\\%\)*\\end\s*{\s*document\s*}' && found
-	    exe "normal %"
-	elseif !found
-	    call search('^\%([^%]\|\\%\)*\zs\\begin\>', 'bW')
-	endif
+	" let min = max([0, col(".")-6])
+	" let max = min([col(".")+5, len(getline(line(".")))])
+	" if getline(line("."))[(min):(max)] =~ '\\begin\>'
+	    " If on \begin moved to the start of it.
+	    call search('\\begin\>\(.*\\end\>\)\@!', 'b', line('.'))
+	" endif
+	for i in range(cnt)
+	    call search('^\%([^%]\|\\%\)*\zs\\\%(begin\|end\)\>', 'Wb')
+	    if getline(".")[col(".")-1:] =~ '^\\end\s*{'
+		call LaTeXBox_JumpToMatch('n', 0, 0)
+	    endif
+	endfor
     endif
     let &l:lazyredraw=lazyredraw
 endfunction 
+" atplib#motion#FastJumptoEnvironment {{{1 
+" Good for going up one level omittig current nodes.
+function! atplib#motion#FastJumptoEnvironment(forward, ...)
+    let cnt = (a:0>=1 ? a:1 : 1)
+    k`
+    call setpos("''", getpos("."))
+    let lazyredraw=&l:lazyredraw
+    set lazyredraw
+    if a:forward
+	call search('\\begin\>\(.*\\end\>\)\@!', 'b', line('.'))
+	for i in range(cnt)
+	    let ppos = getpos(".")[1:2]
+	    call searchpair('\\begin\s*\zs{\s*\%(document\>\)\@!', '', '\\end\s*{\s*\%(document\>\)\@!', 'W')
+	    call search('\\begin\>\(.*\\end\>\)\@!', 'b', line('.'))
+	    let pos = getpos(".")[1:2]
+	    if pos == ppos
+		call searchpair('\\begin\s*{\s*\%(document\>\)\@!', '', '\\end\s*{\s*\%(document\>\)\@!', 'W')
+	    endif
+	    call search('^\%([^%]\|\\%\)*\zs\\begin\>', 'W')
+	endfor
+    else
+	call search('\\begin\>\(.*\\end\>\)\@!', 'b', line('.'))
+	for i in range(cnt)
+	    let ppos = getpos(".")[1:2]
+	    call searchpair('\\begin\s*{\s*\zs\%(document\>\)\@!', '', '\\end\s*{\s*\%(document\>\)\@!', 'Wb')
+	    call search('\\begin', 'b', line('.'))
+	    let pos = getpos(".")[1:2]
+	    if  ppos == pos
+		call search('\\end\s*{\s*\%(document\>\)\@!', 'Wb')
+		if pos != getpos(".")[1:2]
+		    call LaTeXBox_JumpToMatch('n', 0, 0)
+		endif
+	    endif
+	endfor
+    endif
+    let &l:lazyredraw=lazyredraw
+endfunction 
+" atplib#motion#JumpOut {{{1 
+function! atplib#motion#JumpOut(forward,count)
+    k`
+    call setpos("''", getpos("."))
+    let lazyredraw=&l:lazyredraw
+    set lazyredraw
+    if a:forward
+	let flags = 'W'
+	" let limit = line(".")+g:atp_completion_limits[3]
+    else
+	let flags = 'Wb'
+	" let limit = max([1, line(".")-g:atp_completion_limits[3]])
+    endif
+    let ppos = getpos(".")[1:2]
+    let pos = searchpairpos('\\begin\s*{\s*\%(document\>\)\@!', '', '\\end\s*{\s*\%(document\>\)\@!', flags) " , '', limit)
+    for i in range(a:count-1)
+	let ppos = pos
+	if a:forward
+	    let limit = line(".")+g:atp_completion_limits[3]
+	else
+	    let limit = max([1, line(".")-g:atp_completion_limits[3]])
+	endif
+	let pos =  searchpairpos('\\begin\s*{\s*\%(document\>\)\@!', '', '\\end\s*{\s*\%(document\>\)\@!', flags) " , '', limit)
+	if pos == ppos
+	    break
+	endif
+    endfor
+    let &l:lazyredraw=lazyredraw
+endfunction 
+" atplib#motion#FastJumpOut {{{1 
+function! atplib#motion#FastJumpOut(forward)
+    k`
+    let s_pos = getpos(".")[1:2]
+    let lazyredraw=&l:lazyredraw
+    set lazyredraw
+    if a:forward
+	let flags = 'W'
+	let limit = line(".")+g:atp_completion_limits[3]
+    else
+	let flags = 'Wb'
+	let limit = max([1, line(".")-g:atp_completion_limits[3]])
+    endif
+    let ppos = getpos(".")[1:2]
+    let pos = searchpairpos('\\begin\s*{\s*\%(document\>\)\@!', '', '\\end\s*{\s*\%(document\>\)\@!', flags, '', limit)
+    while pos != ppos
+	let ppos = pos
+	if a:forward
+	    let limit = line(".")+g:atp_completion_limits[3]
+	else
+	    let limit = max([1, line(".")-g:atp_completion_limits[3]])
+	endif
+	let pos =  searchpairpos('\\begin\s*{\s*\%(document\>\)\@!', '', '\\end\s*{\s*\%(document\>\)\@!', flags, '', limit)
+    endwhile
+    if getpos(".")[1:2] == s_pos
+	echohl ErrorMsg
+	if a:forward
+	    echom '[ATP]: End not found within limits. Try ]o or enlarge g:atp_completion_limits[3]='.g:atp_completion_limits[3].'.'
+	else
+	    echom '[ATP]: Begin not found within limits. Try [o or enlarge g:atp_completion_limits[3]='.g:atp_completion_limits[3].'.'
+	endif
+	echohl None
+    endif
+    let &l:lazyredraw=lazyredraw
+endfunction 
+
 " atplib#motion#GotoSection {{{1 
 " The extra argument is a pattern to match for the
 " section title. The first, obsolete argument stands for:
@@ -1611,14 +1739,22 @@ function! atplib#motion#ggGotoSection(count,section)
 endfunction
 
 " atplib#motion#Input {{{1 
-function! atplib#motion#Input(flag)
+function! atplib#motion#Input(flag, count)
     let pat 	= ( &l:filetype == "plaintex" ? '\\input\s*{' : '\%(\\input\s*{\=\>'.(atplib#search#SearchPackage('subfiles') ?  '\|\\subfile\s*{' : '' ).'\|\\include\s*{\)' )
     let @/	= '^\([^%]\|\\\@<!\\%\)*' . pat
-    if g:atp_mapNn
-	exe ':S /^\([^%]\|\\\@<!\\%\)*' .  pat . '/ ' . a:flag
-    else
-	call search('^\([^%]\|\\\@<!\\%\)*' . pat, a:flag)
+    if stridx(a:flag, 'b') != -1
+	let ww=&ww
+	set ww+=h
+	normal h
+	let &ww=ww
     endif
+    for i in range(a:count)
+	if g:atp_mapNn
+	    exe ':S /^\([^%]\|\\\@<!\\%\)*' .  pat . '/ ' . a:flag
+	else
+	    call search('^\([^%]\|\\\@<!\\%\)*' . pat, a:flag)
+	endif
+    endfor
     call atplib#motion#UpdateToCLine()
     "     This pattern is quite simple and it might be not neccesary to add it to
     "     search history.
@@ -1768,10 +1904,6 @@ function! atplib#motion#GotoFile(bang,args,...)
 	call extend(level_d, { atp_MainFile : 0 })
     endif
 
-    let g:file_l = copy(file_l)
-    let g:method = method
-    let g:line 	= line
-
     if len(file_l) > 1 && file =~ '^\s*$'
 	if method == "all"
 	    let msg = "Which file to edit?"
@@ -1860,12 +1992,6 @@ function! atplib#motion#GotoFile(bang,args,...)
 	let file 	= atplib#FullPath(file)
 	let fname	= file
     endif
-
-"     DEBUG
-"     let g:fname  = fname
-"     let g:file   = file 
-"     let g:file_l = file_l
-"     let g:choice = choice 
 
     if !exists("file")
 	exe "lcd " . fnameescape(cwd)
@@ -2019,9 +2145,6 @@ function! atplib#motion#TexSyntaxMotion(forward, how, ...)
     let SectionModifierCounth 	= count(synstackh, 'texSectionModifier') && !count(synstackh, 'Delimiter') && col(".") > 1
 "     let MathZonesCount		= len(filter(copy(synstack), 'v:val =~ ''^texMathZone[A-Z]'''))
 
-"     let g:col	= col(".")
-"     let g:line	= line(".")
-
     if DelimiterCount 
 	let syntax	= [ 'Delimiter' ]
     elseif StatementCount && StatementCounth && step == "h"
@@ -2149,6 +2272,8 @@ function! atplib#motion#JMotion(flag)
 	    return
 	endif
     endif
+    let lz = &lz
+    set lz
     if a:flag !~# 'b'
 	let pattern = '\%(\]\zs\|{\zs\|}\zs\|(\zs\|)\zs\|\[\zs\|\]\zs\|\$\zs\|^\zs\s*$\|\(\\\w\+\>\s*{\)\@!\\\w\+\>\zs\)'
     else
@@ -2158,26 +2283,22 @@ function! atplib#motion#JMotion(flag)
 	let pattern = '\%(&\s*\zs\|^\s*\zs\)\|' . pattern
     endif
 
-    "     let g:col = col(".") " sometimes this doesn't work - in normal mode go to
-    "     end of line and press 'a' - then col(".") is not working!
-"     let g:let = getline(line("."))[col(".")-1]
-"     let g:con = getline(line("."))[col(".")-1] =~ '\%(\$\|{\|}\|(\|)\|\[\|\]\)' && col(".") < len(getline(line(".")))
     if getline(line("."))[col(".")-1] =~ '\%(\$\|{\|}\|(\|)\|\[\|\]\)' && a:flag !~# 'b'
 	if col(".") == len(getline(line(".")))
-	    execute "normal a "
+	    execute "normal! +"
 	else
 	    call cursor(line("."), col(".")+1)
 	endif
-	return
     else
 	call search(pattern, a:flag)
 	" In the imaps we use 'a' for the backward move and 'i' for forward move! 
 	let condition = getline(line("."))[col(".")-1] =~ '\%(\$\|{\|}\|(\|)\|\[\|\]\)'
 	if a:flag !~# 'b' && col(".") == len(getline(line("."))) && condition
-" 	    Add a space at the end of line and move there
-		execute "normal a "
+	    " Add a space at the end of line and move there
+	    execute "normal a"
 	endif
     endif
+    let &lz=lz
 endfunction
 " }}}1
 " atplib#motion#ParagraphNormalMotion {{{1
@@ -2193,49 +2314,79 @@ function! atplib#motion#ParagraphNormalMotion(backward,count)
 	endfor
     endif
 endfunction
-nmap <buffer> <Plug>ParagraphNormalMotionForward 	:<C-U>call atplib#motion#ParagraphNormalMotion('', v:count1)<CR>
-nmap <buffer> <Plug>ParagraphNormalMotionBackward	:<C-U>call atplib#motion#ParagraphNormalMotion('b', v:count1)<CR>
-
+" atplib#motion#SentenceNormalMotion {{{1
+fun! atplib#motion#SentenceNormalMotion(backward,count)
+    normal! m`
+    if a:backward != "b"
+	for i in range(1,a:count)
+	    call search('\%(\.\|\\par\|\\]\|\\noindent\|\\\%(begin\|end\)\%(\s*{.*}\|\s*\[.*\]\)*\|\\\%(part\|chapter\|\%(sub\)\{0,2}section\|\%(sub\)\?paragraph\)\%(\s*[.\{-}]\)\?{.*}\)\_s\+\zs\%(\s*\\begin\|\s*\\end\)\@![A-Z]', 'W')
+	endfor
+    else
+	for i in range(1,a:count)
+	    call search('\%(\.\|\\par\|\\]\|\\noindent\|\\\%(begin\|end\)\%(\s*{.*}\|\s*\[.*\]\)*\|\\\%(part\|chapter\|\%(sub\)\{0,2}section\|\%(sub\)\?paragraph\)\%(\s*[.\{-}]\)\?{.*}\)\_s\+\zs\%(\s*\\begin\|\s*\\end\)\@![A-Z]', 'Wb')
+	endfor
+    endif
+endfun
 " atplib#motion#StartVisualMode {{{1
-function! atplib#motion#StartVisualMode(mode)
+function! atplib#motion#StartVisualMode(mode, count)
     let g:atp_visualstartpos = getpos(".")
+    let l:count = ( a:count ? a:count : "" )
     if a:mode ==# 'v'
-	normal! v
+	exe "normal! ".l:count."v"
     elseif a:mode ==# 'V'
-	normal! V
+	exe "normal! ".l:count."V"
     elseif a:mode ==# 'cv'
-	exe "normal! \<c-v>"
+	exe "normal! ".l:count."\<c-v>"
     endif
 endfunction
 " atplib#motion#ParagraphVisualMotion {{{1
 function! atplib#motion#ParagraphVisualMotion(backward,count)
-    let cond = !atplib#CompareCoordinates(g:atp_visualstartpos[1:2],getpos("'>")[1:2])
-"     let g:pos = string(g:atp_visualstartpos)." ".string(getpos("'<"))." ".string(getpos("'>"))." ".cond
     let bpos = g:atp_visualstartpos
     normal! m`
     if a:backward != "b"
+	let cond = (bpos[1] >= getpos("'>")[1])
 	if cond
 	    call cursor(getpos("'<")[1:2])
 	else
 	    call cursor(getpos("'>")[1:2])
 	endif
 	for i in range(1,a:count)
-	    let epos = searchpos('\(^\(\n\|\s\)*\n\ze\|\(\_s*\)\=\\par\>\|\%'.line("$").'l$\)', 'Wn')
+	    call search('.', 'cW')
+	    let epos = searchpos('\(^\(\n\|\s\)*\n\ze\|\(\_s*\)\=\\par\>\|\%'.line("$").'l$\)', 'W')
+	    if epos == [0, 0]
+		let epos = getpos(".")[1:2]
+	    endif
 	endfor
     else 
+	let cond = (bpos[1] < getpos("'>")[1])
 	if cond
-	    call cursor(getpos("'<")[1:2])
-	else
 	    call cursor(getpos("'>")[1:2])
+	else
+	    call cursor(getpos("'<")[1:2])
 	endif
 	for i in range(1,a:count)
-	    let epos = searchpos('\(^\(\n\|\s\)*\n\ze\|\(\_s*\)\=\\par\>\|^\%1l\ze\)', 'Wnb')
+	    call search('.', 'cbW')
+	    let epos = searchpos('\(^\(\n\|\s\)*\n\ze\|\(\_s*\)\=\\par\>\|^\%1l\ze\)', 'Wb')
+	    if epos == [0, 0]
+		let epos = getpos(".")[1:2]
+	    endif
 	endfor
     endif
     call cursor(bpos[1:2])
     exe "normal ".visualmode()
     call cursor(epos)
 endfunction
-vmap <buffer> <silent> <Plug>ParagraphVisualMotionForward 	:<C-U>call atplib#motion#ParagraphVisualMotion('',v:count1)<CR>
-vmap <buffer> <silent> <Plug>ParagraphVisualMotionBackward 	:<C-U>call atplib#motion#ParagraphVisualMotion('b',v:count1)<CR>
+fun! atplib#motion#TexKeywordObject() " {{{1
+    let line = getline(line("."))
+    let beg = len(matchstr(line[:(col(".")-1)], '\\\?\k*$'))
+    let end = len(matchstr(line[col("."):], '^\k*'))
+    if beg-1 >= 1
+	exe "normal! ".(beg-1)."h"
+    endif
+    normal v
+    if end+beg-1 >= 1
+	exe "normal! ".(beg+end-1)."l"
+    endif
+endfun
+" Modeliens: {{{1
 " vim:fdm=marker:tw=85:ff=unix:noet:ts=8:sw=4:fdc=1

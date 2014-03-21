@@ -22,6 +22,7 @@ function! SyntaxCheckers_vim_vimlint_GetHighlightRegex(item)
     let term = matchstr(a:item['text'], '\m `\zs[^`]\+\ze`')
     if term != ''
         let col = get(a:item, 'col', 0)
+<<<<<<< HEAD
 
         if col && term[0:1] ==# 'l:'
             if getline(a:item.lnum)[col-1:col] !=# 'l:'
@@ -30,6 +31,9 @@ function! SyntaxCheckers_vim_vimlint_GetHighlightRegex(item)
         endif
 
         return '\V' . (col ? '\%' . col . 'c' : '') . escape(term, '\')
+=======
+        return '\V' . (col ? '\%' . col . 'c' : '') . term
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     endif
 
     return ''
@@ -40,7 +44,11 @@ function! SyntaxCheckers_vim_vimlint_IsAvailable() dict
     try
         call vimlint#vimlint(syntastic#util#DevNull(), { 'output': [], 'quiet': 1 })
         let ret = 1
+<<<<<<< HEAD
     catch /\m^Vim\%((\a\+)\)\=:E117/
+=======
+    catch /^Vim\%((\a\+)\)\=:E117/
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
         " do nothing
     endtry
     return ret
@@ -49,9 +57,13 @@ endfunction
 function! SyntaxCheckers_vim_vimlint_GetLocList() dict
     " EVL102: unused variable v
     " EVL103: unused argument v
+<<<<<<< HEAD
     " EVL104: variable may not be initialized on some execution path: v
     " EVL105: global variable v is defined without g:
     " EVL106: local variable v is used without l:
+=======
+    " EVL105: global variable v is defined without g:
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     " EVL201: unreachable code
     " EVL204: constant in conditional context
     " EVL205: missing scriptencoding
@@ -63,26 +75,40 @@ function! SyntaxCheckers_vim_vimlint_GetLocList() dict
         \ 'quiet':  1,
         \ 'EVL102': 3,
         \ 'EVL103': 3,
+<<<<<<< HEAD
         \ 'EVL104': 3,
         \ 'EVL105': 3,
         \ 'EVL106': 3,
+=======
+        \ 'EVL105': 3,
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
         \ 'EVL201': 3,
         \ 'EVL204': 3,
         \ 'EVL205': 3 })
 endfunction
 
+<<<<<<< HEAD
 " @vimlint(EVL103, 1, a:filename)
 function! s:vimlintOutput(filename, pos, ev, eid, mes, obj)
     call add(a:obj.error, {
+=======
+function! s:vimlintOutput(filename, pos, ev, eid, mes, obj)
+    let a:obj.error += [{
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
         \ 'bufnr': bufnr(''),
         \ 'lnum': a:pos.lnum,
         \ 'col': a:pos.col,
         \ 'vcol': 0,
         \ 'type': a:ev[0],
         \ 'text': '[' . a:eid . '] ' . a:mes,
+<<<<<<< HEAD
         \ 'valid': a:pos.lnum > 0 })
 endfunction
 " @vimlint(EVL103, 0, a:filename)
+=======
+        \ 'valid': 1 }]
+endfunction
+>>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
     \ 'filetype': 'vim',

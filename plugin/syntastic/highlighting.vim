@@ -90,4 +90,19 @@ endfunction " }}}2
 
 " }}}1
 
+" Private methods {{{1
+
+" One time setup: define our own highlighting
+function! g:SyntasticHighlightingNotifier._setup()
+    if s:has_highlighting
+        if !hlexists('SyntasticError')
+            highlight link SyntasticError SpellBad
+
+        endif
+        if !hlexists('SyntasticWarning')
+            highlight link SyntasticWarning SpellCap
+        endif
+    endif
+endfunction
+
 " vim: set sw=4 sts=4 et fdm=marker:
