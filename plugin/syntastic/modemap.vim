@@ -38,15 +38,9 @@ function! g:SyntasticModeMap.allowsAutoChecking(filetype) " {{{2
     endif
 endfunction " }}}2
 
-<<<<<<< HEAD
 function! g:SyntasticModeMap.isPassive() " {{{2
     return self._mode ==# 'passive'
 endfunction " }}}2
-=======
-function! g:SyntasticModeMap.isPassive()
-    return self._mode ==# 'passive'
-endfunction
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
 function! g:SyntasticModeMap.toggleMode() " {{{2
     call self.synch()

@@ -10,11 +10,7 @@ set cpo&vim
 
 " convenience function to determine the 'null device' parameter
 " based on the current operating system
-<<<<<<< HEAD
 function! syntastic#c#NullOutput() " {{{2
-=======
-function! syntastic#c#NullOutput()
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     let known_os = has('unix') || has('mac') || syntastic#util#isRunningWindows()
     return known_os ? '-o ' . syntastic#util#DevNull() : ''
 endfunction " }}}2
@@ -60,13 +56,8 @@ function! syntastic#c#ReadConfig(file) " {{{2
         endif
     endfor
 
-<<<<<<< HEAD
     return join(map(parameters, 'syntastic#util#shescape(v:val)'))
 endfunction " }}}2
-=======
-    return join(map(parameters, 'syntastic#util#shescape(fnameescape(v:val))'))
-endfunction
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
 " GetLocList() for C-like compilers
 function! syntastic#c#GetLocList(filetype, subchecker, options) " {{{2
@@ -76,12 +67,8 @@ function! syntastic#c#GetLocList(filetype, subchecker, options) " {{{2
         return []
     endtry
 
-<<<<<<< HEAD
     let makeprg = syntastic#util#shexpand(g:syntastic_{a:filetype}_compiler) .
         \ ' ' . flags . ' ' . syntastic#util#shexpand('%')
-=======
-    let makeprg = expand(g:syntastic_{a:filetype}_compiler) . ' ' . flags . ' ' . syntastic#util#shexpand('%')
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let errorformat = s:getCheckerVar('g', a:filetype, a:subchecker, 'errorformat', a:options['errorformat'])
 
@@ -203,13 +190,8 @@ function! s:getIncludeDirs(filetype) " {{{2
         call extend(include_dirs, g:syntastic_{a:filetype}_include_dirs)
     endif
 
-<<<<<<< HEAD
     return join(map(syntastic#util#unique(include_dirs), 'syntastic#util#shescape("-I" . v:val)'))
 endfunction " }}}2
-=======
-    return join(map(syntastic#util#unique(include_dirs), 'syntastic#util#shescape(fnameescape("-I" . v:val))'))
-endfunction
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
 " search the first 100 lines for include statements that are
 " given in the handlers dictionary

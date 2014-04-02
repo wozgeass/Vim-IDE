@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 if exists('g:loaded_syntastic_util_autoload') || !exists("g:loaded_syntastic_plugin")
-=======
-if exists('g:loaded_syntastic_util_autoload')
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     finish
 endif
 let g:loaded_syntastic_util_autoload = 1
@@ -10,7 +6,6 @@ let g:loaded_syntastic_util_autoload = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
-<<<<<<< HEAD
 " Public functions {{{1
 
 function! syntastic#util#isRunningWindows() " {{{2
@@ -18,19 +13,6 @@ function! syntastic#util#isRunningWindows() " {{{2
 endfunction " }}}2
 
 function! syntastic#util#DevNull() " {{{2
-=======
-" strwidth() was added in Vim 7.3; if it doesn't exist, we use strlen()
-" and hope for the best :)
-let s:width = function(exists('*strwidth') ? 'strwidth' : 'strlen')
-
-" Public functions {{{1
-
-function! syntastic#util#isRunningWindows()
-    return has('win16') || has('win32') || has('win64')
-endfunction
-
-function! syntastic#util#DevNull()
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     if syntastic#util#isRunningWindows()
         return 'NUL'
     endif
@@ -120,11 +102,7 @@ function! syntastic#util#wideMsg(msg) " {{{2
     "width as the proper amount of characters
     let chunks = split(msg, "\t", 1)
     let msg = join(map(chunks[:-2], 'v:val . repeat(" ", &ts - s:width(v:val) % &ts)'), '') . chunks[-1]
-<<<<<<< HEAD
     let msg = strpart(msg, 0, &columns - 1)
-=======
-    let msg = strpart(msg, 0, winwidth(0) - 1)
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     set noruler noshowcmd
     call syntastic#util#redraw(0)
@@ -133,11 +111,7 @@ function! syntastic#util#wideMsg(msg) " {{{2
 
     let &ruler = old_ruler
     let &showcmd = old_showcmd
-<<<<<<< HEAD
 endfunction " }}}2
-=======
-endfunction
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
 " Check whether a buffer is loaded, listed, and not hidden
 function! syntastic#util#bufIsActive(buffer) " {{{2
@@ -171,21 +145,13 @@ function! syntastic#util#findInParent(what, where) " {{{2
         let root = here[0] . root[1:]
     endif
 
-<<<<<<< HEAD
     let old = ''
     while here != ''
-=======
-    while !empty(here)
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
         let p = split(globpath(here, a:what), '\n')
 
         if !empty(p)
             return fnamemodify(p[0], ':p')
-<<<<<<< HEAD
         elseif here ==? root || here ==? old
-=======
-        elseif here ==? root
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
             break
         endif
 
@@ -231,20 +197,13 @@ function! syntastic#util#decodeXMLEntities(string) " {{{2
     let str = substitute(str, '\m&apos;', "'", 'g')
     let str = substitute(str, '\m&amp;', '\&', 'g')
     return str
-<<<<<<< HEAD
 endfunction " }}}2
 
 function! syntastic#util#redraw(full) " {{{2
-=======
-endfunction
-
-function! syntastic#util#redraw(full)
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     if a:full
         redraw!
     else
         redraw
-<<<<<<< HEAD
     endif
 endfunction " }}}2
 
@@ -301,49 +260,3 @@ let &cpo = s:save_cpo
 unlet s:save_cpo
 
 " vim: set sw=4 sts=4 et fdm=marker:
-=======
-    endif
-endfunction
-
-function! syntastic#util#dictFilter(errors, filter)
-    let rules = s:translateFilter(a:filter)
-    " call syntastic#log#debug(g:SyntasticDebugFilters, "applying filter:", rules)
-    try
-        call filter(a:errors, rules)
-    catch /\m^Vim\%((\a\+)\)\=:E/
-        let msg = matchstr(v:exception, '\m^Vim\%((\a\+)\)\=:\zs.*')
-        call syntastic#log#error('quiet_messages: ' . msg)
-    endtry
-endfunction
-
-" Private functions {{{1
-
-function! s:translateFilter(filters)
-    let conditions = []
-    for [k, v] in items(a:filters)
-        if type(v) == type([])
-            call extend(conditions, map(copy(v), 's:translateElement(k, v:val)'))
-        else
-            call add(conditions, s:translateElement(k, v))
-        endif
-    endfor
-    return len(conditions) == 1 ? conditions[0] : join(map(conditions, '"(" . v:val . ")"'), ' && ')
-endfunction
-
-function! s:translateElement(key, term)
-    if a:key ==? 'level'
-        let ret = 'v:val["type"] !=? ' . string(a:term[0])
-    elseif a:key ==? 'type'
-        let ret = a:term ==? 'style' ? 'get(v:val, "subtype", "") !=? "style"' : 'has_key(v:val, "subtype")'
-    elseif a:key ==? 'regex'
-        let ret = 'v:val["text"] !~? ' . string(a:term)
-    elseif a:key ==? 'file'
-        let ret = 'bufname(str2nr(v:val["bufnr"])) !~# ' . string(a:term)
-    endif
-    return ret
-endfunction
-
-let &cpo = s:save_cpo
-unlet s:save_cpo
-" vim: set et sts=4 sw=4 fdm=marker:
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd

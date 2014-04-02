@@ -23,14 +23,9 @@ set cpo&vim
 
 function! SyntaxCheckers_javascript_jsl_GetLocList() dict
     let makeprg = self.makeprgBuild({
-<<<<<<< HEAD
         \ 'args': (g:syntastic_javascript_jsl_conf != '' ?
         \       '-conf ' . syntastic#util#shexpand(g:syntastic_javascript_jsl_conf) : ''),
         \ 'args_after': '-nologo -nofilelisting -nosummary -nocontext -process' })
-=======
-        \ 'args': (!empty(g:syntastic_javascript_jsl_conf) ? "-conf " . g:syntastic_javascript_jsl_conf : "") .
-        \       " -nologo -nofilelisting -nosummary -nocontext -process" })
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let errorformat =
         \ '%W%f(%l): lint warning: %m,'.

@@ -29,13 +29,8 @@ set cpo&vim
 
 function! SyntaxCheckers_glsl_cgc_GetLocList() dict
     let makeprg = self.makeprgBuild({
-<<<<<<< HEAD
         \ 'args_before': '-oglsl -profile ' . s:GetProfile(),
         \ 'args': (exists('g:syntastic_glsl_options') ? ' ' . g:syntastic_glsl_options : '') })
-=======
-        \ 'args': '-oglsl -profile ' . s:GetProfile() .
-        \       (exists('g:syntastic_glsl_options') ? ' ' . g:syntastic_glsl_options : '') })
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let errorformat =
         \ "%E%f(%l) : error %m," .
@@ -70,11 +65,7 @@ function! s:GetProfile()
     endif
 
     return profile
-<<<<<<< HEAD
 endfunction
-=======
-endfunction!
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
     \'filetype': 'glsl',

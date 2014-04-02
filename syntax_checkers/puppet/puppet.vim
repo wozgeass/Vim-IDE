@@ -19,11 +19,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! SyntaxCheckers_puppet_puppet_GetLocList() dict
-<<<<<<< HEAD
     let ver = syntastic#util#getVersion(self.getExecEscaped() . ' --version 2>' . syntastic#util#DevNull())
-=======
-    let ver = syntastic#util#getVersion(self.getExec() . ' --version 2>' . syntastic#util#DevNull())
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     if syntastic#util#versionIsAtLeast(ver, [2,7,0])
         let args = 'parser validate --color=false'
@@ -31,11 +27,7 @@ function! SyntaxCheckers_puppet_puppet_GetLocList() dict
         let args = '--color=false --parseonly'
     endif
 
-<<<<<<< HEAD
     let makeprg = self.makeprgBuild({ 'args_before': args })
-=======
-    let makeprg = self.makeprgBuild({ 'args': args })
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let errorformat =
         \ '%-Gerr: Try ''puppet help parser validate'' for usage,' .

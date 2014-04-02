@@ -27,13 +27,9 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! SyntaxCheckers_css_csslint_GetLocList() dict
-<<<<<<< HEAD
     let makeprg = self.makeprgBuild({
         \ 'args': g:syntastic_csslint_options,
         \ 'args_after': '--format=compact' })
-=======
-    let makeprg = self.makeprgBuild({ 'args': '--format=compact ' . g:syntastic_csslint_options })
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     " Print CSS Lint's error/warning messages from compact format. Ignores blank lines.
     let errorformat =

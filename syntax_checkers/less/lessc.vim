@@ -33,7 +33,6 @@ endif
 let s:save_cpo = &cpo
 set cpo&vim
 
-<<<<<<< HEAD
 let s:node_file = 'node ' . syntastic#util#shescape(expand('<sfile>:p:h') . syntastic#util#Slash() . 'less-lint.js')
 
 function! SyntaxCheckers_less_lessc_IsAvailable() dict
@@ -50,23 +49,6 @@ function! SyntaxCheckers_less_lessc_GetLocList() dict
         \ 'args': g:syntastic_less_options,
         \ 'args_after': '--no-color',
         \ 'tail': '> ' . syntastic#util#DevNull() })
-=======
-if g:syntastic_less_use_less_lint
-    let s:check_file = 'node ' . expand('<sfile>:p:h') . syntastic#util#Slash() . 'less-lint.js'
-else
-    let s:check_file = 'lessc'
-endif
-
-function! SyntaxCheckers_less_lessc_IsAvailable() dict
-    return g:syntastic_less_use_less_lint ? executable('node') : executable('lessc')
-endfunction
-
-function! SyntaxCheckers_less_lessc_GetLocList() dict
-    let makeprg = self.makeprgBuild({
-        \ 'exe': s:check_file,
-        \ 'args': g:syntastic_less_options,
-        \ 'tail': syntastic#util#DevNull() })
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let errorformat =
         \ '%m in %f on line %l\, column %c:,' .

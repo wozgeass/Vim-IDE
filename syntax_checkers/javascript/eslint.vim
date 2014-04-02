@@ -21,7 +21,6 @@ endif
 let s:save_cpo = &cpo
 set cpo&vim
 
-<<<<<<< HEAD
 function! SyntaxCheckers_javascript_eslint_IsAvailable() dict
     return
         \ executable('eslint') &&
@@ -33,11 +32,6 @@ function! SyntaxCheckers_javascript_eslint_GetLocList() dict
         \ 'args_before': '-f compact',
         \ 'args': (g:syntastic_javascript_eslint_conf != '' ?
         \       '--config ' . syntastic#util#shexpand(g:syntastic_javascript_eslint_conf) : '') })
-=======
-function! SyntaxCheckers_javascript_eslint_GetLocList() dict
-    let makeprg = self.makeprgBuild({
-        \ 'args': !empty(g:syntastic_javascript_eslint_conf) ? ' --config ' . g:syntastic_javascript_eslint_conf : '' })
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let errorformat =
         \ '%E%f: line %l\, col %c\, Error - %m'

@@ -34,11 +34,7 @@ function! g:SyntasticSignsNotifier.enabled() " {{{2
     return has('signs') && syntastic#util#var('enable_signs')
 endfunction " }}}2
 
-<<<<<<< HEAD
 function! g:SyntasticSignsNotifier.refresh(loclist) " {{{2
-=======
-function! g:SyntasticSignsNotifier.refresh(loclist)
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     call syntastic#log#debug(g:SyntasticDebugNotifications, 'signs: refresh')
     let old_signs = copy(self._bufSignIds())
     if self.enabled()

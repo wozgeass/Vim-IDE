@@ -20,19 +20,11 @@ set cpo&vim
 
 function! SyntaxCheckers_po_msgfmt_GetHighlightRegex(item)
     let term = matchstr(a:item['text'], '\mkeyword "\zs[^"]\+\ze" unknown')
-<<<<<<< HEAD
     return term != '' ? '\V' . escape(term, '\') : ''
 endfunction
 
 function! SyntaxCheckers_po_msgfmt_GetLocList() dict
     let makeprg = self.makeprgBuild({ 'args_after': '-c ' . syntastic#c#NullOutput() })
-=======
-    return !empty(term) ? '\V' . term : ''
-endfunction
-
-function! SyntaxCheckers_po_msgfmt_GetLocList() dict
-    let makeprg = self.makeprgBuild({ 'args': '-c ' . syntastic#c#NullOutput() })
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let errorformat =
         \ '%W%f:%l: warning: %m,' .

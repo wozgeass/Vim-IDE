@@ -30,12 +30,8 @@ set cpo&vim
 
 function! SyntaxCheckers_c_sparse_GetLocList() dict
     let makeprg = self.makeprgBuild({
-<<<<<<< HEAD
         \ 'args': syntastic#c#ReadConfig(g:syntastic_sparse_config_file),
         \ 'args_after': '-ftabstop=' . &ts })
-=======
-        \ 'args': '-ftabstop=' . &ts . ' ' . syntastic#c#ReadConfig(g:syntastic_sparse_config_file) })
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let errorformat = '%f:%l:%v: %trror: %m,%f:%l:%v: %tarning: %m,'
 

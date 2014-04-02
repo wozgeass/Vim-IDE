@@ -19,11 +19,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! SyntaxCheckers_co_coco_GetLocList() dict
-<<<<<<< HEAD
     let makeprg = self.makeprgBuild({ 'args_after': '-c -o /tmp' })
-=======
-    let makeprg = self.makeprgBuild({ 'args': '-c -o /tmp' })
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let errorformat =
         \ '%EFailed at: %f,' .

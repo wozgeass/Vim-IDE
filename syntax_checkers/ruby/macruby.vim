@@ -19,13 +19,8 @@ set cpo&vim
 
 function! SyntaxCheckers_ruby_macruby_GetLocList() dict
     let makeprg = self.makeprgBuild({
-<<<<<<< HEAD
         \ 'exe': 'RUBYOPT= ' . self.getExecEscaped(),
         \ 'args_after': '-W1 -c' })
-=======
-        \ 'exe': 'RUBYOPT= ' . self.getExec(),
-        \ 'args': '-W1 -c' })
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let errorformat =
         \ '%-GSyntax OK,'.

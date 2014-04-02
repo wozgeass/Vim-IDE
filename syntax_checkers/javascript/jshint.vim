@@ -13,13 +13,6 @@ if exists('g:loaded_syntastic_javascript_jshint_checker')
     finish
 endif
 let g:loaded_syntastic_javascript_jshint_checker = 1
-<<<<<<< HEAD
-=======
-
-if !exists('g:syntastic_jshint_exec')
-    let g:syntastic_jshint_exec = 'jshint'
-endif
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
 if !exists('g:syntastic_javascript_jshint_conf')
     let g:syntastic_javascript_jshint_conf = ''
@@ -29,31 +22,23 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! SyntaxCheckers_javascript_jshint_IsAvailable() dict
-<<<<<<< HEAD
     if !exists('g:syntastic_jshint_exec')
         let g:syntastic_jshint_exec = self.getExec()
     endif
-=======
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
-    return executable(expand(g:syntastic_jshint_exec))
+    if !executable(expand(g:syntastic_jshint_exec))
+        return 0
+    endif
+    let s:jshint_version = syntastic#util#getVersion(syntastic#util#shexpand(g:syntastic_jshint_exec) . ' --version')
+    return syntastic#util#versionIsAtLeast(s:jshint_version, [1])
 endfunction
 
 function! SyntaxCheckers_javascript_jshint_GetLocList() dict
-<<<<<<< HEAD
-    let exe = syntastic#util#shexpand(g:syntastic_jshint_exec)
     if !exists('s:jshint_new')
-        let s:jshint_new =
-            \ syntastic#util#versionIsAtLeast(syntastic#util#getVersion(exe . ' --version'), [1, 1])
+        let s:jshint_new = syntastic#util#versionIsAtLeast(s:jshint_version, [1, 1])
     endif
-=======
-    let jshint_new = s:JshintNew()
-    let makeprg = self.makeprgBuild({
-        \ 'exe': expand(g:syntastic_jshint_exec),
-        \ 'post_args': (jshint_new ? ' --verbose ' : '') . s:Args() })
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let makeprg = self.makeprgBuild({
-        \ 'exe': exe,
+        \ 'exe': syntastic#util#shexpand(g:syntastic_jshint_exec),
         \ 'args': (g:syntastic_javascript_jshint_conf != '' ?
         \       '--config ' . syntastic#util#shexpand(g:syntastic_javascript_jshint_conf) : ''),
         \ 'args_after': (s:jshint_new ? '--verbose ' : '') })

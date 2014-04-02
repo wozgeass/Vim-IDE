@@ -22,7 +22,6 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! SyntaxCheckers_ruby_rubocop_IsAvailable() dict
-<<<<<<< HEAD
     return
         \ executable(self.getExec()) &&
         \ syntastic#util#versionIsAtLeast(syntastic#util#getVersion(self.getExecEscaped() . ' --version'), [0, 9, 0])
@@ -30,16 +29,6 @@ endfunction
 
 function! SyntaxCheckers_ruby_rubocop_GetLocList() dict
     let makeprg = self.makeprgBuild({ 'args_after': '--format emacs --silent' })
-=======
-    let exe = self.getExec()
-    return
-        \ executable(exe) &&
-        \ syntastic#util#versionIsAtLeast(syntastic#util#getVersion(exe . ' --version'), [0,9,0])
-endfunction
-
-function! SyntaxCheckers_ruby_rubocop_GetLocList() dict
-    let makeprg = self.makeprgBuild({ 'args': '--format emacs --silent' })
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let errorformat = '%f:%l:%c: %t: %m'
 

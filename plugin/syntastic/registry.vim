@@ -10,10 +10,7 @@ let s:defaultCheckers = {
         \ 'ada':         ['gcc'],
         \ 'applescript': ['osacompile'],
         \ 'asciidoc':    ['asciidoc'],
-<<<<<<< HEAD
         \ 'asm':         ['gcc'],
-=======
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
         \ 'bemhtml':     ['bemhtmllint'],
         \ 'c':           ['gcc'],
         \ 'chef':        ['foodcritic'],
@@ -23,11 +20,7 @@ let s:defaultCheckers = {
         \ 'coq':         ['coqtop'],
         \ 'cpp':         ['gcc'],
         \ 'cs':          ['mcs'],
-<<<<<<< HEAD
         \ 'css':         ['csslint'],
-=======
-        \ 'css':         ['csslint', 'phpcs'],
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
         \ 'cucumber':    ['cucumber'],
         \ 'cuda':        ['nvcc'],
         \ 'd':           ['dmd'],
@@ -61,11 +54,7 @@ let s:defaultCheckers = {
         \ 'objc':        ['gcc'],
         \ 'objcpp':      ['gcc'],
         \ 'ocaml':       ['camlp4o'],
-<<<<<<< HEAD
         \ 'perl':        ['perlcritic'],
-=======
-        \ 'perl':        ['perl', 'perlcritic'],
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
         \ 'php':         ['php', 'phpcs', 'phpmd'],
         \ 'po':          ['msgfmt'],
         \ 'pod':         ['podchecker'],
@@ -78,18 +67,11 @@ let s:defaultCheckers = {
         \ 'sass':        ['sass'],
         \ 'scala':       ['fsc', 'scalac'],
         \ 'scss':        ['sass', 'scss_lint'],
-<<<<<<< HEAD
         \ 'sh':          ['sh', 'shellcheck'],
         \ 'slim':        ['slimrb'],
         \ 'tcl':         ['nagelfar'],
         \ 'tex':         ['lacheck', 'chktex'],
         \ 'texinfo':     ['makeinfo'],
-=======
-        \ 'sh':          ['sh'],
-        \ 'slim':        ['slimrb'],
-        \ 'tcl':         ['nagelfar'],
-        \ 'tex':         ['lacheck', 'chktex'],
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
         \ 'text':        ['atdtool'],
         \ 'twig':        ['twiglint'],
         \ 'typescript':  ['tsc'],
@@ -104,11 +86,7 @@ let s:defaultCheckers = {
         \ 'yaml':        ['jsyaml'],
         \ 'z80':         ['z80syntaxchecker'],
         \ 'zpt':         ['zptlint'],
-<<<<<<< HEAD
         \ 'zsh':         ['zsh', 'shellcheck']
-=======
-        \ 'zsh':         ['zsh']
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     \ }
 
 let s:defaultFiletypeMap = {
@@ -132,7 +110,6 @@ function! g:SyntasticRegistry.Instance() " {{{2
         let s:SyntasticRegistryInstance = copy(self)
         let s:SyntasticRegistryInstance._checkerRaw = {}
         let s:SyntasticRegistryInstance._checkerMap = {}
-        let s:SyntasticRegistryInstance._cachedCheckersFor = {}
     endif
 
     return s:SyntasticRegistryInstance
@@ -142,7 +119,6 @@ function! g:SyntasticRegistry.CreateAndRegisterChecker(args) " {{{2
     let checker = g:SyntasticChecker.New(a:args)
     let registry = g:SyntasticRegistry.Instance()
     call registry._registerChecker(checker)
-<<<<<<< HEAD
 endfunction " }}}2
 
 function! g:SyntasticRegistry.isCheckable(ftalias) " {{{2
@@ -171,9 +147,6 @@ function! g:SyntasticRegistry.getCheckers(ftalias, list) " {{{2
         \ exists('b:syntastic_checkers') ? b:syntastic_checkers :
         \ exists('g:syntastic_' . ft . '_checkers') ? g:syntastic_{ft}_checkers :
         \ get(s:defaultCheckers, ft, 0)
-=======
-endfunction
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     return type(names) == type([]) ?
         \ self._filterCheckersByName(checkers_map, names) : [checkers_map[keys(checkers_map)[0]]]
@@ -188,7 +161,6 @@ function! g:SyntasticRegistry.getKnownFiletypes() " {{{2
         call extend(types, keys(g:syntastic_filetype_map))
     endif
 
-<<<<<<< HEAD
     if exists('g:syntastic_extra_filetypes') && type(g:syntastic_extra_filetypes) == type([])
         call extend(types, g:syntastic_extra_filetypes)
     endif
@@ -203,33 +175,6 @@ function! g:SyntasticRegistry.echoInfoFor(ftalias_list) " {{{2
     if len(ft_list) != 1
         let available = []
         let active = []
-=======
-    return checkers[0:0]
-endfunction
-
-function! g:SyntasticRegistry.getCheckers(ftalias, list)
-    return self._filterCheckersByName(self.availableCheckersFor(a:ftalias), a:list)
-endfunction
-
-function! g:SyntasticRegistry.availableCheckersFor(ftalias)
-    if !has_key(self._cachedCheckersFor, a:ftalias)
-        let filetype = s:SyntasticRegistryNormaliseFiletype(a:ftalias)
-        let checkers = self._allCheckersFor(filetype)
-        let self._cachedCheckersFor[a:ftalias] = self._filterCheckersByAvailability(checkers)
-    endif
-
-    return self._cachedCheckersFor[a:ftalias]
-endfunction
-
-function! g:SyntasticRegistry.knownFiletypes()
-    let types = keys(s:defaultCheckers)
-    call extend(types, keys(s:defaultFiletypeMap))
-    if exists('g:syntastic_filetype_map')
-        call extend(types, keys(g:syntastic_filetype_map))
-    endif
-    return syntastic#util#unique(types)
-endfunction
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
         for ft in ft_list
             call extend(available, map( keys(self.getCheckersMap(ft)), 'ft . "/" . v:val' ))
@@ -249,31 +194,12 @@ endfunction " }}}2
 
 " Private methods {{{1
 
-<<<<<<< HEAD
 function! g:SyntasticRegistry._registerChecker(checker) abort " {{{2
     let ft = a:checker.getFiletype()
 
     if !has_key(self._checkerRaw, ft)
         let self._checkerRaw[ft] = []
         let self._checkerMap[ft] = {}
-=======
-function! g:SyntasticRegistry._registerChecker(checker) abort
-    let ft = a:checker.getFiletype()
-
-    if !has_key(self._checkerMap, ft)
-        let self._checkerMap[ft] = []
-    endif
-
-    call self._validateUniqueName(a:checker)
-
-    call add(self._checkerMap[ft], a:checker)
-endfunction
-
-function! g:SyntasticRegistry._allCheckersFor(filetype)
-    call self._loadCheckers(a:filetype)
-    if empty(self._checkerMap[a:filetype])
-        return []
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     endif
 
     call self._validateUniqueName(a:checker)
@@ -315,25 +241,11 @@ endfunction " }}}2
 function! g:SyntasticRegistry._checkDeprecation(filetype) " {{{2
     if exists('g:syntastic_' . a:filetype . '_checker') && !exists('g:syntastic_' . a:filetype . '_checkers')
         let g:syntastic_{a:filetype}_checkers = [g:syntastic_{a:filetype}_checker]
-<<<<<<< HEAD
         call syntastic#log#deprecationWarn('variable g:syntastic_' . a:filetype . '_checker is deprecated')
-=======
-        call syntastic#log#deprecationWarn("variable g:syntastic_" . a:filetype . "_checker is deprecated")
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     endif
 endfunction " }}}2
 
-<<<<<<< HEAD
 " }}}1
-=======
-function! g:SyntasticRegistry._validateUniqueName(checker) abort
-    for checker in self._allCheckersFor(a:checker.getFiletype())
-        if checker.getName() ==# a:checker.getName()
-            throw "Syntastic: Duplicate syntax checker name for: " . a:checker.getName()
-        endif
-    endfor
-endfunction
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
 " Private functions {{{1
 

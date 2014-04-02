@@ -48,19 +48,6 @@ endif
 
 let s:save_cpo = &cpo
 set cpo&vim
-<<<<<<< HEAD
-=======
-
-function! SyntaxCheckers_perl_perl_IsAvailable() dict
-    " don't call executable() here, to allow things like
-    " let g:syntastic_perl_interpreter='/usr/bin/env perl'
-    silent! call system(expand(g:syntastic_perl_interpreter) . ' -e ' . syntastic#util#shescape('exit(0)'))
-    return v:shell_error == 0
-endfunction
-
-function! SyntaxCheckers_perl_perl_Preprocess(errors)
-    let out = []
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
 function! SyntaxCheckers_perl_perl_IsAvailable() dict
     if !exists('g:syntastic_perl_interpreter')
@@ -74,14 +61,11 @@ function! SyntaxCheckers_perl_perl_IsAvailable() dict
 endfunction
 
 function! SyntaxCheckers_perl_perl_GetLocList() dict
-<<<<<<< HEAD
     if !exists('g:syntastic_enable_perl_checker') || !g:syntastic_enable_perl_checker
         call syntastic#log#error('checker perl/perl: checks disabled for security reasons; set g:syntastic_enable_perl_checker to 1 to override')
         return []
     endif
 
-=======
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     let exe = expand(g:syntastic_perl_interpreter)
     if type(g:syntastic_perl_lib_path) == type('')
         call syntastic#log#deprecationWarn('variable g:syntastic_perl_lib_path should be a list')
@@ -97,11 +81,7 @@ function! SyntaxCheckers_perl_perl_GetLocList() dict
 
     let makeprg = self.makeprgBuild({
         \ 'exe': exe,
-<<<<<<< HEAD
         \ 'args_before': '-c -X ' . extra })
-=======
-        \ 'args': '-c -X ' . extra })
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let errors = SyntasticMake({
         \ 'makeprg': makeprg,
@@ -114,11 +94,7 @@ function! SyntaxCheckers_perl_perl_GetLocList() dict
 
     let makeprg = self.makeprgBuild({
         \ 'exe': exe,
-<<<<<<< HEAD
         \ 'args_before': '-c -Mwarnings ' . extra })
-=======
-        \ 'args': '-c -Mwarnings ' . extra })
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     return SyntasticMake({
         \ 'makeprg': makeprg,

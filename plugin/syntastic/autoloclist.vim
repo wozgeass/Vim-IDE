@@ -12,26 +12,15 @@ function! g:SyntasticAutoloclistNotifier.New() " {{{2
     return newObj
 endfunction " }}}2
 
-<<<<<<< HEAD
 function! g:SyntasticAutoloclistNotifier.refresh(loclist) " {{{2
-=======
-function! g:SyntasticAutoloclistNotifier.refresh(loclist)
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
     call syntastic#log#debug(g:SyntasticDebugNotifications, 'autoloclist: refresh')
     call g:SyntasticAutoloclistNotifier.AutoToggle(a:loclist)
 endfunction " }}}2
 
-<<<<<<< HEAD
 function! g:SyntasticAutoloclistNotifier.AutoToggle(loclist) " {{{2
     call syntastic#log#debug(g:SyntasticDebugNotifications, 'autoloclist: toggle')
     if !a:loclist.isEmpty()
         if syntastic#util#var('auto_loc_list') == 1
-=======
-function! g:SyntasticAutoloclistNotifier.AutoToggle(loclist)
-    call syntastic#log#debug(g:SyntasticDebugNotifications, 'autoloclist: toggle')
-    if !a:loclist.isEmpty()
-        if g:syntastic_auto_loc_list == 1
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
             call a:loclist.show()
         endif
     else

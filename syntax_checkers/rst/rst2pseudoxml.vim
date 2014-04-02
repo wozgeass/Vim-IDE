@@ -25,11 +25,7 @@ set cpo&vim
 
 function! SyntaxCheckers_rst_rst2pseudoxml_GetLocList() dict
     let makeprg = self.makeprgBuild({
-<<<<<<< HEAD
         \ 'args_after': '--report=2 --exit-status=1',
-=======
-        \ 'args': '--report=2 --exit-status=1',
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
         \ 'tail': syntastic#util#DevNull() })
 
     let errorformat =

@@ -15,33 +15,19 @@ if exists('g:loaded_syntastic_objc_gcc_checker')
 endif
 let g:loaded_syntastic_objc_gcc_checker = 1
 
-<<<<<<< HEAD
 if !exists('g:syntastic_objc_compiler_options')
     let g:syntastic_objc_compiler_options = '-std=gnu99'
-=======
-if !exists('g:syntastic_objc_compiler')
-    let g:syntastic_objc_compiler = executable('gcc') ? 'gcc' : 'clang'
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 endif
 
 let s:save_cpo = &cpo
 set cpo&vim
 
 function! SyntaxCheckers_objc_gcc_IsAvailable() dict
-<<<<<<< HEAD
     if !exists('g:syntastic_objc_compiler')
         let g:syntastic_objc_compiler = executable(self.getExec()) ? self.getExec() : 'clang'
     endif
     return executable(expand(g:syntastic_objc_compiler))
 endfunction
-=======
-    return executable(expand(g:syntastic_objc_compiler))
-endfunction
-
-if !exists('g:syntastic_objc_compiler_options')
-    let g:syntastic_objc_compiler_options = '-std=gnu99'
-endif
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
 function! SyntaxCheckers_objc_gcc_GetLocList() dict
     return syntastic#c#GetLocList('objc', 'gcc', {

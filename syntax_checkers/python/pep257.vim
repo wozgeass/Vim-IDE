@@ -12,14 +12,6 @@ let g:loaded_syntastic_python_pep257_checker = 1
 
 let s:save_cpo = &cpo
 set cpo&vim
-<<<<<<< HEAD
-=======
-
-" sanity: kill empty lines here rather than munging errorformat
-function! SyntaxCheckers_python_pep257_Preprocess(errors)
-    return filter(copy(a:errors), 'v:val != ""')
-endfunction
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
 function! SyntaxCheckers_python_pep257_GetLocList() dict
     let makeprg = self.makeprgBuild({})

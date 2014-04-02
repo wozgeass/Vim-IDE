@@ -30,13 +30,8 @@ set cpo&vim
 
 function! SyntaxCheckers_c_cppcheck_GetLocList() dict
     let makeprg = self.makeprgBuild({
-<<<<<<< HEAD
         \ 'args': syntastic#c#ReadConfig(g:syntastic_cppcheck_config_file),
         \ 'args_after': '-q --enable=style' })
-=======
-        \ 'args': '-q ' . syntastic#c#ReadConfig(g:syntastic_cppcheck_config_file),
-        \ 'post_args': '--enable=style' })
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let errorformat =
         \ '[%f:%l]: (%trror) %m,' .
@@ -51,10 +46,7 @@ function! SyntaxCheckers_c_cppcheck_GetLocList() dict
     let loclist = SyntasticMake({
         \ 'makeprg': makeprg,
         \ 'errorformat': errorformat,
-<<<<<<< HEAD
         \ 'preprocess': 'cppcheck',
-=======
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
         \ 'returns': [0] })
 
     for e in loclist

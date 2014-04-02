@@ -41,24 +41,14 @@ function! SyntaxCheckers_actionscript_mxmlc_GetHighlightRegex(item)
 
     endif
 
-<<<<<<< HEAD
     return term != '' ? '\V\<' . escape(term, '\') . '\>' : ''
-=======
-    return strlen(term) ? '\V\<' . term . '\>' : ''
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 endfunction
 
 function! SyntaxCheckers_actionscript_mxmlc_GetLocList() dict
     let makeprg = self.makeprgBuild({
-<<<<<<< HEAD
         \ 'args_before': (g:syntastic_actionscript_mxmlc_conf != '' ?
         \   ' -load-config+=' . syntastic#util#shexpand(g:syntastic_actionscript_mxmlc_conf) : ''),
         \ 'args_after': '-output=' . syntastic#util#DevNull() })
-=======
-        \ 'args': '-output=' . syntastic#util#DevNull() .
-        \   (!empty(g:syntastic_actionscript_mxmlc_conf) ?
-        \   ' -load-config+=' . g:syntastic_actionscript_mxmlc_conf : '') })
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 
     let errorformat =
         \ '%f(%l): col: %c %trror: %m,' .
