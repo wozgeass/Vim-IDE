@@ -64,7 +64,7 @@ set smartindent
 set smarttab
 set autoindent
 set tags+=~/.vim/tags/ctags
-set number
+"set number
 autocmd FileType python set omnifunc=pythoncomplete#Complete
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType html set omnifunc=htmlcomplete#CompleteTags

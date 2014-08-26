@@ -11,7 +11,7 @@ runtime! ftplugin/html.vim ftplugin/html_*.vim ftplugin/html/*.vim
 
 setlocal comments=fb:*,fb:-,fb:+,n:> commentstring=>\ %s
 setlocal formatoptions+=tcqln formatoptions-=r formatoptions-=o
-setlocal formatlistpat=^\\s*\\d\\+\\.\\s\\+\\\|^[-*+]\\s\\+
+setlocal formatlistpat=^\\s*\\d\\+\\.\\s\\+\\\|^[-*+]\\s\\+\\\|^\\[^\\ze[^\\]]\\+\\]:
 
 if exists('b:undo_ftplugin')
   let b:undo_ftplugin .= "|setl cms< com< fo< flp<"
@@ -19,7 +19,6 @@ else
   let b:undo_ftplugin = "setl cms< com< fo< flp<"
 endif
 
-<<<<<<< HEAD
 function! MarkdownFold()
   let line = getline(v:lnum)
 
@@ -48,6 +47,4 @@ if has("folding") && exists("g:markdown_folding")
   let b:undo_ftplugin .= " foldexpr< foldmethod<"
 endif
 
-=======
->>>>>>> 4c33b4be3c77a773e81a7fdffd102ec16be4e3cd
 " vim:set sw=2:
