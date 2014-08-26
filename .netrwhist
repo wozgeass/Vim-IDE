@@ -1,9 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =7
-let g:netrw_dirhist_1='/media/wozgeass/Archivos/Nuevos/Web-Template/connoisseur'
-let g:netrw_dirhist_2='/home/wozgeass/carpeta/Practica1/Registro'
-let g:netrw_dirhist_3='/usr/share/vim/addons/ftplugin/latex-suite'
-let g:netrw_dirhist_4='/media/wozgeass/4895-CEAE/servidor_rest_mongodb/servidor_rest_mongodb/node_modules'
-let g:netrw_dirhist_5='/home/wozgeass/Público/syntastic/autoload/syntastic'
-let g:netrw_dirhist_6='/home/wozgeass/VisusalizacionInformacion/Canvas'
-let g:netrw_dirhist_7='/home/wozgeass/VisusalizacionInformacion'
