@@ -1,6 +1,6 @@
-*automatic-tex-plugin.txt* LaTeX filetype plugin	Last change: 25 January 2014
+*automatic-tex-plugin.txt* LaTeX filetype plugin	Last change: 12 April 2014
 
-	    An Introduction to AUTOMATIC (La)TeX PLUGIN (ver. 12.4)
+	    An Introduction to AUTOMATIC (La)TeX PLUGIN (ver. 12.5)
 			by Marcin Szamotulski
 		    mszamot [AT] gmail [DOT] com
 -----------------------------------------------------------------------------
@@ -1488,13 +1488,14 @@ map <LocalLeader>V, map <S-F3>, imap <S-F3>
 :SyncTex[!]						*atp-:SyncTex* *atp-\f*
 map <LocalLeader>f, map <S-LeftMouse>
 	Which makes an forward search (vim->Viewer).  As for now ATP supports
-	Okular, Xpdf and Xdvi with this feature (Evince is not yet supported).
+	Okular, Xpdf, Xdvi and zathura with this feature (Evince is not yet supported).
 
 	With bang |atp-:SyncTex| will not check if the viewer is running.
 
-	Note: you can also set reverse search for Okular and Xdvi, see
-	|atp-Viewers-Okular| and |atp-Viewers-Xdvi| for an instruction how to
-	do that.  Xpdf doesn't support reverse searching.
+	Note: you can also set reverse search for Okular, Xdvi and zathura see
+	|atp-Viewers-Okular|, |atp-Viewers-Xdvi| and |atp-Viewers-zathura| for
+	an instruction how to do that.  Xpdf doesn't support reverse
+	searching.
 
 							*atp-:SyncTex_Xpdf-hack*
 	Note: there is a bug in Xpdf, one cannot sent commands to Xpdf to
@@ -4137,10 +4138,11 @@ put them in your |atprc| it is enough to use the standard "let b:...=".
 							*g:atp_CompilersDict*
 >
  let g:atp_CompilersDict 	= { 
-		\ "pdflatex": ".pdf", 		"pdftex" 	: ".pdf", 
+		\ "pdflatex"    : ".pdf", 	"pdftex" 	: ".pdf",
 		\ "xetex" 	: ".pdf", 	"latex" 	: ".dvi", 
 		\ "tex" 	: ".dvi",	"elatex"	: ".dvi",
-		\ "etex"	: ".dvi", 	"luatex"	: ".pdf"}
+		\ "etex"	: ".dvi", 	"luatex"	: ".pdf",
+		\ "lualatex"	: ".pdf", 	"xelatex"	: ".pdf"}
 <	This variable is used to associate an extension to the compiler that
 	is used.
 
@@ -4711,7 +4713,7 @@ defined in non math mode.  The advantage of this is that the imap o* which
 produces \otimes doesn't affect typing o in LaTeX text mode.  In this way we
 can provide many useful math imaps!
 
-The function which makes the imaps is: atplib#MakeIMaps(), the function which
+The function which makes the imaps is: atplib#MakeMaps(), the function which
 toggles on/off math/text imaps is atplib#ToggleIMaps() (which now also set vim
 options for math mode, see |g:atp_MathVimOptions|).
 
@@ -5626,8 +5628,12 @@ Xdvi ~
 	Note the watchfile switch for xdvi: with it xdvi will reload the file,
 	if needed, every second.
 
+							*atp-Viewers-Zathura*
 Zathura	~
-	Perfectly works (but there is no reverse/inverse searching).
+	Use the '-s' switch to enable syntex support for zathura. To enable
+	backwards synchronisation you need to set the editor command with the
+	'-x' flag:
+	    zathura -s -x "gvim --servername synctex --remote +%{line} %{input}"
 
 Mupdf ~
 	It is the fastest pdf viewer program ever made, why? because it

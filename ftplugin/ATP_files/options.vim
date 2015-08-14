@@ -1053,7 +1053,8 @@ if !exists("g:atp_CompilersDict")
 		\ "pdflatex" 	: ".pdf", 	"pdftex" 	: ".pdf", 
 		\ "xetex" 	: ".pdf", 	"latex" 	: ".dvi", 
 		\ "tex" 	: ".dvi",	"elatex"	: ".dvi",
-		\ "etex"	: ".dvi", 	"luatex"	: ".pdf"}
+		\ "etex"	: ".dvi", 	"luatex"	: ".pdf",
+		\ "lualatex"	: ".pdf", 	"xelatex"	: ".pdf"}
 endif
 
 if !exists("g:CompilerMsg_Dict")
@@ -1066,6 +1067,8 @@ if !exists("g:CompilerMsg_Dict")
 		\ 'pdflatex'		: 'pdfLaTeX', 
 		\ 'context'		: 'ConTeXt',
 		\ 'luatex'		: 'LuaTeX',
+		\ 'lualatex'		: 'LuaLaTeX',
+		\ 'xelatex'		: 'XeLaTeX',
 		\ 'xetex'		: 'XeTeX'}
 endif
 
@@ -1079,7 +1082,8 @@ if !exists("g:ViewerMsg_Dict")
 		\ 'skim'		: 'Skim', 
 		\ 'evince'		: 'Evince',
 		\ 'acroread'		: 'AcroRead',
-		\ 'epdfview'		: 'epdfView' }
+		\ 'epdfview'		: 'epdfView',
+		\ 'zathura'		: 'zathura' }
 endif
 if b:atp_updatetime_normal
     let &l:updatetime=b:atp_updatetime_normal
@@ -1669,9 +1673,11 @@ endfunction
 command! -buffer SetXpdf			:call <SID>SetPdf('xpdf')
 command! -buffer SetOkular			:call <SID>SetPdf('okular')
 command! -buffer SetEvince			:call <SID>SetPdf('evince')
+command! -buffer SetZathura			:call <SID>SetPdf('zathura')
 nnoremap <silent> <buffer> <Plug>SetXpdf	:call <SID>SetPdf('xpdf')<CR>
 nnoremap <silent> <buffer> <Plug>SetOkular	:call <SID>SetPdf('okular')<CR>
 nnoremap <silent> <buffer> <Plug>SetEvince	:call <SID>SetPdf('evince')<CR>
+nnoremap <silent> <buffer> <Plug>SetZathura	:call <SID>SetPdf('zathura')<CR>
 
 function! <SID>Kill_Evince_Sync()
 python << EOF
@@ -1681,11 +1687,17 @@ try:
     import os
     import signal
     import re
-    from psutil import NoSuchProcess, AccessDenied
+    try:
+        from psutil import NoSuchProcess, AccessDenied
+    except ImportError:
+        from psutil.error import NoSuchProcess, AccessDenied
     for pid in psutil.get_pid_list():
         try:
             process = psutil.Process(pid)
-            cmdline = process.cmdline
+            if psutil.version_info[0] >= 2:
+                cmdline = process.cmdline()
+            else:
+                cmdline = process.cmdline
             if len(cmdline) > 1 and re.search('evince_sync\.py$', cmdline[1]):
                 os.kill(pid, signal.SIGTERM)
         except (NoSuchProcess, AccessDenied):
@@ -2624,8 +2636,7 @@ function! <SID>Compiler(...)
 endfunction
 command! -buffer -nargs=? -complete=customlist,CompilerComp Compiler	:call <SID>Compiler(<f-args>)
 function! CompilerComp(A,L,P)
-    let compilers = [ 'tex', 'pdftex', 'latex', 'pdflatex', 'etex', 'xetex', 'luatex', 'xelatex' ]
-"     let g:compilers = copy(compilers)
+    let compilers = keys(g:atp_CompilersDict)
     call filter(compilers, "v:val =~ '^' . a:A")
     call filter(compilers, 'executable(v:val)')
     return compilers
