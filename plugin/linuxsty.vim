@@ -1,10 +1,13 @@
 " Vim plugin to fit the Linux kernel coding style and help kernel development
-" Last Change:  2014 Sep 25
-" Maintainer:   Vivien Didelot <vivien.didelot@savoirfairelinux.com>
+" Adding colors for functions, macros an data types of linux kernel
+" Last Change:  2015 Aug 20
+" Maintainer:   Adrian Perez Dominguez <vivien.didelot@savoirfairelinux.com>
 " License:      Distributed under the same terms as Vim itself.
 "
 " This script is inspired from an article written by Bart:
 " http://www.jukie.net/bart/blog/vim-and-linux-coding-style
+" and adapted from Linux kernel Coding style to expand his fuctionalities.
+" Vivien Didelot <vivien.didelot@savoirfairelinux.com>
 " and various user comments.
 
 if exists("g:loaded_linuxsty")
@@ -36,8 +39,13 @@ function s:LinuxFormatting()
 endfunction
 
 function s:LinuxKeywords()
+	"
     syn keyword cOperator likely unlikely
-    syn keyword cType u8 u16 u32 u64 s8 s16 s32 s64
+    syn keyword cDefine prueba1
+	syn keyword cFunction prueba2
+	syn keyword cConstant prueba3
+	syn keyword CstorageClass __init __exit __initdata __initconst __exitdata __exit_call 
+	syn keyword cType u8 u16 u32 u64 s8 s16 s32 s64 adrian
 endfunction
 
 function s:LinuxHighlighting()
