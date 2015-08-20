@@ -11,11 +11,11 @@ El tener un entorno de desarrollo es mi prioridad y le dare especial soporte al 
 - Proximamente glibc.
 - Proximamente Linux kernel API.
 
-Aqui se encuentras los snippets creados por la comunidad Aztli para mejorar los 
-snippets de snipmate.
+Tabmein se encuentras los snippets creados por la comunidad Aztli para mejorar los snippets de snipmate.
 Algunos snippets han sido creados por nuestra cuenta:
 html5 -> Tambien editados.
 css3
 javascript
-python
+python --> Tambien editados.
 c --> Solo los snippets de ANSI c.
+markdown --> Por ser implementados. 
