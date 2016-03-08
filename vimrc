@@ -28,7 +28,7 @@ set t_Co=256
 colorscheme jellybeans
 " If using a dark background within the editing area and syntax highlighting
 " turn on this option as well
-set background=dark
+set background=light
 
 " Uncomment the following to have Vim jump to the last position when
 " reopening a file
@@ -60,13 +60,14 @@ endif
 syntax enable
 filetype plugin on
 set tabstop=4
+set noai
 set showmatch
 set shiftwidth=4
 set nocp
 set smartindent
 set smarttab
 set autoindent
-set tags+=~/.vim/tags/ctags
+set tags+=~/.vim/tags/kerntags
 "set number
 autocmd FileType python set omnifunc=pythoncomplete#Complete
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
