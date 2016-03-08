@@ -78,3 +78,6 @@ autocmd FileType php set omnifunc=phpcomplete#CompletePHP
 autocmd FileType c set omnifunc=ccomplete#Complete
 autocmd FileType java set omnifunc=javacomplete#Complete
 let g:livepreview_previewer = 'okular'
+let g:jedi#auto_initialization = 0
+let g:jedi#auto_vim_configuration = 0
+
