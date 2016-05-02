@@ -14,7 +14,7 @@ set cpo&vim
 
 let s:ft = matchstr(&ft, '^\([^.]\)\+')
 
-" A bunch of useful C keywords
+" Palabras reservadas del lenguaje
 syn keyword	cStatement	goto break return continue asm
 syn keyword	cLabel		case default
 syn keyword	cConditional	if else switch
