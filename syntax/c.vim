@@ -5489,9 +5489,14 @@ endif
 syn keyword	cType		int long short char void
 syn keyword	cType		signed unsigned float double
 if !exists("c_no_ansi") || exists("c_ansi_typedefs")
-  syn keyword   cType		size_t ssize_t off_t wchar_t ptrdiff_t sig_atomic_t fpos_t
-  syn keyword   cType		clock_t time_t va_list jmp_buf FILE DIR div_t ldiv_t
-  syn keyword   cType		mbstate_t wctrans_t wint_t wctype_t
+  syn keyword   cType		size_t ssize_t off_t wchar_t ptrdiff_t sig_atomic_t fpos_t clockid_t
+  syn keyword   cType		clock_t time_t va_list jmp_buf FILE DIR div_t ldiv_t blksize_t fsfilcnt_t
+  syn keyword   cType		mbstate_t wctrans_t wint_t wctype_t pid_t blkcnt_t dev_t fsblkcnt_t
+  syn keyword	cType		gid_t id_t ino_t mode_t nlink_t pthread_attr_t pthread_barrier_t
+  syn keyword	cType		pthread_barrierattr_t pthread_cond_t pthread_condattr_t pthread_key_t
+  syn keyword	cType		pthread_mutex_t pthread_mutexattr_t pthread_once_t pthread_rwlock_t
+  syn keyword	cType		pthread_rwlockattr_t pthread_spinlock_t pthread_t suseconds_t timer_t
+  syn keyword	cType		trace_attr_t trace_event_id_t trace_event_set_t trace_id_t uid_t
 endif
 if !exists("c_no_c99") " ISO C99
   syn keyword	cType		_Bool bool _Complex complex _Imaginary imaginary
@@ -5528,9 +5533,7 @@ if !exists("c_no_c11")
 endif
 
 if !exists("c_no_ansi") || exists("c_ansi_constants") || exists("c_gnu")
-  if exists("c_gnu")
-    syn keyword cConstant __GNUC__ __FUNCTION__ __PRETTY_FUNCTION__ __func__
-  endif
+  syn keyword cConstant __GNUC__ __FUNCTION__ __PRETTY_FUNCTION__ __func__
   syn keyword cConstant __LINE__ __FILE__ __DATE__ __TIME__ __STDC__
   syn keyword cConstant __STDC_VERSION__
   syn keyword cConstant CHAR_BIT MB_LEN_MAX MB_CUR_MAX
@@ -5570,23 +5573,20 @@ if !exists("c_no_ansi") || exists("c_ansi_constants") || exists("c_gnu")
   syn keyword cConstant LC_ALL LC_COLLATE LC_CTYPE LC_MONETARY
   syn keyword cConstant LC_NUMERIC LC_TIME
   syn keyword cConstant SIG_DFL SIG_ERR SIG_IGN
-  syn keyword cConstant SIGABRT SIGFPE SIGILL SIGHUP SIGINT SIGSEGV SIGTERM
-  " Add POSIX signals as well...
-  syn keyword cConstant SIGABRT SIGALRM SIGCHLD SIGCONT SIGFPE SIGHUP
-  syn keyword cConstant SIGILL SIGINT SIGKILL SIGPIPE SIGQUIT SIGSEGV
-  syn keyword cConstant SIGSTOP SIGTERM SIGTRAP SIGTSTP SIGTTIN SIGTTOU
-  syn keyword cConstant SIGUSR1 SIGUSR2
+  " Señales POSIX.
+  syn keyword cConstant SIGILL SIGINT SIGSEGV SIGTERM 
+  syn keyword cConstant SIGABRT SIGALRM SIGCHLD SIGCONT SIGFPE SIGHUP SIGIOT 
+  syn keyword cConstant SIGQUIT SIGPIPE SIGWINCH SIGPWR
+  syn keyword cConstant SIGSTOP SIGTRAP SIGTTIN SIGTTOU SIGSTKFLT
+  syn keyword cConstant SIGUSR1 SIGUSR2 SIGTSTP 
   syn keyword cConstant _IOFBF _IOLBF _IONBF BUFSIZ EOF WEOF
   syn keyword cConstant FOPEN_MAX FILENAME_MAX L_tmpnam
   syn keyword cConstant SEEK_CUR SEEK_END SEEK_SET
   syn keyword cConstant TMP_MAX stderr stdin stdout
   syn keyword cConstant EXIT_FAILURE EXIT_SUCCESS RAND_MAX
-  " POSIX 2001
-  syn keyword cConstant SIGBUS SIGPOLL SIGPROF SIGSYS SIGURG
+  syn keyword cConstant SIGPOLL SIGPROF SIGSYS SIGURG
   syn keyword cConstant SIGVTALRM SIGXCPU SIGXFSZ
-  " non-POSIX signals
-  syn keyword cConstant SIGWINCH SIGINFO
-  " Add POSIX errors as well
+  " Errores POSIX
   syn keyword cConstant E2BIG EACCES EAGAIN EBADF EBADMSG EBUSY
   syn keyword cConstant ECANCELED ECHILD EDEADLK EDOM EEXIST EFAULT
   syn keyword cConstant EFBIG EILSEQ EINPROGRESS EINTR EINVAL EIO EISDIR
