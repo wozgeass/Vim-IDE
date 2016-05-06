@@ -1,4 +1,4 @@
-/" Vim syntax file
+" Vim syntax file
 " Language:	C
 " Notes: This is a compendio to support news highlights to diferents functions o Macros used by the open source libraries.
 " Maintainer:	Adrian Perez Dominguez <adrian@aztli.org>
