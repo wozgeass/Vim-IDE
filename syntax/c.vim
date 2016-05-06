@@ -1,4 +1,4 @@
-" Vim syntax file
+/" Vim syntax file
 " Language:	C
 " Notes: This is a compendio to support news highlights to diferents functions o Macros used by the open source libraries.
 " Maintainer:	Adrian Perez Dominguez <adrian@aztli.org>
@@ -5516,10 +5516,10 @@ endif
 syn keyword	cStructure	struct union enum typedef
 syn keyword	cStorageClass	static register auto volatile extern const
 if exists("c_gnu")
-  syn keyword	cStorageClass	inline __attribute__
+  syn keyword	cStorageClass	noinline inline __attribute__
 endif
 if !exists("c_no_c99")
-  syn keyword	cStorageClass	inline restrict
+  syn keyword	cStorageClass	noinline inline restrict
 endif
 if !exists("c_no_c11")
   syn keyword	cStorageClass	_Alignas alignas
