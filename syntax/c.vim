@@ -5482,10 +5482,12 @@ hi def link cBoolean Boolean
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""
 syn keyword	cOperator	sizeof
-if exists("c_gnu")
-  syn keyword	cStatement	__asm__
-  syn keyword	cOperator	typeof __real__ __imag__
-endif
+"if exists("c_gnu")
+syn keyword	cStatement	__asm__
+syn keyword	cOperator	typeof __real__ __imag__
+syn keyword	cType		__u8 __u16 __u32 __u64
+syn keyword	cType		__s8 __s16 __s32 __s64
+"endif
 syn keyword	cType		int long short char void
 syn keyword	cType		signed unsigned float double
 if !exists("c_no_ansi") || exists("c_ansi_typedefs")
