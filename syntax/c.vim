@@ -5484,7 +5484,7 @@ hi def link cBoolean Boolean
 syn keyword	cOperator	sizeof
 "if exists("c_gnu")
 syn keyword	cStatement	__asm__
-syn keyword	cOperator	typeof __real__ __imag__
+syn keyword	cOperator	typeof __real__ __imag__ typedef
 syn keyword	cType		__u8 __u16 __u32 __u64
 syn keyword	cType		__s8 __s16 __s32 __s64
 "endif
@@ -5498,7 +5498,8 @@ if !exists("c_no_ansi") || exists("c_ansi_typedefs")
   syn keyword	cType		pthread_barrierattr_t pthread_cond_t pthread_condattr_t pthread_key_t
   syn keyword	cType		pthread_mutex_t pthread_mutexattr_t pthread_once_t pthread_rwlock_t
   syn keyword	cType		pthread_rwlockattr_t pthread_spinlock_t pthread_t suseconds_t timer_t
-  syn keyword	cType		trace_attr_t trace_event_id_t trace_event_set_t trace_id_t uid_t
+  syn keyword	cType		trace_attr_t trace_event_id_t trace_event_set_t trace_id_t uid_t kgid_t
+  syn keyword	cType		atomic_t spinlock_t raw_spinlock_t key_serial_t key_perm_t kuid_t
 endif
 if !exists("c_no_c99") " ISO C99
   syn keyword	cType		_Bool bool _Complex complex _Imaginary imaginary
@@ -5515,7 +5516,7 @@ if exists("c_gnu")
   syn keyword	cType		__label__ __complex__ __volatile__
 endif
 
-syn keyword	cStructure	struct union enum typedef
+syn keyword	cStructure	struct union enum
 syn keyword	cStorageClass	static register auto volatile extern const
 if exists("c_gnu")
   syn keyword	cStorageClass	noinline inline __attribute__
