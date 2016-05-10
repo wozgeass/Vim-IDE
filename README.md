@@ -1,5 +1,7 @@
 # Introduccion.
-El tener un entorno de desarrollo es mi prioridad y le dare especial soporte al resaltado de syntaxis y otras extensiones para este
+
+El tener un entorno de desarrollo es mi prioridad y le dare especial soporte al resaltado de syntaxis y otras extensiones para este:
+
 - Lenguaje C.
 - Lenguaje Python.
 - WEB.
@@ -17,5 +19,5 @@ html5 -> Tambien editados.
 css3
 javascript
 python --> Tambien editados.
-c --> Solo los snippets de ANSI c.
+c --> Solo los snippets de Ansi C.
 markdown --> Por ser implementados. 
