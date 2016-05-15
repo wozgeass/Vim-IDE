@@ -1,8 +1,8 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Name:           grimmjow
 " Author:         Adelar S. Queiroz
-" Version:        0.0.6
-" Last Change:    2016.05.09
+" Version:        0.0.9
+" Last Change:    2016.05.10
 " URL:            https://github.com/adelarsq/vim-grimmjow
 " License:        Apache 2.0
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -91,7 +91,7 @@ if &background == "dark"
 
   " User interface ############################################################
   
-  hi Search           guifg=#000000 guibg=#b8ea00 gui=bold
+  hi Search           guifg=#000000 guibg=#00875f gui=bold
   hi IncSearch        guifg=#f8cf00 guibg=#000000
 
   hi Error            guifg=#e5a5a5 guibg=#602020 gui=bold,underline
@@ -227,8 +227,8 @@ if &background == "dark"
   \}
 
   " https://github.com/scrooloose/syntastic
-  hi SyntasticErrorSign  guifg=#f92672 guibg=#e0e0e0
-  hi SyntasticWarningSign guifg=#afd700 guibg=#e0e0e0
+  hi SyntasticErrorSign  guifg=#f92672 guibg=#f5f5f5
+  hi SyntasticWarningSign guifg=#afd700 guibg=#f5f5f5
 
   " https://github.com/majutsushi/tagbar
   hi link TagbarSignature Comment
@@ -433,7 +433,7 @@ else
 
   " Misc syntax ###############################################################
   
-  hi Todo             guifg=#000000 guibg=#ffff00 gui=bold
+  hi Todo             guifg=#00af5f guibg=#f5f5f5 gui=bold
  
   hi Directory        guifg=#0060a0 guibg=NONE    gui=bold
   " html: special keywords in jscript: window log 
@@ -442,14 +442,12 @@ else
   
   hi Special	      guifg=#3a3a3a gui=none
   hi SpecialChar      guifg=#6a96ff gui=bold
-  hi SpecialKey	      guifg=#d8d8d8 guibg=#f5f7f5 ctermbg=243 ctermfg=237
-  hi NonText          guifg=#303030 guibg=#eaeaea gui=none
+  hi SpecialKey	      guifg=#999999 guibg=#f5f7f5 ctermbg=243 ctermfg=237
+  hi NonText          guifg=#999999 guibg=#f5f5f5 gui=none
  
   hi Conceal          guifg=#303030 guibg=#e0e8e0
 
-  " hi ColorColumn      guibg=#87D7FF
-  " hi ColorColumn      guibg=#eaeaea
-  hi ColorColumn      guibg=#e1f5ff term=reverse ctermbg=12
+  hi ColorColumn      guibg=#f0f0f0 term=reverse ctermbg=12
 
   hi DiffAdd                        guibg=#ddffdd 
   hi DiffChange                     guibg=#e8e8e8 
@@ -467,19 +465,18 @@ else
   hi Visual           guifg=#ffffff guibg=#398df0 gui=NONE
   hi VisualNOS                      guibg=#d8d8d8 gui=none
 
-  hi Cursor           guifg=#ffffff guibg=#ff0000 gui=NONE
-  hi CursorLineNr     guifg=#000000 guibg=#eaeaea gui=bold
+  hi Cursor           guifg=#F5F5F5 guibg=#444444 gui=NONE
+  hi CursorLineNr     guifg=#000000 guibg=#f5f5f5 gui=bold
   hi Cursorline                     guibg=#eaeaea
   hi CursorColumn                   guibg=#eaeaea
-  hi LineNr           guifg=#707070 guibg=#eaeaea gui=NONE
+  hi LineNr           guifg=#707070 guibg=#f5f5f5 gui=NONE
   hi MatchParen       guifg=#ffffff guibg=#ffd030 gui=none
 
-  hi Search           guifg=#000000 guibg=#b8ea00 gui=bold
+  hi Search           guifg=#000000 guibg=#ffff5f gui=bold
   hi IncSearch        guifg=#f8cf00 guibg=#000000
 
   hi StatusLine       guifg=#e0e0e0 guibg=#707070 gui=NONE
   hi StatusLineNC     guifg=#e0e0e0 guibg=#a0a0a0 gui=NONE
-  hi VertSplit        guifg=#000000 guibg=#c9c4c4 gui=NONE
   hi Folded           guifg=#707070 guibg=#e8e8e8 gui=NONE
   hi FoldColumn       guifg=#707070 guibg=#b0b0b0 gui=bold
 
@@ -494,7 +491,8 @@ else
   hi TabLineSel       guifg=#005f00 guibg=#afd700 gui=none
   hi TabLineFill      guifg=#303030 guibg=#a0a0a0 gui=none
 
-  hi SignColumn       guifg=#A6E22E guibg=#e0e0e0 
+  hi VertSplit        guifg=#a0a0a0 guibg=#f5f5f5 gui=NONE
+  hi SignColumn       guifg=#005f00 guibg=#f5f5f5 
 
   hi Pmenu        guifg=#ffffff   guibg=#323232
   hi PmenuSel     guifg=#ffffff   guibg=#1994d1
@@ -589,6 +587,14 @@ else
   hi NERDTreeBookmarkName gui=bold ctermbg=4 guifg=#07281c
   hi NERDTreeBookmark     ctermbg=4 guifg=#797772
   hi NERDTreeBookmarksLeader guifg=#f5f7f5 guibg=#f5f7f5
+  " NERDTress File highlighting
+  " Fonte: https://github.com/scrooloose/nerdtree/issues/433#issuecomment-92590696
+  function! GrimmjowNERDTreeHighlightFile(extension, fg, guifg)
+      exec 'au filetype nerdtree highlight ' . a:extension .' ctermfg='. a:fg .' guifg='. a:guifg
+      exec 'au filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
+  endfunction
+  call GrimmjowNERDTreeHighlightFile('java' , 'cyan'    , '#d80050')
+  call GrimmjowNERDTreeHighlightFile('sql'  , 'cyan'    , '#a444ff')
 
   " https://github.com/tomtom/quickfixsigns_vim
   if g:grimmjow_recolor_quickfixsigns == 1
@@ -607,8 +613,8 @@ else
   \}
 
   " https://github.com/scrooloose/syntastic
-  hi SyntasticErrorSign  guifg=#f92672 guibg=#e0e0e0
-  hi SyntasticWarningSign guifg=#afd700 guibg=#e0e0e0
+  hi SyntasticErrorSign  guifg=#f92672 guibg=#f5f5f5
+  hi SyntasticWarningSign guifg=#005faf guibg=#f5f5f5
 
   " https://github.com/majutsushi/tagbar
   hi link TagbarSignature Comment
@@ -638,14 +644,14 @@ else
   hi MBEVisibleActiveChanged guifg=#005f00 guibg=#afd700
 
   " https://github.com/kshenoy/vim-signature
-  hi SignatureMarkText guifg=#0087d7 guibg=#e0e0e0
+  hi SignatureMarkText guifg=#0087d7 guibg=#f5f5f5
 
   " https://github.com/mhinz/vim-signify
-  hi SignifySignAdd             guifg=#008700 guibg=#e0e0e0
-  hi SignifySignChange          guifg=#ff5f00 guibg=#e0e0e0
-  hi SignifySignChangeDelete    guifg=#ff5f00 guibg=#e0e0e0
-  hi SignifySignDelete          guifg=#ff0000 guibg=#e0e0e0
-  hi SignifySignDeleteFirstLine guifg=#ff0000 guibg=#e0e0e0
+  hi SignifySignAdd             guifg=#008700 guibg=#f5f5f5
+  hi SignifySignChange          guifg=#ff5f00 guibg=#f5f5f5
+  hi SignifySignChangeDelete    guifg=#ff5f00 guibg=#f5f5f5
+  hi SignifySignDelete          guifg=#ff0000 guibg=#f5f5f5
+  hi SignifySignDeleteFirstLine guifg=#ff0000 guibg=#f5f5f5
 
   " https://github.com/justinmk/vim-sneak
   hi SneakPluginTarget guibg=#ffaf00 guifg=#ffff00 gui=bold ctermbg=214 ctermfg=226 cterm=bold
