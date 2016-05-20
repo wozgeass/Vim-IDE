@@ -19,7 +19,7 @@ Tambien se encuentras los snippets creados por la comunidad Aztli agregando vari
 Algunos snippets han sido creados por nuestra cuenta:
 - **html5** -> Tambien editados.
 - **css3**
-- **javascript
+- **javascript**
 - **python** --> Tambien editados.
 - **C** --> Solo los snippets de Ansi C.
 - **markdown** --> Por ser implementados. 
