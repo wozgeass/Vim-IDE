@@ -39,6 +39,12 @@ autocmd FileType php set omnifunc=phpcomplete#CompletePHP
 autocmd FileType c set omnifunc=ccomplete#Complete
 autocmd FileType java set omnifunc=javacomplete#Complete
 let g:livepreview_previewer = 'okular'
-let g:jedi#auto_initialization = 0
-let g:jedi#auto_vim_configuration = 0
+let g:jedi#auto_initialization = 1
+let g:jedi#auto_vim_configuration = 1
+
+" Agregando close tag para los archivos *.xml, *.html, *.xhtml, ...
+let g:closetag_filenames = "*.html,*.xhtml,*.phtml"
+
+" Activando autopairs
+let g:AutoPairsFlyMode = 1
 
