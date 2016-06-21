@@ -3,6 +3,7 @@
 La finalida del proyecto es simular un entorno de desarrollo integrado, le dare especial soporte al resaltado de syntaxis y otras extensiones para mejorar la experiencia del programador usando vim.
 
 Hasta el momento las mejoras se encuentran realizadas para los siguientes lenguajes:
+
 - **Lenguaje C**
 - **Lenguaje Python**
 - **WEB**
@@ -12,7 +13,17 @@ Hasta el momento las mejoras se encuentran realizadas para los siguientes lengua
 - **Librerias ANSI C**
 - **Proximamente ncurses**
 - **Proximamente glibc**
+- **Proximamente QT**
 - **En progreso Linux kernel API**
+
+Se encuentra integrados algunos plugins entre ellos estan:
+- ConqueGDB
+- CloseTag
+- Autopairs
+
+De momento me encuentro integrando mejoras en:
+- Php Omnicompletion
+- Java Omnicompletion
 
 Tambien se encuentras los snippets creados por la comunidad Aztli agregando varios mas para el lenguaje C y WEB.
 
