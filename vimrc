@@ -28,7 +28,7 @@ set nocp
 set smartindent
 set smarttab
 set autoindent
-set tags+=~/.vim/tags/kerntags
+set tags+=~/.vim/tags/c++tags
 "set number
 autocmd FileType python set omnifunc=pythoncomplete#Complete
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
@@ -38,7 +38,13 @@ autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
 autocmd FileType php set omnifunc=phpcomplete#CompletePHP
 autocmd FileType c set omnifunc=ccomplete#Complete
 autocmd FileType java set omnifunc=javacomplete#Complete
+"Quito los mensajes de error del plugin 
+let g:ConqueTerm_StartMessages = 0
+
+"Configuraciones para latexpreview
 let g:livepreview_previewer = 'okular'
+
+"Configuracion jedi para python
 let g:jedi#auto_initialization = 1
 let g:jedi#auto_vim_configuration = 1
 
