@@ -86,4 +86,4 @@ endif
 
 let b:current_syntax = "cpp"
 
-" vim: ts=8
+"vim: ts=2
