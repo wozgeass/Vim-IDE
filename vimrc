@@ -38,6 +38,8 @@ autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
 autocmd FileType php set omnifunc=phpcomplete#CompletePHP
 autocmd FileType c set omnifunc=ccomplete#Complete
 autocmd FileType java set omnifunc=javacomplete#Complete
+"Completo el resaltado de syntaxis para python
+let python_highlight_all = 1
 "Quito los mensajes de error del plugin 
 let g:ConqueTerm_StartMessages = 0
 
