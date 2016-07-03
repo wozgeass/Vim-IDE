@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/wozgeass/Vim-IDE.png?label=ready&title=Ready)](https://waffle.io/wozgeass/Vim-IDE)
 # Introduccion.
 
 La finalida del proyecto es simular un entorno de desarrollo integrado, le dare especial soporte al resaltado de syntaxis y otras extensiones para mejorar la experiencia del programador usando vim.
