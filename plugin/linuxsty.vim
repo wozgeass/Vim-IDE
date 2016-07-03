@@ -1,7 +1,7 @@
 " Vim plugin to fit the Linux kernel coding style and help kernel development
 " Adding colors for functions, macros an data types of linux kernel
 " Last Change:  2016 Mayo 13
-" Maintainer:   Adrian Perez Dominguez <vivien.didelot@savoirfairelinux.com>
+" Maintainer:   Adrian Perez Dominguez <adrian@aztli.org>
 " License:      Distributed under the same terms as Vim itself.
 "
 " This script is inspired from an article written by Bart:
@@ -43,7 +43,12 @@ function s:LinuxKeywords()
     syn keyword cOperator likely unlikely
     syn keyword cDefine prueba1
 	syn keyword cFunction prueba2
-	syn keyword cConstant prueba3
+    " Constantes para inotify API
+	syn keyword cConstant IN_ACCESS IN_ATTRIB IN_CLOSE_WRITE IN_CLOSE_NOWRITE 
+    syn keyword cConstant IN_CREATE IN_DELETE IN_DELETE_SELF IN_MODIFY IN_MOVE_SELF 
+    syn keyword cConstant IN_MOVED_FROM IN_MOVED_TO IN_OPEN IN_MOVE IN_CLOSE IN_DONT_FOLLOW
+    syn keyword cConstant IN_EXCL_UNLINK IN_MASK_ADD IN_ONESHOT IN_ONLYDIR IN_IGNORED
+    syn keyword cConstant IN_ISDIR IN_Q_OVERFLOW IN_UNMOUNT
 	syn keyword CstorageClass __init __exit __initdata __initconst __exitdata __exit_call 
 	syn keyword cType u8 u16 u32 u64 s8 s16 s32 s64
 endfunction
