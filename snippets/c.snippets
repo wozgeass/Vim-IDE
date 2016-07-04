@@ -65,17 +65,47 @@ snippet bsd
 	 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	 * 
 	 */
+#Licencia FreeBSD
+snippet	freebsd
+	/*-
+	 * Copyright (c) 2015 Neel Natu <neel@freebsd.org>
+	 * All rights reserved.
+	 *
+	 * Redistribution and use in source and binary forms, with or without
+	 * modification, are permitted provided that the following conditions
+	 * are met:
+	 * 1. Redistributions of source code must retain the above copyright
+	 *    notice, this list of conditions and the following disclaimer.
+	 * 2. Redistributions in binary form must reproduce the above copyright
+	 *    notice, this list of conditions and the following disclaimer in the
+	 *    documentation and/or other materials provided with the distribution.
+	 *
+	 * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND
+	 * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+	 * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+	 * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+	 * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+	 * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+	 * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+	 * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+	 * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+	 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+	 * SUCH DAMAGE.
+	 *
+	 * $FreeBSD$
+	 */
+#Licencia MIT
+snippet mit
+	
 # funcion main()
 snippet main
 	int main(int argc, const char *argv[]){
-		${1}
+		${1:Sentencias}
 		return 0;
 	}
 # #include <...>
 snippet inc
-	#include <${1:stdio}.h>
-	${2}
-# #include "..."
+	#include <${1:stdio}.h>${2}
 #snippet Inc
 #	#include "${1:`Filename("$1.h")`}"${2}
 # #ifndef ... #define ... #endif
@@ -84,8 +114,7 @@ snippet ifndef
 	${2}
 
 snippet define
-	#define ${1:Simbolo} ${2:valor}
-	${3}
+	#define ${1:Simbolo} ${2:valor}${3}
 snippet	endif
 	#endif${1}
 	${2}
