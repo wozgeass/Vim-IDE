@@ -29,7 +29,8 @@ set smartindent
 set smarttab
 set autoindent
 set tags+=~/.vim/tags/c++tags
-"set number
+set number
+"Omnicomplete para diferentes lenguajes.
 autocmd FileType python set omnifunc=pythoncomplete#Complete
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
@@ -38,8 +39,11 @@ autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
 autocmd FileType php set omnifunc=phpcomplete#CompletePHP
 autocmd FileType c set omnifunc=ccomplete#Complete
 autocmd FileType java set omnifunc=javacomplete#Complete
+autocmd FileType sql set omnifunc=sqlcomplete#Complete
+autocmd FileType ruby set omnifunc=rubycomplete#Complete
 "Completo el resaltado de syntaxis para python
 let python_highlight_all = 1
+
 "Quito los mensajes de error del plugin 
 let g:ConqueTerm_StartMessages = 0
 
@@ -56,3 +60,5 @@ let g:closetag_filenames = "*.html,*.xhtml,*.phtml"
 " Activando autopairs
 let g:AutoPairsFlyMode = 1
 
+" Activando Neocomplete
+let g:neocomplete#enable_at_startup = 1
