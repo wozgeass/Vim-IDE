@@ -51,8 +51,9 @@ let g:ConqueTerm_StartMessages = 0
 let g:livepreview_previewer = 'okular'
 
 "Configuracion jedi para python
-let g:jedi#auto_initialization = 1
-let g:jedi#auto_vim_configuration = 1
+"let g:jedi#auto_initialization = 0
+"let g:jedi#auto_vim_configuration = 0
+let g:jedi#completions_enabled = 0
 
 " Agregando close tag para los archivos *.xml, *.html, *.xhtml, ...
 let g:closetag_filenames = "*.html,*.xhtml,*.phtml"
