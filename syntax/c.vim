@@ -2612,10 +2612,8 @@ syntax keyword glConstant GL_TEXTURE
 syntax keyword glConstant GL_RENDERBUFFER
 syntax keyword glConstant GL_FRAMEBUFFER
 syntax keyword glConstant GL_MAX_LABEL_LENGTH
-" }}}
 
 " Functions
-"{{{
 " ARB_clear_Buffer_object
 syntax keyword glFunction glClearBufferData
 syntax keyword glFunction glClearBufferSubData
@@ -5439,6 +5437,7 @@ if !exists("c_no_ansi") || exists("c_ansi_typedefs")
   syn keyword	cType		pthread_rwlockattr_t pthread_spinlock_t pthread_t suseconds_t timer_t
   syn keyword	cType		trace_attr_t trace_event_id_t trace_event_set_t trace_id_t uid_t kgid_t
   syn keyword	cType		atomic_t spinlock_t raw_spinlock_t key_serial_t key_perm_t kuid_t
+  syn keyword	cType		mm_segment_t
 endif
 if !exists("c_no_c99") " ISO C99
   syn keyword	cType		_Bool bool _Complex complex _Imaginary imaginary
