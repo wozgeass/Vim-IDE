@@ -148,7 +148,7 @@ snippet else
 	} 
 # Tertiary conditional
 snippet t
-	${1:/* condicion */} ? ${2:a} : ${3:b}
+	${1:/* condicion */} ? ${2:Opcion1} : ${3:Opcion2}
 # Do while 
 snippet do
 	do { 
@@ -225,10 +225,6 @@ snippet tde
 #	${1:/*fprintf(salida,"cadena", variable)*/}
 #	fprintf(${2:stderr}, "${3:%s}\n"${4});
 #	${5}
-snippet [
-	[${1}]${2}
-snippet "
-	"${1}"${2}
 snippet clearerr
 	clearerr(${1:FILE *cadena});
 	${2}
@@ -675,4 +671,3 @@ snippet signed
 	signed ${1}
 snippet void
 	void
-
