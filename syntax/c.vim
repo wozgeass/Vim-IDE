@@ -2,9 +2,7 @@
 " Language:	C
 " Notes: This is a compendio to support news highlights to diferents functions o Macros used by the open source libraries.
 " Maintainer:	Adrian Perez Dominguez <adrian@aztli.org>
-" Last Change:	2016 Mayo 10
-
-" Quit when a (custom) syntax file was already loaded
+" Last Change:	2016 Julio 10
 if exists("b:current_syntax")
   finish
 endif
@@ -71,7 +69,6 @@ syntax keyword glConstant GL_DOUBLE
 syntax keyword glConstant GL_2_BYTES
 syntax keyword glConstant GL_3_BYTES
 syntax keyword glConstant GL_4_BYTES
-
 syntax keyword glType GLenum
 syntax keyword glType GLboolean
 syntax keyword glType GLbitfield
@@ -90,7 +87,6 @@ syntax keyword glType GLfloat
 syntax keyword glType GLclampf
 syntax keyword glType GLdouble
 syntax keyword glType GLclampd
-"
 
 " Constantantes 
 syntax keyword glConstant GL_FALSE
@@ -107,7 +103,6 @@ syntax keyword glConstant GL_TRIANGLE_FAN
 syntax keyword glConstant GL_QUADS
 syntax keyword glConstant GL_QUAD_STRIP
 syntax keyword glConstant GL_POLYGON
-" }}}
 
 " Vertex Arrays
 syntax keyword glConstant GL_VERTEX_ARRAY
@@ -150,21 +145,18 @@ syntax keyword glConstant GL_T2F_C3F_V3F
 syntax keyword glConstant GL_T2F_N3F_V3F
 syntax keyword glConstant GL_T2F_C4F_N3F_V3F
 syntax keyword glConstant GL_T4F_C4F_N3F_V4F
-"
 
 " Modo Matrix
 syntax keyword glConstant GL_MATRIX_MODE
 syntax keyword glConstant GL_MODELVIEW
 syntax keyword glConstant GL_PROJECTION
 syntax keyword glConstant GL_TEXTURE
-"
 
 " Puntos
 syntax keyword glConstant GL_POINT_SMOOTH
 syntax keyword glConstant GL_POINT_SIZE
 syntax keyword glConstant GL_POINT_SIZE_GRANULARITY
 syntax keyword glConstant GL_POINT_SIZE_RANGE
-"
 
 " Lineas
 syntax keyword glConstant GL_LINE_SMOOTH
@@ -174,7 +166,6 @@ syntax keyword glConstant GL_LINE_STIPPLE_REPEAT
 syntax keyword glConstant GL_LINE_WIDTH
 syntax keyword glConstant GL_LINE_WIDTH_GRANULARITY
 syntax keyword glConstant GL_LINE_WIDTH_RANGE
-"
 
 " Polygonos
 syntax keyword glConstant GL_POINT
@@ -196,7 +187,6 @@ syntax keyword glConstant GL_POLYGON_OFFSET_UNITS
 syntax keyword glConstant GL_POLYGON_OFFSET_POINT
 syntax keyword glConstant GL_POLYGON_OFFSET_LINE
 syntax keyword glConstant GL_POLYGON_OFFSET_FILL
-"
 
 " Despliegue de listas
 syntax keyword glConstant GL_COMPILE
@@ -204,7 +194,6 @@ syntax keyword glConstant GL_COMPILE_AND_EXECUTE
 syntax keyword glConstant GL_LIST_BASE
 syntax keyword glConstant GL_LIST_INDEX
 syntax keyword glConstant GL_LIST_MODE
-"
 
 " Buffer
 syntax keyword glConstant GL_NEVER
@@ -222,7 +211,6 @@ syntax keyword glConstant GL_DEPTH_FUNC
 syntax keyword glConstant GL_DEPTH_RANGE
 syntax keyword glConstant GL_DEPTH_WRITEMASK
 syntax keyword glConstant GL_DEPTH_COMPONENT
-"
 
 " Luces
 syntax keyword glConstant GL_LIGHTING
@@ -259,7 +247,6 @@ syntax keyword glConstant GL_COLOR_MATERIAL
 syntax keyword glConstant GL_COLOR_MATERIAL_FACE
 syntax keyword glConstant GL_COLOR_MATERIAL_PARAMETER
 syntax keyword glConstant GL_NORMALIZE
-" 
 
 " Use clipping planes 
 syntax keyword glConstant GL_CLIP_PLANE0
@@ -268,7 +255,6 @@ syntax keyword glConstant GL_CLIP_PLANE2
 syntax keyword glConstant GL_CLIP_PLANE3
 syntax keyword glConstant GL_CLIP_PLANE4
 syntax keyword glConstant GL_CLIP_PLANE5
-"
 
 " Accumulation buffer
 syntax keyword glConstant GL_ACCUM_RED_BITS
@@ -281,13 +267,11 @@ syntax keyword glConstant GL_ADD
 syntax keyword glConstant GL_LOAD
 syntax keyword glConstant GL_MULT
 syntax keyword glConstant GL_RETURN
-"
 
 " Alpha testing
 syntax keyword glConstant GL_ALPHA_TEST
 syntax keyword glConstant GL_ALPHA_TEST_REF
 syntax keyword glConstant GL_ALPHA_TEST_FUNC
-"
 
 " Blending
 syntax keyword glConstant GL_BLEND
@@ -308,13 +292,11 @@ syntax keyword glConstant GL_CONSTANT_COLOR
 syntax keyword glConstant GL_ONE_MINUS_CONSTANT_COLOR
 syntax keyword glConstant GL_CONSTANT_ALPHA
 syntax keyword glConstant GL_ONE_MINUS_CONSTANT_ALPHA
-"
 
 " Modos de Render
 syntax keyword glConstant GL_FEEDBACK
 syntax keyword glConstant GL_RENDER
 syntax keyword glConstant GL_SELECT
-"
 
 " Feedback
 syntax keyword glConstant GL_2D
@@ -333,12 +315,10 @@ syntax keyword glConstant GL_PASS_THROUGH_TOKEN
 syntax keyword glConstant GL_FEEDBACK_BUFFER_POINTER
 syntax keyword glConstant GL_FEEDBACK_BUFFER_SIZE
 syntax keyword glConstant GL_FEEDBACK_BUFFER_TYPE
-"
 
 " Selecciones
 syntax keyword glConstant GL_SELECTION_BUFFER_POINTER
 syntax keyword glConstant GL_SELECTION_BUFFER_SIZE
-"
 
 " Fog
 syntax keyword glConstant GL_FOG
@@ -351,7 +331,6 @@ syntax keyword glConstant GL_FOG_END
 syntax keyword glConstant GL_LINEAR
 syntax keyword glConstant GL_EXP
 syntax keyword glConstant GL_EXP2
-"
 
 " Logic ops
 syntax keyword glConstant GL_LOGIC_OP
@@ -374,7 +353,6 @@ syntax keyword glConstant GL_AND_REVERSE
 syntax keyword glConstant GL_AND_INVERTED
 syntax keyword glConstant GL_OR_REVERSE
 syntax keyword glConstant GL_OR_INVERTED
-"
 
 " Stencil
 syntax keyword glConstant GL_STENCIL_TEST
@@ -392,7 +370,6 @@ syntax keyword glConstant GL_KEEP
 syntax keyword glConstant GL_REPLACE
 syntax keyword glConstant GL_INCR
 syntax keyword glConstant GL_DECR
-"
 
 " Buffers, Pixel Drawing/Reading
 syntax keyword glConstant GL_NONE
@@ -431,7 +408,6 @@ syntax keyword glConstant GL_STENCIL
 syntax keyword glConstant GL_DITHER
 syntax keyword glConstant GL_RGB
 syntax keyword glConstant GL_RGBA
-"
 
 " Implementacion de limites
 syntax keyword glConstant GL_MAX_LIST_NESTING
@@ -447,7 +423,6 @@ syntax keyword glConstant GL_MAX_TEXTURE_SIZE
 syntax keyword glConstant GL_MAX_PIXEL_MAP_TABLE
 syntax keyword glConstant GL_MAX_VIEWPORT_DIMS
 syntax keyword glConstant GL_MAX_CLIENT_ATTRIB_STACK_DEPTH
-"
 
 " Gets
 syntax keyword glConstant GL_ATTRIB_STACK_DEPTH
@@ -477,7 +452,6 @@ syntax keyword glConstant GL_RGBA_MODE
 syntax keyword glConstant GL_TEXTURE_MATRIX
 syntax keyword glConstant GL_TEXTURE_STACK_DEPTH
 syntax keyword glConstant GL_VIEWPORT
-"
 
 " Evaluadores
 syntax keyword glConstant GL_AUTO_NORMAL
@@ -506,7 +480,6 @@ syntax keyword glConstant GL_MAP2_VERTEX_4
 syntax keyword glConstant GL_COEFF
 syntax keyword glConstant GL_DOMAIN
 syntax keyword glConstant GL_ORDER
-"
 
 " Hints
 syntax keyword glConstant GL_FOG_HINT
@@ -517,12 +490,10 @@ syntax keyword glConstant GL_POLYGON_SMOOTH_HINT
 syntax keyword glConstant GL_DONT_CARE
 syntax keyword glConstant GL_FASTEST
 syntax keyword glConstant GL_NICEST
-" 
 
 " Scissor box 
 syntax keyword glConstant GL_SCISSOR_TEST
 syntax keyword glConstant GL_SCISSOR_BOX
-"
 
 " Modo Pixel / Transfererencia
 syntax keyword glConstant GL_MAP_COLOR
@@ -572,7 +543,6 @@ syntax keyword glConstant GL_UNPACK_SKIP_ROWS
 syntax keyword glConstant GL_UNPACK_SWAP_BYTES
 syntax keyword glConstant GL_ZOOM_X
 syntax keyword glConstant GL_ZOOM_Y
-"
 
 " Mapeo de texturas
 syntax keyword glConstant GL_TEXTURE_ENV
@@ -618,14 +588,12 @@ syntax keyword glConstant GL_R
 syntax keyword glConstant GL_Q
 syntax keyword glConstant GL_TEXTURE_GEN_R
 syntax keyword glConstant GL_TEXTURE_GEN_Q
-"
 
 " Utilidades
 syntax keyword glConstant GL_VENDOR
 syntax keyword glConstant GL_RENDERER
 syntax keyword glConstant GL_VERSION
 syntax keyword glConstant GL_EXTENSIONS
-"
 
 " Errors
 syntax keyword glConstant GL_NO_ERROR
@@ -636,7 +604,6 @@ syntax keyword glConstant GL_STACK_OVERFLOW
 syntax keyword glConstant GL_STACK_UNDERFLOW
 syntax keyword glConstant GL_OUT_OF_MEMORY
 syntax keyword glConstant GL_TABLE_TOO_LARGE
-"
 
 " glPush/PopAttrib bits
 syntax keyword glConstant GL_CURRENT_BIT
@@ -660,7 +627,6 @@ syntax keyword glConstant GL_LIST_BIT
 syntax keyword glConstant GL_TEXTURE_BIT
 syntax keyword glConstant GL_SCISSOR_BIT
 syntax keyword glConstant GL_ALL_ATTRIB_BITS
-"
 
 " OpenGL 1.1
 syntax keyword glConstant GL_PROXY_TEXTURE_1D
@@ -707,7 +673,6 @@ syntax keyword glConstant GL_CLIENT_PIXEL_STORE_BIT
 syntax keyword glConstant GL_CLIENT_VERTEX_ARRAY_BIT
 syntax keyword glConstant GL_ALL_CLIENT_ATTRIB_BITS
 syntax keyword glConstant GL_CLIENT_ALL_ATTRIB_BITS
-"
 
 " OpenGL 1.2
 syntax keyword glConstant GL_RESCALE_NORMAL
@@ -751,7 +716,6 @@ syntax keyword glConstant GL_TEXTURE_DEPTH
 syntax keyword glConstant GL_TEXTURE_WRAP_R
 syntax keyword glConstant GL_MAX_3D_TEXTURE_SIZE
 syntax keyword glConstant GL_TEXTURE_BINDING_3D
-"
 
 " OpenGL 1.3 
 syntax keyword glConstant GL_TEXTURE0
@@ -850,7 +814,6 @@ syntax keyword glConstant GL_PREVIOUS
 syntax keyword glConstant GL_DOT3_RGB
 syntax keyword glConstant GL_DOT3_RGBA
 syntax keyword glConstant GL_CLAMP_TO_BORDER
-"
 
 " OpenGL 1.4
 syntax keyword glConstant GL_GENERATE_MIPMAP
@@ -893,7 +856,6 @@ syntax keyword glConstant GL_TEXTURE_FILTER_CONTROL
 syntax keyword glConstant GL_TEXTURE_LOD_BIAS
 syntax keyword glConstant GL_MAX_TEXTURE_LOD_BIAS
 syntax keyword glConstant GL_MIRRORED_REPEAT
-"
 
 " Soporte para OpenGL 2.1
 " Constantes
@@ -1110,7 +1072,6 @@ syntax keyword glConstant GL_VERTEX_ATTRIB_ARRAY_POINTER
 syntax keyword glConstant GL_VERTEX_ATTRIB_ARRAY_SIZE
 syntax keyword glConstant GL_VERTEX_ATTRIB_ARRAY_STRIDE
 syntax keyword glConstant GL_VERTEX_ATTRIB_ARRAY_TYPE
-"
 
 " Functions
 syntax keyword glFunction glAttachShader
@@ -1275,7 +1236,6 @@ syntax keyword glConstant GL_UNSIGNED_INT_5_9_9_9_REV
 syntax keyword glConstant GL_FLOAT_32_UNSIGNED_INT_24_8_REV
 syntax keyword glConstant GL_INDEX
 syntax keyword glConstant GL_UNSIGNED_NORMALIZED
-
 syntax keyword glType GLhalf
 syntax keyword glType GLtime
 
@@ -1321,7 +1281,6 @@ syntax keyword glConstant GL_COLOR_ATTACHMENT12
 syntax keyword glConstant GL_COLOR_ATTACHMENT13
 syntax keyword glConstant GL_COLOR_ATTACHMENT14
 syntax keyword glConstant GL_COLOR_ATTACHMENT15
-
 syntax keyword glConstant GL_DEPTH_ATTACHMENT
 syntax keyword glConstant GL_STENCIL_ATTACHMENT
 syntax keyword glConstant GL_DEPTH_STENCIL_ATTACHMENT
@@ -1856,7 +1815,7 @@ syntax keyword glFunction glVertexAttribP2uiv
 syntax keyword glFunction glVertexAttribP3uiv
 syntax keyword glFunction glVertexAttribP4uiv
 
-" Soporte OpenGL 4.0 {{{
+" Soporte OpenGL 4.0
 " Tipos de Datos
 syntax keyword glConstant GL_INT_2_10_10_10_REV
 
@@ -2298,12 +2257,9 @@ syntax keyword glFunction glTextureStorage3DEXT
 " ARB_transform_feedback_instanced
 syntax keyword glFunction glDrawTransformFeedbackInstanced
 syntax keyword glFunction glDrawTransformFeedbackStreamInstanced
-"}}}
-"}}}
 
-" OpenGL 4.3 {{{
+" Soporte OpenGL 4.3
 " Constants
-" {{{
 " ARB_compute_shader
 syntax keyword glConstant GL_COMPUTE_SHADER
 syntax keyword glConstant GL_MAX_COMPUTE_UNIFORM_BLOCKS
@@ -2692,18 +2648,13 @@ syntax keyword glFunction glObjectLabel
 syntax keyword glFunction glGetObjectLabel
 syntax keyword glFunction glObjectPtrLabel
 syntax keyword glFunction glGetObjectPtrLabel
-"}}}
-"}}}
 
-
-" }}}
-
-" Extensions {{{
+" Extensions
 
   if !exists ("c_opengl_no_ext_arb")
-  " ARB extensions {{{
+  " ARB extensions
 
-    " GL_ARB_multitexture (ARB extension and OpenGL 1.2.1) {{{
+    " GL_ARB_multitexture (ARB extension and OpenGL 1.2.1)
     syntax keyword glConstant GL_TEXTURE0_ARB
     syntax keyword glConstant GL_TEXTURE1_ARB
     syntax keyword glConstant GL_TEXTURE2_ARB
@@ -2739,7 +2690,6 @@ syntax keyword glFunction glGetObjectPtrLabel
     syntax keyword glConstant GL_ACTIVE_TEXTURE_ARB
     syntax keyword glConstant GL_CLIENT_ACTIVE_TEXTURE_ARB
     syntax keyword glConstant GL_MAX_TEXTURE_UNITS_ARB
-
     syntax keyword glFunction glActiveTextureARB
     syntax keyword glFunction glClientActiveTextureARB
     syntax keyword glFunction glMultiTexCoord1dARB
@@ -2841,9 +2791,8 @@ syntax keyword glFunction glGetObjectPtrLabel
     syntax keyword glFunction glTraceListMESA
     syntax keyword glFunction glTracePointerMESA
     syntax keyword glFunction glTracePointerRangeMESA
-    " }}}
 
-    " Functions from GL_ARB_VERTEX_PROGRAM {{{
+    " Functions from GL_ARB_VERTEX_PROGRAM
     syntax keyword glFunction glVertexAttrib1sARB
     syntax keyword glFunction glVertexAttrib1fARB
     syntax keyword glFunction glVertexAttrib1dARB
@@ -2906,9 +2855,8 @@ syntax keyword glFunction glGetObjectPtrLabel
     syntax keyword glFunction glGetVertexAttribivARB
     syntax keyword glFunction glGetVertexAttribPointervARB
     syntax keyword glFunction glIsProgramARB
-    " }}}
 
-    " other functions (openGL 1.4 and ARB extensions) {{{
+    " other functions (openGL 1.4 and ARB extensions)
     syntax keyword glFunction glLoadTransposeMatrixfARB
     syntax keyword glFunction glLoadTransposeMatrixdARB
     syntax keyword glFunction glMultTransposeMatrixfARB
@@ -2971,9 +2919,8 @@ syntax keyword glFunction glGetObjectPtrLabel
     syntax keyword glFunction glGetQueryivARB
     syntax keyword glFunction glGetQueryObjectivARB
     syntax keyword glFunction glGetQueryObjectuivARB
-    " }}}
 
-    " GL_ARB_vertex_buffer_object {{{
+    " GL_ARB_vertex_buffer_object
     syntax keyword glConstant GL_ARRAY_BUFFER_ARB
     syntax keyword glConstant GL_ELEMENT_ARRAY_BUFFER_ARB
     syntax keyword glConstant GL_ARRAY_BUFFER_BINDING_ARB
@@ -3005,9 +2952,8 @@ syntax keyword glFunction glGetObjectPtrLabel
     syntax keyword glConstant GL_BUFFER_ACCESS_ARB
     syntax keyword glConstant GL_BUFFER_MAPPED_ARB
     syntax keyword glConstant GL_BUFFER_MAP_POINTER_ARB
-    "}}}
 
-    " GL_ARB_matrix_palette {{{
+    " GL_ARB_matrix_palette
     syntax keyword glConstant GL_MATRIX_PALETTE_ARB
     syntax keyword glConstant GL_MAX_MATRIX_PALETTE_STACK_DEPTH_ARB
     syntax keyword glConstant GL_MAX_PALETTE_MATRICES_ARB
@@ -3018,9 +2964,8 @@ syntax keyword glFunction glGetObjectPtrLabel
     syntax keyword glConstant GL_MATRIX_INDEX_ARRAY_TYPE_ARB
     syntax keyword glConstant GL_MATRIX_INDEX_ARRAY_STRIDE_ARB
     syntax keyword glConstant GL_MATRIX_INDEX_ARRAY_POINTER_ARB
-    " }}}
 
-    " GL_ARB_multisample {{{
+    " GL_ARB_multisample
     syntax keyword glConstant GL_MULTISAMPLE_ARB
     syntax keyword glConstant GL_SAMPLE_ALPHA_TO_COVERAGE_ARB
     syntax keyword glConstant GL_SAMPLE_ALPHA_TO_ONE_ARB
@@ -3030,21 +2975,18 @@ syntax keyword glFunction glGetObjectPtrLabel
     syntax keyword glConstant GL_SAMPLE_COVERAGE_VALUE_ARB
     syntax keyword glConstant GL_SAMPLE_COVERAGE_INVERT_ARB
     syntax keyword glConstant GL_MULTISAMPLE_BIT_ARB
-    " }}}
 
-    " GL_ARB_occlusion_query {{{
+    " GL_ARB_occlusion_query
     syntax keyword glConstant GL_SAMPLES_PASSED_ARB
     syntax keyword glConstant GL_QUERY_COUNTER_BITS_ARB
     syntax keyword glConstant GL_CURRENT_QUERY_ARB
     syntax keyword glConstant GL_QUERY_RESULT_ARB
     syntax keyword glConstant GL_QUERY_RESULT_AVAILABLE_ARB
-    " }}}
 
-    " GL_ARB_texture_border_clamp {{{
-    syntax keyword glConstant GL_CLAMP_TO_BORDER_ARB
-    " }}}
+    " GL_ARB_texture_border_clamp 
+    syntax keyword glConstant GL_CLAMP_TO_BORDER_ARBa
 
-    " GL_ARB_texture_compression {{{
+    " GL_ARB_texture_compression
     syntax keyword glConstant GL_COMPRESSED_ALPHA_ARB
     syntax keyword glConstant GL_COMPRESSED_LUMINANCE_ARB
     syntax keyword glConstant GL_COMPRESSED_LUMINANCE_ALPHA_ARB
@@ -3056,9 +2998,8 @@ syntax keyword glFunction glGetObjectPtrLabel
     syntax keyword glConstant GL_TEXTURE_COMPRESSED_ARB
     syntax keyword glConstant GL_NUM_COMPRESSED_TEXTURE_FORMATS_ARB
     syntax keyword glConstant GL_COMPRESSED_TEXTURE_FORMATS_ARB
-    " }}}
 
-    " GL_ARB_texture_cube_map {{{
+    " GL_ARB_texture_cube_map
     syntax keyword glConstant GL_NORMAL_MAP_ARB
     syntax keyword glConstant GL_REFLECTION_MAP_ARB
     syntax keyword glConstant GL_TEXTURE_CUBE_MAP_ARB
@@ -3071,9 +3012,8 @@ syntax keyword glFunction glGetObjectPtrLabel
     syntax keyword glConstant GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_ARB
     syntax keyword glConstant GL_PROXY_TEXTURE_CUBE_MAP_ARB
     syntax keyword glConstant GL_MAX_CUBE_MAP_TEXTURE_SIZE_ARB
-    " }}}
 
-    " GL_ARB_texture_env_combine {{{
+    " GL_ARB_texture_env_combine
     syntax keyword glConstant GL_COMBINE_ARB
     syntax keyword glConstant GL_COMBINE_RGB_ARB
     syntax keyword glConstant GL_COMBINE_ALPHA_ARB
@@ -3096,25 +3036,21 @@ syntax keyword glFunction glGetObjectPtrLabel
     syntax keyword glConstant GL_PRIMARY_COLOR_ARB
     syntax keyword glConstant GL_PREVIOUS_ARB
     syntax keyword glConstant GL_SUBTRACT_ARB
-    " }}}
 
-    " GL_ARB_texture_env_dot3 {{{
+    " GL_ARB_texture_env_dot3
     syntax keyword glConstant GL_DOT3_RGB_ARB
     syntax keyword glConstant GL_DOT3_RGBA_ARB
-    " }}}
 
-    " GL_ARB_texture_mirrored_repeat {{{
+    " GL_ARB_texture_mirrored_repeat
     syntax keyword glConstant GL_MIRRORED_REPEAT_ARB
-    " }}}
 
-    " GL_ARB_transpose_matrix {{{
+    " GL_ARB_transpose_matrix
     syntax keyword glConstant GL_TRANSPOSE_MODELVIEW_MATRIX_ARB
     syntax keyword glConstant GL_TRANSPOSE_PROJECTION_MATRIX_ARB
     syntax keyword glConstant GL_TRANSPOSE_TEXTURE_MATRIX_ARB
     syntax keyword glConstant GL_TRANSPOSE_COLOR_MATRIX_ARB
-    " }}}
 
-    " GL_ARB_vertex_blend {{{
+    " GL_ARB_vertex_blend
     syntax keyword glConstant GL_MAX_VERTEX_UNITS_ARB
     syntax keyword glConstant GL_ACTIVE_VERTEX_UNITS_ARB
     syntax keyword glConstant GL_WEIGHT_SUM_UNITY_ARB
@@ -3157,9 +3093,8 @@ syntax keyword glFunction glGetObjectPtrLabel
     syntax keyword glConstant GL_MODELVIEW29_ARB
     syntax keyword glConstant GL_MODELVIEW30_ARB
     syntax keyword glConstant GL_MODELVIEW31_ARB
-    " }}}
 
-    " GL_ARB_vertex_program {{{
+    " GL_ARB_vertex_program
     syntax keyword glConstant GL_VERTEX_PROGRAM_ARB
     syntax keyword glConstant GL_VERTEX_PROGRAM_POINT_SIZE_ARB
     syntax keyword glConstant GL_VERTEX_PROGRAM_TWO_SIDE_ARB
@@ -3239,34 +3174,29 @@ syntax keyword glFunction glGetObjectPtrLabel
     syntax keyword glConstant GL_MATRIX29_ARB
     syntax keyword glConstant GL_MATRIX30_ARB
     syntax keyword glConstant GL_MATRIX31_ARB
-    " }}}
 
-    " GL_ARB_depth_texture {{{
+    " GL_ARB_depth_texture 
     syntax keyword glConstant GL_DEPTH_COMPONENT16_ARB
     syntax keyword glConstant GL_DEPTH_COMPONENT24_ARB
     syntax keyword glConstant GL_DEPTH_COMPONENT32_ARB
     syntax keyword glConstant GL_TEXTURE_DEPTH_SIZE_ARB
     syntax keyword glConstant GL_DEPTH_TEXTURE_MODE_ARB
-    " }}}
 
-    " GL_ARB_shadow {{{
+    " GL_ARB_shadow 
     syntax keyword glConstant GL_TEXTURE_COMPARE_MODE_ARB
     syntax keyword glConstant GL_TEXTURE_COMPARE_FUNC_ARB
     syntax keyword glConstant GL_COMPARE_R_TO_TEXTURE_ARB
-    " }}}
 
-    " GL_ARB_shadow_ambient {{{
+    " GL_ARB_shadow_ambient 
     syntax keyword glConstant GL_TEXTURE_COMPARE_FAIL_VALUE_ARB
-    " }}}
 
-    " GL_ARB_point_parameters {{{
+    " GL_ARB_point_parameters 
     syntax keyword glConstant GL_POINT_SIZE_MIN_ARB
     syntax keyword glConstant GL_POINT_SIZE_MAX_ARB
     syntax keyword glConstant GL_POINT_FADE_THRESHOLD_SIZE_ARB
     syntax keyword glConstant GL_POINT_DISTANCE_ATTENUATION_ARB
-    " }}}
 
-    " GL_ARB_fragment_program {{{
+    " GL_ARB_fragment_program 
     syntax keyword glConstant GL_FRAGMENT_PROGRAM_ARB
     syntax keyword glConstant GL_PROGRAM_ALU_INSTRUCTIONS_ARB
     syntax keyword glConstant GL_PROGRAM_TEX_INSTRUCTIONS_ARB
@@ -3282,9 +3212,8 @@ syntax keyword glFunction glGetObjectPtrLabel
     syntax keyword glConstant GL_MAX_PROGRAM_NATIVE_TEX_INDIRECTIONS_ARB
     syntax keyword glConstant GL_MAX_TEXTURE_COORDS_ARB
     syntax keyword glConstant GL_MAX_TEXTURE_IMAGE_UNITS_ARB
-    " }}}
 
-    " OpenGL ARB extension GL_ARB_shader_objects {{{
+    " OpenGL ARB extension GL_ARB_shader_objects
     syntax keyword glConstant GL_OBJECT_TYPE_ARB
     syntax keyword glConstant GL_OBJECT_SUBTYPE_ARB
     syntax keyword glConstant GL_OBJECT_DELETE_STATUS_ARB
@@ -3296,7 +3225,6 @@ syntax keyword glFunction glGetObjectPtrLabel
     syntax keyword glConstant GL_OBJECT_ACTIVE_UNIFORMS_ARB
     syntax keyword glConstant GL_OBJECT_ACTIVE_UNIFORM_MAX_LENGTH_ARB
     syntax keyword glConstant GL_OBJECT_SHADER_SOURCE_LENGTH_ARB
-
     syntax keyword glType GL_PROGRAM_OBJECT_ARB
     syntax keyword glType GL_SHADER_OBJECT_ARB
     syntax keyword glType GL_FLOAT_VEC2_ARB
@@ -3314,7 +3242,6 @@ syntax keyword glFunction glGetObjectPtrLabel
     syntax keyword glType GL_FLOAT_MAT4_ARB
     syntax keyword glType GLcharARB
     syntax keyword glType GLhandleARB
-
     syntax keyword glFunction glDeleteObjectARB
     syntax keyword glFunction glGetHandleARB
     syntax keyword glFunction glDetachObjectARB
@@ -3354,9 +3281,8 @@ syntax keyword glFunction glGetObjectPtrLabel
     syntax keyword glFunction glGetUniformfvARB
     syntax keyword glFunction glGetUniformivARB
     syntax keyword glFunction glGetShaderSourceARB
-    " }}}
 
-    " OpenGL ARB extension GL_ARB_vertex_shader {{{
+    " OpenGL ARB extension GL_ARB_vertex_shader 
     syntax keyword glConstant GL_MAX_VERTEX_UNIFORM_COMPONENTS_ARB
     syntax keyword glConstant GL_MAX_VARYING_FLOATS_ARB
     syntax keyword glConstant GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS_ARB
@@ -3367,19 +3293,14 @@ syntax keyword glFunction glGetObjectPtrLabel
     syntax keyword glFunction glBindAttribLocationARB
     syntax keyword glFunction glGetActiveAttribARB
     syntax keyword glFunction glGetAttribLocationARB
-    " }}}
 
-    " OpenGL ARB extension GL_ARB_fragment_shader {{{
+    " OpenGL ARB extension GL_ARB_fragment_shader 
     syntax keyword glConstant GL_MAX_FRAGMENT_UNIFORM_COMPONENTS_ARB
     syntax keyword glType GL_FRAGMENT_SHADER_ARB
-    " }}}
 
-  " }}}
   endif
 
-" }}}
-
-" Functions {{{
+" Functions 
 syntax keyword glFunction glClearIndex
 syntax keyword glFunction glClearColor
 syntax keyword glFunction glClear
@@ -3802,13 +3723,11 @@ syntax keyword glFunction glLoadTransposeMatrixf
 syntax keyword glFunction glMultTransposeMatrixd
 syntax keyword glFunction glMultTransposeMatrixf
 syntax keyword glFunction glSampleCoverage
-" }}}
-
 
 " glu.h
 if !exists ("c_opengl_no_glu")
-" GLU {{{
-  " Constants {{{
+" GLU 
+  " Constants 
   syn keyword glConstant GLU_EXT_object_space_tess
   syn keyword glConstant GLU_EXT_nurbs_tessellator
   syn keyword glConstant GLU_FALSE GLU_TRUE
@@ -3985,12 +3904,11 @@ if !exists ("c_opengl_no_glu")
   syn keyword glConstant GLU_TESS_WINDING_NEGATIVE
   syn keyword glConstant GLU_TESS_WINDING_ABS_GEQ_TWO
 
-" }}}
-  " Types {{{
+  " Types 
   syntax keyword glType GLUnurbs GLUquadric GLUtesselator
   syntax keyword glType GLUnurbsObj GLUquadricObj GLUtesselatorObj GLUtriangulatorObj
-  " }}}
-  " Functions {{{
+  
+  " Functions 
   syntax keyword glFunction gluBeginCurve
   syntax keyword glFunction gluBeginPolygon
   syntax keyword glFunction gluBeginSurface
@@ -4048,15 +3966,12 @@ if !exists ("c_opengl_no_glu")
   syntax keyword glFunction gluTessVertex
   syntax keyword glFunction gluUnProject
   syntax keyword glFunction gluUnProject4
-  " }}}
-" }}}
 endif
-
 
 " glut.h
 if !exists ("c_opengl_no_glut")
-" GLUT {{{
-  " Constants {{{
+" GLUT 
+  " Constants 
   syntax keyword glConstant GLUT_ACCUM
   syntax keyword glConstant GLUT_ACTION_CONTINUE_EXECUTION
   syntax keyword glConstant GLUT_ACTION_EXIT
@@ -4284,9 +4199,8 @@ if !exists ("c_opengl_no_glut")
   syntax keyword glConstant GLUT_WINDOW_X
   syntax keyword glConstant GLUT_WINDOW_Y
   syntax keyword glConstant GLUT_XLIB_IMPLEMENTATION
-  " }}}
 
-  " Functions {{{
+  " Functions 
   syntax keyword glFunction glutAddMenuEntry
   syntax keyword glFunction glutAddSubMenu
   syntax keyword glFunction glutAttachMenu
@@ -4436,21 +4350,18 @@ if !exists ("c_opengl_no_glut")
   syntax keyword glFunction glutWireTeapot
   syntax keyword glFunction glutWireTetrahedron
   syntax keyword glFunction glutWireTorus
-  " }}}
-" }}}
 endif
 
 " gles2/gl.h
 if !exists ("c_opengl_no_gles2")
-" GLES2 {{{
-  " Data types {{{
+" GLES2 
+  " Data types 
   syntax keyword glType GLfixed
   syntax keyword glType GLclampx
   syntax keyword glType GLintptr
   syntax keyword glType GLsizeiptr
-  " }}}
 
-  " Constants {{{
+  " Constants 
   " BlendEquationSeperate
   syntax keyword glConstant GL_FUNC_ADD
   syntax keyword glConstant GL_BLEND_EQUATION
@@ -4722,15 +4633,12 @@ if !exists ("c_opengl_no_gles2")
 
   " OES_shader_source + OES_shader_binary
   syntax keyword glFunction glGetShaderPrecisionFormatOES
-
-  " }}}
-" }}}
 endif
 
 " egl.h
 if !exists ("c_opengl_no_egl")
-" EGL {{{
-  " Data types {{{
+" EGL 
+  " Data types 
   syntax keyword glType EGLint
   syntax keyword glType EGLenum
   syntax keyword glType EGLBoolean
@@ -4742,9 +4650,8 @@ if !exists ("c_opengl_no_egl")
   syntax keyword glType NativeDisplayType
   syntax keyword glType NativeWindowType
   syntax keyword glType NativePixmapType
-  " }}}
 
-  " Constants {{{
+  " Constants 
   " API handles
   syntax keyword glConstant EGL_DEFAULT_DISPLAY
   syntax keyword glConstant EGL_NO_CONTEXT
@@ -4883,56 +4790,42 @@ if !exists ("c_opengl_no_egl")
 
   " Engines
   syntax keyword glConstant EGL_CORE_NATIVE_ENGINE
-  " }}}
 
-  " Functions {{{
+  " Functions 
   syntax keyword glFunction eglGetError
-
   syntax keyword glFunction eglGetDisplay
   syntax keyword glFunction eglInitialize
   syntax keyword glFunction eglTerminate
-
   syntax keyword glFunction eglQueryString
-
   syntax keyword glFunction eglGetConfigs
   syntax keyword glFunction eglChooseConfig
   syntax keyword glFunction eglGetConfigAttrib
-
   syntax keyword glFunction eglCreateWindowSurface
   syntax keyword glFunction eglCreatePbufferSurface
   syntax keyword glFunction eglCreatePixmapSurface
   syntax keyword glFunction eglDestroySurface
   syntax keyword glFunction eglQuerySurface
-
   syntax keyword glFunction eglSurfaceAttrib
   syntax keyword glFunction eglBindTexImage
   syntax keyword glFunction eglReleaseTexImage
-
   syntax keyword glFunction eglSwapInterval
-
   syntax keyword glFunction eglCreateContext
   syntax keyword glFunction eglDestroyContext
   syntax keyword glFunction eglMakeCurrent
-
   syntax keyword glFunction eglGetCurrentContext
   syntax keyword glFunction eglGetCurrentSurface
   syntax keyword glFunction eglGetCurrentDisplay
   syntax keyword glFunction eglQueryContext
-
   syntax keyword glFunction eglWaitGL
   syntax keyword glFunction eglWaitNative
   syntax keyword glFunction eglSwapBuffers
   syntax keyword glFunction eglCopyBuffers
-
   syntax keyword glFunction eglGetProcAddress
-
   syntax keyword glFunction eglCreatePbufferFromClientBuffer
   syntax keyword glFunction eglWaitClient
   syntax keyword glFunction eglBindAPI
   syntax keyword glFunction eglQueryAPI
   syntax keyword glFunction eglReleaseThread
-  " }}}
-" }}}
 endif
 
 " Default highlighting
@@ -4952,7 +4845,6 @@ endif
 " vim: fdm=marker:
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 " It's easy to accidentally add a space after a backslash that was intended
 " for line continuation.  Some compilers allow it, which makes it
 " unpredictable and should be avoided.
@@ -5164,6 +5056,7 @@ endif
 syn match	cCommentError	display "\*/"
 syn match	cCommentStartError display "/\*"me=e-1 contained
 """""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Resaltado de sintaxis para ANSI-C
 syn keyword cAnsiFunction MULU_ DIVU_ MODU_ MUL_ DIV_ MOD_
 syn keyword cAnsiFunction main typeof
 syn keyword cAnsiFunction open close read write lseek dup dup2
@@ -5348,7 +5241,6 @@ syn keyword cAnsiName PRIdFAST64 PRIiMAX PRIoPTR PRIx8
 syn keyword cAnsiName PRIdMAX PRIiPTR PRIu8 PRIx16
 syn keyword cAnsiName PRIdPTR PRIo8 PRIu16 PRIx32
 syn keyword cAnsiName PRIi8 PRIo16 PRIu32 PRIx64
-
 syn keyword cAnsiName PRIxLEAST8 SCNd8 SCNiFAST32 SCNuLEAST32
 syn keyword cAnsiName PRIxLEAST16 SCNd16 SCNiFAST64 SCNuLEAST64
 syn keyword cAnsiName PRIxLEAST32 SCNd32 SCNiMAX SCNuFAST8
@@ -5373,7 +5265,6 @@ syn keyword cAnsiName PRIXFAST32 SCNiLEAST32 SCNu32 SCNxMAX
 syn keyword cAnsiName PRIXFAST64 SCNiLEAST64 SCNu64 SCNxPTR
 syn keyword cAnsiName PRIXMAX SCNiFAST8 SCNuLEAST8
 syn keyword cAnsiName PRIXPTR SCNiFAST16 SCNuLEAST16
-
 syn keyword cAnsiName errno environ
 
 hi def link cAnsiFunction cFunction
@@ -5404,10 +5295,8 @@ syn match cDelimiter "[();\\]"
 " foldmethod=syntax fix, courtesy of Ivan Freitas
 syn match cBraces display "[{}]"
 
-
 " Booleans
 syn keyword cBoolean true false TRUE FALSE
-
 
 " Links
 hi def link cFunction Function
@@ -5416,7 +5305,6 @@ hi def link cDelimiter Delimiter
 " foldmethod=syntax fix, courtesy of Ivan Freitas
 hi def link cBraces Delimiter
 hi def link cBoolean Boolean
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""
 syn keyword	cOperator	sizeof
 "if exists("c_gnu")
