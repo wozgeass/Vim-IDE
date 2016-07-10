@@ -5337,9 +5337,7 @@ if !exists("c_no_c99") " ISO C99
   syn keyword	cType		uint_fast8_t uint_fast16_t uint_fast32_t uint_fast64_t
   syn keyword	cType		intptr_t uintptr_t
   syn keyword	cType		intmax_t uintmax_t
-endif
-if exists("c_gnu")
-  syn keyword	cType		__label__ __complex__ __volatile__
+  syn keyword	cStorageClass	__label__ __complex__ __volatile__ __inline__
 endif
 
 syn keyword	cStructure	struct union enum
