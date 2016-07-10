@@ -46,9 +46,11 @@ let python_highlight_all = 1
 
 "Quito los mensajes de error del plugin 
 let g:ConqueTerm_StartMessages = 0
+let g:ConqueTerm_Color = 2
 
 "Configuraciones para latexpreview
 let g:livepreview_previewer = 'okular'
+autocmd Filetype tex setl updatetime=1
 
 "Configuracion jedi para python
 "let g:jedi#auto_initialization = 0
