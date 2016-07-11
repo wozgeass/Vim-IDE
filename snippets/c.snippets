@@ -29,9 +29,10 @@ snippet gpl
 	 * 
 	 * 
 	 */
+	 ${6}
 #licencia BSD
 snippet bsd
-	/* Usted esta utilizando una licencia BSD
+	/* Licencia BSD
 	 * ${1:Nombre Programa}
 	 *
 	 *  ${2:Descripcion del Programa}
@@ -65,8 +66,9 @@ snippet bsd
 	 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	 * 
 	 */
+	 ${6}
 #Licencia FreeBSD
-snippet	freebsd
+snippet freebsd
 	/*-
 	 * Copyright (c) ${1:Año} ${2:Nombre} <${3:Correo@dominio}>
 	 * All rights reserved.
@@ -101,7 +103,7 @@ snippet mit
 # funcion main()
 snippet main
 	int main(int argc, const char *argv[]){
-		${1:Sentencias}
+		${1}
 		return 0;
 	}
 # #include <...>
@@ -172,7 +174,7 @@ snippet forr
 	} 
 #Como parte importante de switch case tendra su propio snippet
 #switch
-snippet	switch
+snippet switch
 	switch (${1:/* condicion  */})
 	{
 	  	${2:/* casos */}
@@ -193,21 +195,18 @@ snippet fund
 # Typedef
 snippet typedef
 	typedef ${1:int} ${2:MyCustomType};
-	${3} 
 # Struct
 snippet struct
-	struc t ${1:`Filename('$1_t', 'name')`} {
+	struct ${1:`Filename('$1_t', 'name')`} {
 		${2:/* datos */}
 	}${3: Variable Opcional};
-	${4}
 #union 
 snippet union
 	union ${1:nombre_union}{
 		${2:/* datos */}
 	}${3:numero}
-	${4}
 # Typedef struct
-snippet tds
+snippet typestr
 	typedef struct ${2:_ $1 }{
 		${3:/* data */}
 	} ${1: `Filename('$1_t', 'name')`};
@@ -330,7 +329,6 @@ snippet putc
 	${3}
 snippet putchar
 	putchar(${1:int caracter});
-	${2}
 snippet puts
 	puts(${1:const char *cadena});
 	${2}
