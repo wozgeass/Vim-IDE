@@ -41,6 +41,10 @@ autocmd FileType c set omnifunc=ccomplete#Complete
 autocmd FileType java set omnifunc=javacomplete#Complete
 autocmd FileType sql set omnifunc=sqlcomplete#Complete
 autocmd FileType ruby set omnifunc=rubycomplete#Complete
+" Configuraciones para syntastic
+let g:syntastic_sh_checkers = ['shellcheck']
+let g:syntastic_vim_checkers = ['vint']
+
 "Completo el resaltado de syntaxis para python
 let python_highlight_all = 1
 
@@ -64,4 +68,20 @@ let g:closetag_filenames = "*.html,*.xhtml,*.phtml"
 let g:AutoPairsFlyMode = 1
 
 " Activando Neocomplete
+let g:acp_enableAtStartup = 0
+" Use neocomplete.
 let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_smart_case = 1
+let g:neocomplete#sources#syntax#min_keyword_length = 3
+let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+if !exists('g:neocomplete#keyword_patterns')
+	let g:neocomplete#keyword_patterns = {}
+endif
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+if !exists('g:neocomplete#sources#omni#input_patterns')
+	let g:neocomplete#sources#omni#input_patterns = {}
+endif
+let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
