@@ -18,13 +18,16 @@ Hasta el momento las mejoras se encuentran realizadas para los siguientes lengua
 - **En progreso Linux kernel API**
 
 Se encuentra integrados algunos plugins entre ellos estan:
-- ConqueGDB
-- CloseTag
-- Autopairs
+- **ConqueGDB**
+- **CloseTag**
+- **Autopairs**
+- **Neocomplete**
+- **Ninja**
+- **Syntastic**
 
 De momento me encuentro integrando mejoras en:
-- Php Omnicompletion
-- Java Omnicompletion
+- **Php Omnicompletion**
+- **Java Omnicompletion**
 
 Tambien se encuentras los snippets creados por la comunidad Aztli agregando varios mas para el lenguaje C y WEB.
 
@@ -34,6 +37,7 @@ Algunos snippets han sido creados por nuestra cuenta:
 - **javascript**
 - **python** --> Tambien editados.
 - **C** --> Solo los snippets de Ansi C.
+- **C++** -> En construcción..
 - **markdown** --> Por ser implementados. 
 
 # Instalacion y configuracion.
@@ -43,6 +47,8 @@ En el home de tu usuario clona el repositorio de la siguente manera:
 `git clone https://github.com/wozgeass/Vim-IDE.git .vim`
 
 Listo ahora ya podras tener las opciones del Vim-IDE habilitadas.
+
+> **Nota:** Es importante que si usas una distribucion como ubuntu instales vim-nox para que funcionen algunos plugins ya que en mucho casos necesita soportes extras que el editor vim por defecto no tiene.
 
 Lo que deberas ahora sera elegir un tema de color, hasta el momento tengo los siguientes:
 - **coots-beauty-256**
