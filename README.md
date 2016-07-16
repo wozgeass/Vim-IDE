@@ -24,6 +24,7 @@ Se encuentra integrados algunos plugins entre ellos estan:
 - **Neocomplete**
 - **Ninja**
 - **Syntastic**
+- **SingleCompile**
 
 De momento me encuentro integrando mejoras en:
 - **Php Omnicompletion**
