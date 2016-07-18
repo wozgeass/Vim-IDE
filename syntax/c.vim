@@ -5006,6 +5006,12 @@ syn match	cNumbersCom	display contained transparent "\<\d\|\.\d" contains=cNumbe
 syn match	cNumber		display contained "\d\+\(u\=l\{0,2}\|ll\=u\)\>"
 "hex number
 syn match	cNumber		display contained "0x\x\+\(u\=l\{0,2}\|ll\=u\)\>"
+" Empiezando a soportar el nuevo estandar de C
+if s:ft ==# 'cpp' && !exists("cpp_no_cpp14")
+   syn match     cNumber         display contained "\d\('\=\d\+\)*\(u\=l\{0,2}\|ll\=u\)\>"
+   syn match     cNumber         display contained "0x\x\('\=\x\+\)*\(u\=l\{0,2}\|ll\=u\)\>"
+   syn match     cNumber         display contained "0b[01]\('\=[01]\+\)*\(u\=l\{0,2}\|ll\=u\)\>"
+endif
 " Flag the first zero of an octal number as something special
 syn match	cOctal		display contained "0\o\+\(u\=l\{0,2}\|ll\=u\)\>" contains=cOctalZero
 syn match	cOctalZero	display contained "\<0"
@@ -5326,6 +5332,8 @@ if !exists("c_no_ansi") || exists("c_ansi_typedefs")
   syn keyword	cType		trace_attr_t trace_event_id_t trace_event_set_t trace_id_t uid_t kgid_t
   syn keyword	cType		atomic_t spinlock_t raw_spinlock_t key_serial_t key_perm_t kuid_t
   syn keyword	cType		mm_segment_t
+" Estos tipos son parte BSD
+  syn keyword	cType		u_int8_t u_int16_t u_int32_t u_int64_t
 endif
 if !exists("c_no_c99") " ISO C99
   syn keyword	cType		_Bool bool _Complex complex _Imaginary imaginary
@@ -5370,7 +5378,7 @@ if !exists("c_no_ansi") || exists("c_ansi_constants") || exists("c_gnu")
   syn keyword cConstant SCHAR_MIN SINT_MIN SLONG_MIN SSHRT_MIN
   syn keyword cConstant SCHAR_MAX SINT_MAX SLONG_MAX SSHRT_MAX
   if !exists("c_no_c99")
-    syn keyword cConstant __func__
+    syn keyword cConstant __func__ __VA_ARGS__ 
     syn keyword cConstant LLONG_MIN LLONG_MAX ULLONG_MAX
     syn keyword cConstant INT8_MIN INT16_MIN INT32_MIN INT64_MIN
     syn keyword cConstant INT8_MAX INT16_MAX INT32_MAX INT64_MAX
@@ -5510,8 +5518,7 @@ hi def link cCharacter		Character
 hi def link cSpecialCharacter	cSpecial
 hi def link cNumber		Number
 hi def link cOctal		Number
-hi def link cOctalZero		PreProc	 
-" link this to Error if you want
+hi def link cOctalZero		PreProc
 hi def link cFloat		Float
 hi def link cOctalError		cError
 hi def link cParenError		cError
