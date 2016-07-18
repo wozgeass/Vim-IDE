@@ -28,7 +28,7 @@ set nocp
 set smartindent
 set smarttab
 set autoindent
-set tags+=~/.vim/tags/c++tags
+set tags+=~/.vim/tags
 set number
 "Omnicomplete para diferentes lenguajes.
 autocmd FileType python set omnifunc=pythoncomplete#Complete
