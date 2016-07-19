@@ -28,7 +28,6 @@ set nocp
 set smartindent
 set smarttab
 set autoindent
-set tags+=~/.vim/tags
 set number
 "Omnicomplete para diferentes lenguajes.
 autocmd FileType python set omnifunc=pythoncomplete#Complete
@@ -85,3 +84,7 @@ let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
 let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
 let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+" Single compile
+let g:SingleCompile_split = 'vsplit'
+nmap <F9> :SCCompile<cr>
+nmap <F10> :SCCompileRun<cr>
