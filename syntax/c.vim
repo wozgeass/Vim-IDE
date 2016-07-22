@@ -5408,6 +5408,12 @@ if !exists("c_no_ansi") || exists("c_ansi_constants") || exists("c_gnu")
   syn keyword cConstant LC_ALL LC_COLLATE LC_CTYPE LC_MONETARY
   syn keyword cConstant LC_NUMERIC LC_TIME
   syn keyword cConstant SIG_DFL SIG_ERR SIG_IGN
+  " Macros Ncurses
+  syn keyword cConstant ACS_BBSS ACS_BLOCK ACS_BOARD ACS_BSBS ACS_BSSB ACS_BSSS
+  syn keyword cConstant ACS_BTEE ACS_BULLET ACS_CKBOARD ACS_DARROW ACS_DEGREE
+  syn keyword cConstant ACS_DIAMOND ACS_GEQUAL ACS_HLINE ACS_LANTERN ACS_LARROW
+  syn keyword cConstant ACS_LEQUAL ACS_LLCORNER ACS_LRCORNER ACS_LTEE ACS_NEQUAL
+  syn keyword cConstant 
   " Señales POSIX.
   syn keyword cConstant SIGILL SIGINT SIGSEGV SIGTERM 
   syn keyword cConstant SIGABRT SIGALRM SIGCHLD SIGCONT SIGFPE SIGHUP SIGIOT 
