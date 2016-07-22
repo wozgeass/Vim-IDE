@@ -5413,6 +5413,12 @@ if !exists("c_no_ansi") || exists("c_ansi_constants") || exists("c_gnu")
   syn keyword cConstant ACS_BTEE ACS_BULLET ACS_CKBOARD ACS_DARROW ACS_DEGREE
   syn keyword cConstant ACS_DIAMOND ACS_GEQUAL ACS_HLINE ACS_LANTERN ACS_LARROW
   syn keyword cConstant ACS_LEQUAL ACS_LLCORNER ACS_LRCORNER ACS_LTEE ACS_NEQUAL
+  syn keyword cConstant ACS_PI ACS_PLMINUS ACS_PLUS ACS_RARROW ACS_RTEE ACS_S1
+  syn keyword cConstant ACS_S3 ACS_S7 ACS_S9 ACS_SBBS ACS_SBSB ACS_SBSS ACS_SSBB
+  syn keyword cConstant ACS_SSBS ACS_SSSB ACS_SSSS ACS_STERLING ACS_TTEE ACS_UARROW
+  syn keyword cConstant ACS_ULCORNER ACS_URCORNER ACS_VLINE ALL_MOUSE_EVENTS 
+  syn keyword cConstant A_ALTCHARSET A_ATTRIBUTES A_BLINK A_BOLD A_CHARTEXT A_COLOR
+  syn keyword cConstant A_DIM A_HORIZONTAL A_INVIS A_ITALIC A_LEFT A_LOW A_NORMAL
   syn keyword cConstant 
   " Señales POSIX.
   syn keyword cConstant SIGILL SIGINT SIGSEGV SIGTERM 
