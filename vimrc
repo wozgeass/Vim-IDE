@@ -43,6 +43,7 @@ autocmd FileType ruby set omnifunc=rubycomplete#Complete
 " Configuraciones para syntastic
 let g:syntastic_sh_checkers = ['shellcheck']
 let g:syntastic_vim_checkers = ['vint']
+let g:syntastic_filetype_checkers['python'] = ['python3']
 
 "Completo el resaltado de syntaxis para python
 let python_highlight_all = 1
