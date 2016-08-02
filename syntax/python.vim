@@ -1,22 +1,23 @@
 " Vim syntax file
 " Language:             Python
-" Current Maintainer:   Dmitry Vasiliev <dima at hlabs dot org>
+" Current Maintainer:   Adrian Perez Dominguez <adrian<at>aztli.org>
+" Last Previous Maintainer: Dmitry Vasilev <dima at hlabs dot org>
 " Previous Maintainer:  Neil Schemenauer <nas at python dot ca>
 " URL:                  https://github.com/hdima/python-syntax
-" Last Change:          2015-11-01
+" Last Change:          2016-08-01
 " Filenames:            *.py
 " Version:              3.6.0
 "
 " Based on python.vim (from Vim 6.1 distribution)
-" by Neil Schemenauer <nas at python dot ca>
+" by Dmitry Vasilev <nas at python dot ca>
 "
 " Please use the following channels for reporting bugs, offering suggestions or
 " feedback:
 
-" - python.vim issue tracker: https://github.com/hdima/python-syntax/issues
-" - Email: Dmitry Vasiliev (dima at hlabs.org)
-" - Send a message or follow me for updates on Twitter: `@hdima
-"   <https://twitter.com/hdima>`__
+" - python.vim issue tracker: https://github.com/wozgeass/Vim-IDE/issue
+" - Email: Adrian Perez (adrian<at>aztli.org)
+" - Send a message or follow me for updates on Twitter: `@lelouch_linux
+"   <https://twitter.com/lelouch_linux>`__
 "
 " Contributors
 " ============
@@ -434,6 +435,17 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonBuiltinFunc	repr reversed round set setattr
   syn keyword pythonBuiltinFunc	slice sorted staticmethod str sum super tuple
   syn keyword pythonBuiltinFunc	type vars zip
+  " Metodos de los tipos numericos
+  syn keyword pythonBuiltinFunc conjugate trunc floor ceil bit_length 
+  syn keyword pythonBuiltinFunc to_bytes from_bytes as_integer_ratio
+  syn keyword pythonBuiltinFunc is_integer fromhex index count append copy
+  syn keyword pythonBuiltinFunc clear extend insert pop remove reverse
+  " Metodos de los tipos cadena
+  syn keyword pythonBuiltinFunc capitalize casefold center count encode
+  syn keyword pythonBuiltinFunc endswitch expandtabs find format format_map
+  syn keyword pythonBuiltinFunc index isalnum isalpha isdecimal isdigit
+  syn keyword pythonBuiltinFunc 
+  
 endif
 
 "
