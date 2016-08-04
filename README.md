@@ -72,3 +72,17 @@ Ademas se encuentra habilitado el omnicomplete para los siguientes lenguajes:
 - **C**
 - **C++**
 - **Java**
+
+> *Nota:* Para que funcione mejor python-ninja es necesario instalarlo desde los paquetes del sistema:
+Para ubuntu y Debian:
+> apt install 
+
+Para Fedora, CentOS y derivados:
+> dnf install vim-jedi
+
+Y para que funcione el syntastic para bash es necesario el siguiente paqute:
+Para Ubuntu y Debian:
+> apt install 
+
+Para Fedora, CentOS y derivados:
+> dnf install ShellCheck
