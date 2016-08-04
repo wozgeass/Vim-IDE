@@ -444,8 +444,11 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonBuiltinFunc capitalize casefold center count encode
   syn keyword pythonBuiltinFunc endswitch expandtabs find format format_map
   syn keyword pythonBuiltinFunc index isalnum isalpha isdecimal isdigit
-  syn keyword pythonBuiltinFunc 
-  
+  syn keyword pythonBuiltinFunc isidentifier islower isnumeric isprintable
+  syn keyword pythonBuiltinFunc isspace istitle isupper join ljust lower
+  syn keyword pythonBuiltinFunc lstrip maketrans partition replace rfind 
+  syn keyword pythonBuiltinFunc rindex rjust rpartition rsplit rstrip split
+  "syn keyword pythonBuiltinFunc 
 endif
 
 "
