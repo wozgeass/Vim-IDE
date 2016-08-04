@@ -5,11 +5,11 @@ if has("syntax")
 endif
 filetype indent on
 "colorscheme koehler
-"colorscheme PaperColor
+colorscheme PaperColor
 "colorscheme cootsbeauty256
 set t_Co=256
 "colorscheme jellybeans
-colorscheme grimmjow
+"colorscheme grimmjow
 " If using a dark background within the editing area and syntax highlighting
 " turn on this option as well
 set background=dark
@@ -42,8 +42,14 @@ autocmd FileType sql set omnifunc=sqlcomplete#Complete
 autocmd FileType ruby set omnifunc=rubycomplete#Complete
 " Configuraciones para syntastic
 let g:syntastic_sh_checkers = ['shellcheck']
+let g:syntastic_shell = "/bin/bash"
 let g:syntastic_vim_checkers = ['vint']
 let g:syntastic_filetype_checkers['python'] = ['python3']
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_ruby_exec = 'ruby'
 
 "Completo el resaltado de syntaxis para python
 let python_highlight_all = 1
