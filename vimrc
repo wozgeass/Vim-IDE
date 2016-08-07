@@ -12,7 +12,7 @@ set t_Co=256
 "colorscheme grimmjow
 " If using a dark background within the editing area and syntax highlighting
 " turn on this option as well
-set background=dark
+set background=light
 
 " Source a global configuration file if available
 if filereadable("/etc/vim/vimrc.local")
@@ -44,7 +44,7 @@ autocmd FileType ruby set omnifunc=rubycomplete#Complete
 let g:syntastic_sh_checkers = ['shellcheck']
 let g:syntastic_shell = "/bin/bash"
 let g:syntastic_vim_checkers = ['vint']
-let g:syntastic_filetype_checkers['python'] = ['python3']
+let g:syntastic_python_exec = 'python3'
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
