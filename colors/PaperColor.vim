@@ -593,12 +593,12 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
   call s:HL("cppSTLexception", s:pink, "", "")
   call s:HL("cppSTLfunctional", s:foreground, "", "bold")
   call s:HL("cppSTLiterator", s:foreground, "", "bold")
-  " call s:HL("cppSTLfunction", s:aqua, "", "bold")
+  call s:HL("cppSTLfunction", s:aqua, "", "bold")
   call s:HL("cppExceptions", s:red, "", "")
   call s:HL("cppStatement", s:blue, "", "")
   call s:HL("cppStorageClass", s:navy, "", "bold")
   call s:HL("cppAccess",s:blue, "", "")
-  " call s:HL("cppSTL",s:blue, "", "")
+  call s:HL("cppSTLnamespace",s:wine, "", "bold")
 
 
   " Lex highlighting
@@ -766,7 +766,8 @@ call s:HL("cssClassName", s:pink, "", "")
   call s:HL("pythonBytesEscape", s:olive, "", "bold")
   call s:HL("pythonDottedName", s:purple, "", "")
   call s:HL("pythonStrFormat", s:foreground, "", "")
-  call s:HL("pythonBuiltinFunc", s:foreground, "", "")
+  call s:HL("pythonBuiltinFunc", s:wine, "", "bold")
+
   call s:HL("pythonBuiltinObj", s:foreground, "", "")
 
   " Java Highlighting
