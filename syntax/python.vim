@@ -434,7 +434,7 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonBuiltinFunc	pow property range
   syn keyword pythonBuiltinFunc	repr reversed round set setattr
   syn keyword pythonBuiltinFunc	slice sorted staticmethod str sum super tuple
-  syn keyword pythonBuiltinFunc	type vars zip
+  syn keyword pythonBuiltinFunc	type vars zip 
   " Metodos de los tipos numericos
   syn keyword pythonBuiltinFunc conjugate trunc floor ceil bit_length 
   syn keyword pythonBuiltinFunc to_bytes from_bytes as_integer_ratio
@@ -448,7 +448,14 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonBuiltinFunc isspace istitle isupper join ljust lower
   syn keyword pythonBuiltinFunc lstrip maketrans partition replace rfind 
   syn keyword pythonBuiltinFunc rindex rjust rpartition rsplit rstrip split
-  "syn keyword pythonBuiltinFunc 
+  syn keyword pythonBuiltinFunc splitlines startswith strip swapcase title
+  syn keyword pythonBuiltinFunc translate upper zfill
+  " Metodos de memoryview
+  syn keyword pythonBuiltinFunc tobytes tolist release cast nbytes readonly
+  syn keyword pythonBuiltinFunc itemsize ndim shape strides suboffset
+  syn keyword pythonBuiltinFunc c_contiguous f_contiguous contiguous
+  " Metodos de set frozenset
+  syn keyword pythonBuiltinFunc 
 endif
 
 "
