@@ -470,13 +470,13 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
   call s:HL("Float", s:orange, "", "")
 
   call s:HL("Identifier", s:navy, "", "")
-  call s:HL("Function", s:foreground, "", "bold")
+  call s:HL("Function", s:aqua, "", "bold")
 
   call s:HL("Statement", s:pink, "", "none")
   call s:HL("Conditional", s:purple, "", "bold")
   call s:HL("Repeat", s:purple, "", "bold")
   call s:HL("Label", s:blue, "", "")
-  call s:HL("Operator", s:aqua, "", "none")
+  call s:HL("Operator", s:purple, "", "bold")
   call s:HL("Keyword", s:blue, "", "")
   call s:HL("Exception", s:red, "", "")
 
@@ -484,7 +484,7 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
   call s:HL("Include", s:red, "", "")
   call s:HL("Define", s:blue, "", "")
   call s:HL("Macro", s:blue, "", "")
-  call s:HL("PreCondit", s:aqua, "", "")
+  call s:HL("PreCondit", s:wine, "", "bold")
 
   call s:HL("Type", s:pink, "", "bold")
   call s:HL("StorageClass", s:navy, "", "bold")
@@ -494,7 +494,7 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
   call s:HL("Special", s:foreground, "", "")
   call s:HL("SpecialChar", s:foreground, "", "")
   call s:HL("Tag", s:green, "", "")
-  call s:HL("Delimiter",s:aqua, "", "")
+  call s:HL("Delimiter",s:purple, "", "bold")
   call s:HL("SpecialComment", s:comment, "", "bold")
   call s:HL("Debug", s:orange, "", "")
 
@@ -571,11 +571,11 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
   call s:HL("cLabel",s:aqua, "", "")
   call s:HL("cAnsiFunction",s:aqua, "", "bold")
   call s:HL("cAnsiName",s:pink, "", "")
-  call s:HL("cDelimiter",s:blue, "", "")
-  " call s:HL("cBraces",s:foreground, "", "")
+  call s:HL("cDelimiter",s:purple, "", "bold")
+  call s:HL("cBraces",s:foreground, "", "bold")
   " call s:HL("cIdentifier",s:blue, s:pink, "")
   " call s:HL("cSemiColon","", s:blue, "")
-  call s:HL("cOperator",s:aqua, "", "")
+  call s:HL("cOperator",s:purple , "", "bold")
   " call s:HL("cStatement",s:pink, "", "")
   call s:HL("cFunction", s:aqua, "", "bold")
   call s:HL("cTodo", s:red, "", "bold")
@@ -591,7 +591,7 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
   call s:HL("cppSTLconstant", s:foreground, "", "")
   call s:HL("cppSTLtype", s:foreground, "", "")
   call s:HL("cppSTLexception", s:pink, "", "")
-  call s:HL("cppSTLfunctional", s:foreground, "", "bold")
+  call s:HL("cppSTLfunctional", s:orange, "", "bold")
   call s:HL("cppSTLiterator", s:foreground, "", "bold")
   call s:HL("cppSTLfunction", s:aqua, "", "bold")
   call s:HL("cppExceptions", s:red, "", "")
@@ -599,6 +599,7 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
   call s:HL("cppStorageClass", s:navy, "", "bold")
   call s:HL("cppAccess",s:blue, "", "")
   call s:HL("cppSTLnamespace",s:wine, "", "bold")
+  call s:HL("cppRawString", s:purple, "", "bold")
 
 
   " Lex highlighting
