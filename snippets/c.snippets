@@ -127,13 +127,13 @@ snippet #if
 # Header Include-Guard
 # (the randomizer code is taken directly from TextMate; it could probably be
 # cleaner, I don't know how to do it in vim script)
-snippet once
-	#ifndef ${1:`toupper(Filename('', 'UNTITLED').'_'.system("/usr/bin/ruby -e 'print (rand * 2821109907455).round.to_s(36)'"))`}
-
+snippet lib
+	#ifndef ${1:`toupper('_'.Filename('', 'UNTITLED').'_H')`}
 	#define $1
+	
 	${2}
 
-	#endif /* end of include guard: $1 */
+	#endif /* Final de la libreria: $1 */
 # Condicion if/else
 snippet if
 	if (${1: Condicion }) {
@@ -177,12 +177,32 @@ snippet switch
 # Funcion
 snippet case
 	case: $1 
-snippet fun
-	${1:void} ${2:nombre funcion}(${3})
+# Snippets con documentacion para spinx
+snippet docfun
+	/**
+	* $2() - Descripcion de la funcion
+	*
+	* @$3: Descripcion argumento
+	*
+	* Descripcion larga
+	* 
+	* Retorno: Descripcion del valor de retorno
+	*/
+	${1:void} ${2:nombre funcion}(${3:parametros})
 	{
 		${4:/* codigo */}
 	}
-# Declaracion de una funcion
+
+snippet docstr
+	/**
+	* struct $1 - Descripcion de la estructura
+	* @$2 - 
+	*
+	*/
+	struct ${1:nombre_structura} {
+		${2}
+	};
+
 snippet fund
 	${1:void} ${2:function_name}(${3});
 	${4} 
@@ -191,9 +211,9 @@ snippet typedef
 	typedef ${1:int} ${2:Mi Tipo predefinido};
 # Struct
 snippet struct
-	struct ${1:`Filename('$1_t', 'name')`} {
-		${2:/* datos */}
-	}${3: Variable Opcional};
+	struct ${1:nombre_structura} {
+		${2}
+	$;
 #union 
 snippet union
 	union ${1:nombre_union}{
@@ -204,6 +224,7 @@ snippet typestr
 	typedef struct ${2:_ $1 }{
 		${3:/* data */}
 	} ${1: `Filename('$1_t', 'name')`};
+	
 # Typdef enum
 snippet tde
 	typedef  enum { 
