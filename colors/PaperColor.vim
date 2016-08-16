@@ -411,6 +411,7 @@ else " LIGHT VARIANT
 endif
 " }}}
 
+
 " Syntax Highlighting: {{{
 if has("gui_running") || &t_Co == 88 || &t_Co == 256
 
@@ -600,7 +601,7 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
   call s:HL("cppAccess",s:blue, "", "")
   call s:HL("cppSTLnamespace",s:wine, "", "bold")
   call s:HL("cppRawString", s:purple, "", "bold")
-
+  call s:HL("cCustomScope",s:orange,"","bold")
 
   " Lex highlighting
   call s:HL("lexCFunctions", s:foreground, "", "")
