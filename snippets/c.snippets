@@ -200,9 +200,23 @@ snippet docstr
 	*
 	*/
 	struct ${1:nombre_structura} {
-		${2}
+		${2:tipo} ${3nombre};
 	};
 
+snippet doctip
+	/**
+	* $2: Descripcion del tipo
+	*/
+	${1:tipo} ${2:nombre};
+
+snippet doctyp
+	/**
+	* typedef $2 - Descripcion corta
+	* 
+	* Descripcion detallada del typedef
+	*/
+	typedef ${1:tipo} ${2:nombre};
+	
 snippet fund
 	${1:void} ${2:function_name}(${3});
 	${4} 
