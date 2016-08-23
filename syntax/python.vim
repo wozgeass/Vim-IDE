@@ -453,7 +453,7 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   " Metodos de memoryview
   syn keyword pythonBuiltinFunc tobytes tolist release cast nbytes readonly
   syn keyword pythonBuiltinFunc itemsize ndim shape strides suboffset
-  syn keyword pythonBuiltinFunc c_contiguous f_contiguous contiguous
+  syn keyword pythonBuiltinFunc c_contiguous f_contiguous contiguous 
   " Metodos de set frozenset
   syn keyword pythonBuiltinFunc 
 endif
