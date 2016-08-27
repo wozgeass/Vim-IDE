@@ -94,6 +94,7 @@ let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
 let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
 let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+
 " Single compile
 let g:SingleCompile_split = 'tabe'
 let g:SingleCompile_resultsize = 5
@@ -103,3 +104,9 @@ nmap <F10> :SCCompileRun<cr>
 "deberas cambiar por este modo
 autocmd Filetype c nmap <buffer> <F9> :SCCompileAF -g -O3 -lcurses <CR>
 "autocmd Filetype c nmap <buffer> <F10> :SCCompileRunAF -lcurses <CR>
+
+" SQL Complete
+" Seleccionamos por defecto mysql
+" Pero pueden otros mas sqlanywhere
+" sqlhana, sqlinformix, sqloracle
+let g:sql_type_default = 'mysql'
