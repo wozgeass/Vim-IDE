@@ -13,6 +13,8 @@ set t_Co=256
 " If using a dark background within the editing area and syntax highlighting
 " turn on this option as well
 set background=light
+" Establecemos la tipografia
+set guifont=Hermit-bold/14
 
 " Source a global configuration file if available
 if filereadable("/etc/vim/vimrc.local")
