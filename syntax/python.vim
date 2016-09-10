@@ -425,7 +425,14 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   " Libreria python3
   syn keyword pythonClass string re difflib textwrap unicodedata stringprep
   syn keyword pythonClass readline rlcompleter struct codecs datetime calendar
-  syn keyword pythonClass 
+  syn keyword pythonClass collections heapq bisect array weakref types pprint
+  syn keyword pythonClass reprlib enum numbers math cmath decimal fractions
+  syn keyword pythonClass random statistics itertools functools operator
+  syn keyword pythonClass pathlib fileinput stat filecmp tempfile glob fnmatch
+  syn keyword pythonClass linecache shutil macpath pickle copyreg shelve marshal
+  syn keyword pythonClass dbm sqlite3 zlib gzip bz2 lzma zipfile tarfile cvs
+  syn keyword pythonClass configparser netrc xdrlib plistlib hashlib hmac
+  syn keyword pythonClass os io time argparse
   syn keyword pythonBuiltinFunc	__import__ abs all any
   syn keyword pythonBuiltinFunc	bin bool bytearray bytes
   syn keyword pythonBuiltinFunc	chr classmethod cmp compile complex
@@ -442,7 +449,7 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   " Metodos de los tipos numericos
   syn keyword pythonBuiltinFunc conjugate trunc floor ceil bit_length 
   syn keyword pythonBuiltinFunc to_bytes from_bytes as_integer_ratio
-  syn keyword pythonBuiltinFunc is_integer fromhex index count append copy
+  syn keyword pythonBuiltinFunc is_integer fromhex index count append 
   syn keyword pythonBuiltinFunc clear extend insert pop remove reverse
   " Metodos de los tipos cadena
   syn keyword pythonBuiltinFunc capitalize casefold center count encode
