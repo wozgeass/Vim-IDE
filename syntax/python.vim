@@ -4,7 +4,7 @@
 " Last Previous Maintainer: Dmitry Vasilev <dima at hlabs dot org>
 " Previous Maintainer:  Neil Schemenauer <nas at python dot ca>
 " URL:                  https://github.com/hdima/python-syntax
-" Last Change:          2016-08-01
+" Last Change:          2016-09-08
 " Filenames:            *.py
 " Version:              3.6.0
 "
@@ -422,6 +422,10 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   else
     syn keyword pythonBuiltinFunc	ascii exec memoryview print
   endif
+  " Libreria python3
+  syn keyword pythonClass string re difflib textwrap unicodedata stringprep
+  syn keyword pythonClass readline rlcompleter struct codecs datetime calendar
+  syn keyword pythonClass 
   syn keyword pythonBuiltinFunc	__import__ abs all any
   syn keyword pythonBuiltinFunc	bin bool bytearray bytes
   syn keyword pythonBuiltinFunc	chr classmethod cmp compile complex
@@ -449,14 +453,26 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonBuiltinFunc lstrip maketrans partition replace rfind 
   syn keyword pythonBuiltinFunc rindex rjust rpartition rsplit rstrip split
   syn keyword pythonBuiltinFunc splitlines startswith strip swapcase title
-  syn keyword pythonBuiltinFunc translate upper zfill
+  syn keyword pythonBuiltinFunc translate upper zfill 
   " Metodos de memoryview
   syn keyword pythonBuiltinFunc tobytes tolist release cast nbytes readonly
   syn keyword pythonBuiltinFunc itemsize ndim shape strides suboffset
   syn keyword pythonBuiltinFunc c_contiguous f_contiguous contiguous 
   " Metodos de set frozenset
-  syn keyword pythonBuiltinFunc 
-endif
+  syn keyword pythonBuiltinFunc isdistjoint issubset issuperset union intersection
+  syn keyword pythonBuiltinFunc difference symmetric_difference copy update
+  syn keyword pythonBuiltinFunc intersection_update difference_update clear
+  syn keyword pythonBuiltinFunc symmetric_difference_update add remove discard
+  " Metodos de diccionarios
+  syn keyword pythonBuiltinFunc get items keys popitem setdefault values
+  " Metodos de clase string
+  syn keyword pythonBuiltinFunc ascii_letters ascii_lowercase ascii_lowercase
+  syn keyword pythonBuiltinFunc digits hexdigits octdigits punctuation printable
+  syn keyword pythonBuiltinFunc whitespace vformat parse get_field get_value
+  syn keyword pythonBuiltinFunc check_unused_args format_field convert_field
+  " Metodos de clase String.Template
+  syn keyword pythonBuiltinObj a
+endi
 
 "
 " Builtin exceptions and warnings
