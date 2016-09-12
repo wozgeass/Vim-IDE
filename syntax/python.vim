@@ -4,7 +4,7 @@
 " Last Previous Maintainer: Dmitry Vasilev <dima at hlabs dot org>
 " Previous Maintainer:  Neil Schemenauer <nas at python dot ca>
 " URL:                  https://github.com/hdima/python-syntax
-" Last Change:          2016-09-08
+" Last Change:          2016-09-12
 " Filenames:            *.py
 " Version:              3.6.0
 "
@@ -432,7 +432,17 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonClass linecache shutil macpath pickle copyreg shelve marshal
   syn keyword pythonClass dbm sqlite3 zlib gzip bz2 lzma zipfile tarfile cvs
   syn keyword pythonClass configparser netrc xdrlib plistlib hashlib hmac
-  syn keyword pythonClass os io time argparse
+  syn keyword pythonClass os io time argparse getopt logging getpass curses
+  syn keyword pythonClass platform errno ctypes threading multiprocessing
+  syn keyword pythonClass concurrent subprocess sched queue dummy _thread 
+  syn keyword pythonClass socket ssl select selectors asyncio asyncore asynchat
+  syn keyword pythonClass signal mmap email json mailcap mailbox mimetypes
+  syn keyword pythonClass base64 binhex binascii quopri uu html xml  webbrowser
+  syn keyword pythonClass cgi cgitb wsgiref urllib http ftplib poplib imaplib 
+  syn keyword pythonClass nntplib smtplib smtpd telnetlib uuid socketserver
+  syn keyword pythonClass xmlrpc ipaddress audioop aifc sunau wave chunk colorsys
+  syn keyword pythonClass imghdr sndhdr ossaudiodev gettext locale turtle cmd
+  syn keyword pythonClass shlex tkinter PyGObject PyQt PySide wxPython pygtk
   syn keyword pythonBuiltinFunc	__import__ abs all any
   syn keyword pythonBuiltinFunc	bin bool bytearray bytes
   syn keyword pythonBuiltinFunc	chr classmethod cmp compile complex
