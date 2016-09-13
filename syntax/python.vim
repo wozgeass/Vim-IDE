@@ -443,6 +443,16 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonClass xmlrpc ipaddress audioop aifc sunau wave chunk colorsys
   syn keyword pythonClass imghdr sndhdr ossaudiodev gettext locale turtle cmd
   syn keyword pythonClass shlex tkinter PyGObject PyQt PySide wxPython pygtk
+  syn keyword pythonClass typing pydoc doctest unittest test bdb faulthandler
+  syn keyword pythonClass pdb timeit trace tracemalloc distutils ensurepip
+  syn keyword pythonClass venv zipapp sys sysconfig builtins warnings contextlib
+  syn keyword pythonClass abc atexit traceback gc inspect site fpectl code codeop
+  syn keyword pythonClass zipimport pkgutil modulefinder runpy importlib parser
+  syn keyword pythonClass ast symtable symbol token keyword tokenize tabnanny
+  syn keyword pythonClass pyclbr py_compile compileall dis pickletools formatter
+  syn keyword pythonClass msilib msvcrt winreg winsound posix pwd spwd grp crypt
+  syn keyword pythonClass termios tty pty fcntl pipes resource nis syslog optparse
+  syn keyword pythonClass imp
   syn keyword pythonBuiltinFunc	__import__ abs all any
   syn keyword pythonBuiltinFunc	bin bool bytearray bytes
   syn keyword pythonBuiltinFunc	chr classmethod cmp compile complex
@@ -487,8 +497,12 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonBuiltinFunc digits hexdigits octdigits punctuation printable
   syn keyword pythonBuiltinFunc whitespace vformat parse get_field get_value
   syn keyword pythonBuiltinFunc check_unused_args format_field convert_field
+  syn keyword pythonBuiltinFunc capwords
   " Metodos de clase String.Template
-  syn keyword pythonBuiltinObj a
+  syn keyword pythonBuiltinObj substitute safe_substitute template
+  " Metodos de operaciones de Expresiones regulares
+  syn keyword pythonBuiltinFunc A ASCII DEBUG I IGNORECASE L LOCALE M MULTILINE
+  syn keyword pythonBuiltinFunc a
 endi
 
 "
