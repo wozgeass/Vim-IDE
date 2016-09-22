@@ -112,3 +112,9 @@ autocmd Filetype c nmap <buffer> <F9> :SCCompileAF -g -O3 -lcurses <CR>
 " Pero pueden otros mas sqlanywhere
 " sqlhana, sqlinformix, sqloracle
 let g:sql_type_default = 'mysql'
+
+" Markdown preview
+let vim_markdown_preview_browser='Google Chrome'
+let vim_markdown_preview_github=1
+
+

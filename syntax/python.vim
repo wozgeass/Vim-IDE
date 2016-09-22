@@ -4,7 +4,7 @@
 " Last Previous Maintainer: Dmitry Vasilev <dima at hlabs dot org>
 " Previous Maintainer:  Neil Schemenauer <nas at python dot ca>
 " URL:                  https://github.com/hdima/python-syntax
-" Last Change:          2016-08-01
+" Last Change:          2016-09-12
 " Filenames:            *.py
 " Version:              3.6.0
 "
@@ -422,6 +422,37 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   else
     syn keyword pythonBuiltinFunc	ascii exec memoryview print
   endif
+  " Libreria python3
+  syn keyword pythonClass string re difflib textwrap unicodedata stringprep
+  syn keyword pythonClass readline rlcompleter struct codecs datetime calendar
+  syn keyword pythonClass collections heapq bisect array weakref types pprint
+  syn keyword pythonClass reprlib enum numbers math cmath decimal fractions
+  syn keyword pythonClass random statistics itertools functools operator
+  syn keyword pythonClass pathlib fileinput stat filecmp tempfile glob fnmatch
+  syn keyword pythonClass linecache shutil macpath pickle copyreg shelve marshal
+  syn keyword pythonClass dbm sqlite3 zlib gzip bz2 lzma zipfile tarfile cvs
+  syn keyword pythonClass configparser netrc xdrlib plistlib hashlib hmac
+  syn keyword pythonClass os io time argparse getopt logging getpass curses
+  syn keyword pythonClass platform errno ctypes threading multiprocessing
+  syn keyword pythonClass concurrent subprocess sched queue dummy _thread 
+  syn keyword pythonClass socket ssl select selectors asyncio asyncore asynchat
+  syn keyword pythonClass signal mmap email json mailcap mailbox mimetypes
+  syn keyword pythonClass base64 binhex binascii quopri uu html xml  webbrowser
+  syn keyword pythonClass cgi cgitb wsgiref urllib http ftplib poplib imaplib 
+  syn keyword pythonClass nntplib smtplib smtpd telnetlib uuid socketserver
+  syn keyword pythonClass xmlrpc ipaddress audioop aifc sunau wave chunk colorsys
+  syn keyword pythonClass imghdr sndhdr ossaudiodev gettext locale turtle cmd
+  syn keyword pythonClass shlex tkinter PyGObject PyQt PySide wxPython pygtk
+  syn keyword pythonClass typing pydoc doctest unittest test bdb faulthandler
+  syn keyword pythonClass pdb timeit trace tracemalloc distutils ensurepip
+  syn keyword pythonClass venv zipapp sys sysconfig builtins warnings contextlib
+  syn keyword pythonClass abc atexit traceback gc inspect site fpectl code codeop
+  syn keyword pythonClass zipimport pkgutil modulefinder runpy importlib parser
+  syn keyword pythonClass ast symtable symbol token keyword tokenize tabnanny
+  syn keyword pythonClass pyclbr py_compile compileall dis pickletools formatter
+  syn keyword pythonClass msilib msvcrt winreg winsound posix pwd spwd grp crypt
+  syn keyword pythonClass termios tty pty fcntl pipes resource nis syslog optparse
+  syn keyword pythonClass imp
   syn keyword pythonBuiltinFunc	__import__ abs all any
   syn keyword pythonBuiltinFunc	bin bool bytearray bytes
   syn keyword pythonBuiltinFunc	chr classmethod cmp compile complex
@@ -438,7 +469,7 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   " Metodos de los tipos numericos
   syn keyword pythonBuiltinFunc conjugate trunc floor ceil bit_length 
   syn keyword pythonBuiltinFunc to_bytes from_bytes as_integer_ratio
-  syn keyword pythonBuiltinFunc is_integer fromhex index count append copy
+  syn keyword pythonBuiltinFunc is_integer fromhex index count append 
   syn keyword pythonBuiltinFunc clear extend insert pop remove reverse
   " Metodos de los tipos cadena
   syn keyword pythonBuiltinFunc capitalize casefold center count encode
@@ -449,14 +480,30 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonBuiltinFunc lstrip maketrans partition replace rfind 
   syn keyword pythonBuiltinFunc rindex rjust rpartition rsplit rstrip split
   syn keyword pythonBuiltinFunc splitlines startswith strip swapcase title
-  syn keyword pythonBuiltinFunc translate upper zfill
+  syn keyword pythonBuiltinFunc translate upper zfill 
   " Metodos de memoryview
   syn keyword pythonBuiltinFunc tobytes tolist release cast nbytes readonly
   syn keyword pythonBuiltinFunc itemsize ndim shape strides suboffset
   syn keyword pythonBuiltinFunc c_contiguous f_contiguous contiguous 
   " Metodos de set frozenset
-  syn keyword pythonBuiltinFunc 
-endif
+  syn keyword pythonBuiltinFunc isdistjoint issubset issuperset union intersection
+  syn keyword pythonBuiltinFunc difference symmetric_difference copy update
+  syn keyword pythonBuiltinFunc intersection_update difference_update clear
+  syn keyword pythonBuiltinFunc symmetric_difference_update add remove discard
+  " Metodos de diccionarios
+  syn keyword pythonBuiltinFunc get items keys popitem setdefault values
+  " Metodos de clase string
+  syn keyword pythonBuiltinFunc ascii_letters ascii_lowercase ascii_lowercase
+  syn keyword pythonBuiltinFunc digits hexdigits octdigits punctuation printable
+  syn keyword pythonBuiltinFunc whitespace vformat parse get_field get_value
+  syn keyword pythonBuiltinFunc check_unused_args format_field convert_field
+  syn keyword pythonBuiltinFunc capwords
+  " Metodos de clase String.Template
+  syn keyword pythonBuiltinObj substitute safe_substitute template
+  " Metodos de operaciones de Expresiones regulares
+  syn keyword pythonBuiltinFunc A ASCII DEBUG I IGNORECASE L LOCALE M MULTILINE
+  syn keyword pythonBuiltinFunc a
+endi
 
 "
 " Builtin exceptions and warnings

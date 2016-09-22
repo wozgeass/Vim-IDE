@@ -687,7 +687,7 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
   call s:HL("htmlBold", s:foreground, "", "bold")
   call s:HL("htmlItalic", s:comment, "", "bold")
   call s:HL("htmlBoldItalic", s:navy, "", "bold")
-  " call s:HL("htmlLink", s:blue, "", "bold")
+  call s:HL("htmlLink", s:blue, "", "bold")
   call s:HL("htmlTagN", s:wine, "", "bold")
   call s:HL("htmlSpecialTagName", s:wine, "", "")
   call s:HL("htmlComment", s:comment, "", "")
@@ -702,14 +702,14 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
   call s:HL("cssPositioningAttr", s:navy, "", "")
   call s:HL("cssValueLength", s:orange, "", "")
 
-call s:HL("cssFunctionName", s:blue, "", "")
-call s:HL("cssUnitDecorators", s:aqua, "", "")
-call s:HL("cssColor", s:blue, "", "bold")
-call s:HL("cssBraces", s:pink, "", "")
-call s:HL("cssBackgroundProp", s:foreground, "", "")
-call s:HL("cssTextProp", s:foreground, "", "")
-call s:HL("cssDimensionProp", s:foreground, "", "")
-call s:HL("cssClassName", s:pink, "", "")
+  call s:HL("cssFunctionName", s:blue, "", "")
+  call s:HL("cssUnitDecorators", s:aqua, "", "")
+  call s:HL("cssColor", s:blue, "", "bold")
+  call s:HL("cssBraces", s:pink, "", "")
+  call s:HL("cssBackgroundProp", s:foreground, "", "")
+  call s:HL("cssTextProp", s:foreground, "", "")
+  call s:HL("cssDimensionProp", s:foreground, "", "")
+  call s:HL("cssClassName", s:pink, "", "")
 
   " Markdown Highlighting
   call s:HL("markdownHeadingRule", s:pink, "", "bold")
@@ -746,7 +746,7 @@ call s:HL("cssClassName", s:pink, "", "")
 
   " Python Highlighting
   call s:HL("pythonImport", s:pink, "", "bold")
-  call s:HL("pythonExceptions", s:red, "", "")
+  call s:HL("pythonExceptions", s:red, "", "bold")
   call s:HL("pythonException", s:purple, "", "bold")
   call s:HL("pythonInclude", s:red, "", "")
   call s:HL("pythonStatement", s:pink, "", "")
@@ -758,11 +758,11 @@ call s:HL("cssClassName", s:pink, "", "")
   call s:HL("pythonOperator", s:purple, "", "bold")
   call s:HL("pythonBuiltin", s:foreground, "", "")
   call s:HL("pythonDecorator", s:orange, "", "")
-
+  call s:HL("pythonClass",s:navy, "", "bold")
   call s:HL("pythonString", s:olive, "", "")
   call s:HL("pythonEscape", s:olive, "", "bold")
   call s:HL("pythonStrFormatting", s:olive, "", "bold")
-
+  call s:HL("pythonDot", s:orange, "", "Bold")
   call s:HL("pythonBoolean", s:green, "", "bold")
   call s:HL("pythonExClass", s:red, "", "")
   call s:HL("pythonBytesEscape", s:olive, "", "bold")
@@ -770,7 +770,7 @@ call s:HL("cssClassName", s:pink, "", "")
   call s:HL("pythonStrFormat", s:foreground, "", "")
   call s:HL("pythonBuiltinFunc", s:wine, "", "bold")
 
-  call s:HL("pythonBuiltinObj", s:foreground, "", "")
+  call s:HL("pythonBuiltinObj", s:green, "", "bold")
 
   " Java Highlighting
   call s:HL("javaExternal", s:pink, "", "")
