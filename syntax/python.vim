@@ -505,7 +505,23 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonBuiltinFunc S DOTALL X VERBOSE search match fullmatch findall
   syn keyword pythonBuiltinFunc sub subn scape purge
   " Metodos de operaciones de Expresiones en los objetos
-  syn keyword pythonBuiltinFunc finditer flags groups groupindex pattern
+  syn keyword pythonBuiltinObj finditer flags groups groupindex patternt
+  " Metodos de operaciones de Objetos match
+  syn keyword pythonBuiltinObj expand groupdict start end span pos endpos
+  syn keyword pythonBuiltinObj lastindex lastgroup re string 
+  " Metodos de la libreria difflib 
+  syn keyword pythonBuiltinFunc Differ HtmlDiff context_diff get_close_matches
+  syn keyword pythonBuiltinFunc ndiff restore unified_diff diff_bytes IS_LINE_JUNK
+  syn keyword pythonBuiltinFunc IS_CHARACTER_JUNK
+  " Metodos del objeto SequenceMatcher
+  syn keyword pythonBuiltinObj SequenseMatcher set_seqs set_seq1 set_seq2
+  syn keyword pythonBuiltinObj find_longest_match get_matching blocks get_opcodes
+  syn keyword pythonBuiltinObj set_grouped_opcodes ratio quick_ratio real_quick_ratio
+  " Metodos del Objeto Differ
+  syn keyword pythonBuiltinObj Differ compare
+  " Metodos del objeto HtmlDiff
+  syn keyword pythonBuiltinObj make_file make_table
+
 endi
 
 "
