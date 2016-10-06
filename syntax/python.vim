@@ -540,6 +540,16 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonBuiltinFunc lookup name decimal digit numeric category
   syn keyword pythonBuiltinFunc bidirectional combining east_asian_width mirrored
   syn keyword pythonBuiltinFunc decomposition normalize unidata_version ucd_3_2_0
+  "
+  " Metodos de la libreria stringprep
+  "
+  syn keyword pythonBuiltinFunc in_table_a1 in_table_b1 map_table_b2 map_table_b3
+  syn keyword pythonBuiltinFunc in_table_c11 in_table_c12 in_table_c11_c12 
+  syn keyword pythonBuiltinFunc in_table_c21 in_table_c22 in_table_c21_c22
+  syn keyword pythonBuiltinFunc in_table_c3 in_table_c4 in_table_c5 in_table_c6
+  syn keyword pythonBuiltinFunc in_table_c7 in_table_c8 in_table_c9
+  syn keyword pythonBuiltinFunc in_table_d1 in_table_d2
+
 endi
 
 "
