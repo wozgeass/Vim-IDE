@@ -500,7 +500,9 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonBuiltinFunc capwords
   " Metodos de clase String.Template
   syn keyword pythonBuiltinObj substitute safe_substitute template
-  " Metodos de operaciones de Expresiones regulares
+  "
+  " Metodos de operaciones de la libreria re
+  "
   syn keyword pythonBuiltinFunc A ASCII DEBUG I IGNORECASE L LOCALE M MULTILINE
   syn keyword pythonBuiltinFunc S DOTALL X VERBOSE search match fullmatch findall
   syn keyword pythonBuiltinFunc sub subn scape purge
@@ -509,7 +511,9 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   " Metodos de operaciones de Objetos match
   syn keyword pythonBuiltinObj expand groupdict start end span pos endpos
   syn keyword pythonBuiltinObj lastindex lastgroup re string 
+  "
   " Metodos de la libreria difflib 
+  "
   syn keyword pythonBuiltinFunc Differ HtmlDiff context_diff get_close_matches
   syn keyword pythonBuiltinFunc ndiff restore unified_diff diff_bytes IS_LINE_JUNK
   syn keyword pythonBuiltinFunc IS_CHARACTER_JUNK
@@ -521,7 +525,21 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonBuiltinObj Differ compare
   " Metodos del objeto HtmlDiff
   syn keyword pythonBuiltinObj make_file make_table
-
+  "
+  " Metodos de la libreria textwrap
+  "
+  syn keyword pythonBuiltinFunc wrap fill shorten dedent indent
+  " Metodos del objeto TextWrapper
+  syn keyword pythonBuiltinObj width expand_tabs tabsize replace_whitespace
+  syn keyword pythonBuiltinObj drop_whitespace initial_indent subsequent_indent
+  syn keyword pythonBuiltinObj fix_sentence_endings break_long_words break_on_hyphens
+  syn keyword pythonBuiltinObj max_lines placeholder wrap fill
+  "
+  " Metodos de la libreria unicodedata
+  "
+  syn keyword pythonBuiltinFunc lookup name decimal digit numeric category
+  syn keyword pythonBuiltinFunc bidirectional combining east_asian_width mirrored
+  syn keyword pythonBuiltinFunc decomposition normalize unidata_version ucd_3_2_0
 endi
 
 "
