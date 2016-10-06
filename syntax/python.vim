@@ -568,10 +568,14 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   " Metodos de la libreria rlcompleter
   "
   syn keyword pythonBuiltinFunc  complete
+  "
+  " Metodos de la libreria struct
+  "
+  syn keyword pythonBuiltinFunc pack pack_into unpack unpack_from iter_unpack 
+  syn keyword pythonBuiltinFunc calcsize
+  " Metodos del objeto Struct
+  syn keyword pythonBuiltinFunc size
 
-  syn keyword pythonBuiltinFunc 
-  syn keyword pythonBuiltinFunc 
-  syn keyword pythonBuiltinFunc 
 
 endi
 
