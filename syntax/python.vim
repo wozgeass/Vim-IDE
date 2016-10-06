@@ -502,7 +502,10 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonBuiltinObj substitute safe_substitute template
   " Metodos de operaciones de Expresiones regulares
   syn keyword pythonBuiltinFunc A ASCII DEBUG I IGNORECASE L LOCALE M MULTILINE
-  syn keyword pythonBuiltinFunc a
+  syn keyword pythonBuiltinFunc S DOTALL X VERBOSE search match fullmatch findall
+  syn keyword pythonBuiltinFunc sub subn scape purge
+  " Metodos de operaciones de Expresiones en los objetos
+  syn keyword pythonBuiltinFunc finditer flags groups groupindex pattern
 endi
 
 "
