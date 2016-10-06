@@ -574,7 +574,29 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonBuiltinFunc pack pack_into unpack unpack_from iter_unpack 
   syn keyword pythonBuiltinFunc calcsize
   " Metodos del objeto Struct
-  syn keyword pythonBuiltinFunc size
+  syn keyword pythonBuiltinObj size
+  "
+  " Metodos de la libreria codecs
+  "
+  syn keyword pythonBuiltinFunc encode decode lookup getencoder getdecoder 
+  syn keyword pythonBuiltinFunc getincrementalencoder getincrementaldecoder
+  syn keyword pythonBuiltinFunc getreader getwriter register open EncodedFile 
+  syn keyword pythonBuiltinFunc iterencode iterdecode register_error
+  syn keyword pythonBuiltinFunc lookup_error strict_errors replace_errors
+  syn keyword pythonBuiltinFunc ignore_errors xmlcharrefreplace_errors
+  syn keyword pythonBuiltinFunc backslashreplace_errors namereplace_errors
+  " Metodos del objeto IncrementalEncoder
+  syn keyword pythonBuiltinObj encode reset getstate setstate 
+  " Metodos del objeto IncrementalDecoder
+  syn keyword pythonBuiltinObj decode reset getstate setstate
+  " Metodos del objeto StreamWriter
+  syn keyword pythonBuiltinObj write writelines reset
+  " Metodos del objeto StreamReader
+  syn keyword pythonBuiltinObj read readlines reset
+  "
+  " Metodos de la libreria datetime
+  "
+  syn keyword pythonBuiltinFunc  
 
 
 endi
