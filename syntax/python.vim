@@ -549,6 +549,28 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonBuiltinFunc in_table_c3 in_table_c4 in_table_c5 in_table_c6
   syn keyword pythonBuiltinFunc in_table_c7 in_table_c8 in_table_c9
   syn keyword pythonBuiltinFunc in_table_d1 in_table_d2
+  "
+  " Metodos de la libreria readline
+  "
+  syn keyword pythonBuiltinFunc parse_and_bind read_init_file get_line_buffer
+  syn keyword pythonBuiltinFunc insert_text redisplay read_history_file
+  syn keyword pythonBuiltinFunc write_history_file append_history_file
+  syn keyword pythonBuiltinFunc get_history_length set_history_length
+  syn keyword pythonBuiltinFunc clear_history get_current_history_length 
+  syn keyword pythonBuiltinFunc get_history_item remove_history_item 
+  syn keyword pythonBuiltinFunc replace_history_item add_history get_begidx
+  syn keyword pythonBuiltinFunc set_startup_hook set_pre_input_hook
+  syn keyword pythonBuiltinFunc set_completer get_completer get_completion_type
+  syn keyword pythonBuiltinFunc get_endidx set_completer_delims
+  syn keyword pythonBuiltinFunc get_completer_delims 
+  syn keyword pythonBuiltinFunc set_completion_display_matches_hook
+  " 
+  " Metodos de la libreria rlcompleter
+  "
+  syn keyword pythonBuiltinFunc  
+  syn keyword pythonBuiltinFunc 
+  syn keyword pythonBuiltinFunc 
+  syn keyword pythonBuiltinFunc 
 
 endi
 
