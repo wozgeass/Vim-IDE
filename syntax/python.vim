@@ -550,7 +550,7 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonBuiltinFunc in_table_c7 in_table_c8 in_table_c9
   syn keyword pythonBuiltinFunc in_table_d1 in_table_d2
   "
-  " Metodos de la libreria readline
+  " Metodos de la libreria readlinte
   "
   syn keyword pythonBuiltinFunc parse_and_bind read_init_file get_line_buffer
   syn keyword pythonBuiltinFunc insert_text redisplay read_history_file
@@ -567,7 +567,8 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   " 
   " Metodos de la libreria rlcompleter
   "
-  syn keyword pythonBuiltinFunc  
+  syn keyword pythonBuiltinFunc  complete
+
   syn keyword pythonBuiltinFunc 
   syn keyword pythonBuiltinFunc 
   syn keyword pythonBuiltinFunc 
