@@ -500,9 +500,105 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonBuiltinFunc capwords
   " Metodos de clase String.Template
   syn keyword pythonBuiltinObj substitute safe_substitute template
-  " Metodos de operaciones de Expresiones regulares
+  "
+  " Metodos de operaciones de la libreria re
+  "
   syn keyword pythonBuiltinFunc A ASCII DEBUG I IGNORECASE L LOCALE M MULTILINE
-  syn keyword pythonBuiltinFunc a
+  syn keyword pythonBuiltinFunc S DOTALL X VERBOSE search match fullmatch findall
+  syn keyword pythonBuiltinFunc sub subn scape purge
+  " Metodos de operaciones de Expresiones en los objetos
+  syn keyword pythonBuiltinObj finditer flags groups groupindex patternt
+  " Metodos de operaciones de Objetos match
+  syn keyword pythonBuiltinObj expand groupdict start end span pos endpos
+  syn keyword pythonBuiltinObj lastindex lastgroup re string 
+  "
+  " Metodos de la libreria difflib 
+  "
+  syn keyword pythonBuiltinFunc Differ HtmlDiff context_diff get_close_matches
+  syn keyword pythonBuiltinFunc ndiff restore unified_diff diff_bytes IS_LINE_JUNK
+  syn keyword pythonBuiltinFunc IS_CHARACTER_JUNK
+  " Metodos del objeto SequenceMatcher
+  syn keyword pythonBuiltinObj SequenseMatcher set_seqs set_seq1 set_seq2
+  syn keyword pythonBuiltinObj find_longest_match get_matching blocks get_opcodes
+  syn keyword pythonBuiltinObj set_grouped_opcodes ratio quick_ratio real_quick_ratio
+  " Metodos del Objeto Differ
+  syn keyword pythonBuiltinObj Differ compare
+  " Metodos del objeto HtmlDiff
+  syn keyword pythonBuiltinObj make_file make_table
+  "
+  " Metodos de la libreria textwrap
+  "
+  syn keyword pythonBuiltinFunc wrap fill shorten dedent indent
+  " Metodos del objeto TextWrapper
+  syn keyword pythonBuiltinObj width expand_tabs tabsize replace_whitespace
+  syn keyword pythonBuiltinObj drop_whitespace initial_indent subsequent_indent
+  syn keyword pythonBuiltinObj fix_sentence_endings break_long_words break_on_hyphens
+  syn keyword pythonBuiltinObj max_lines placeholder wrap fill
+  "
+  " Metodos de la libreria unicodedata
+  "
+  syn keyword pythonBuiltinFunc lookup name decimal digit numeric category
+  syn keyword pythonBuiltinFunc bidirectional combining east_asian_width mirrored
+  syn keyword pythonBuiltinFunc decomposition normalize unidata_version ucd_3_2_0
+  "
+  " Metodos de la libreria stringprep
+  "
+  syn keyword pythonBuiltinFunc in_table_a1 in_table_b1 map_table_b2 map_table_b3
+  syn keyword pythonBuiltinFunc in_table_c11 in_table_c12 in_table_c11_c12 
+  syn keyword pythonBuiltinFunc in_table_c21 in_table_c22 in_table_c21_c22
+  syn keyword pythonBuiltinFunc in_table_c3 in_table_c4 in_table_c5 in_table_c6
+  syn keyword pythonBuiltinFunc in_table_c7 in_table_c8 in_table_c9
+  syn keyword pythonBuiltinFunc in_table_d1 in_table_d2
+  "
+  " Metodos de la libreria readlinte
+  "
+  syn keyword pythonBuiltinFunc parse_and_bind read_init_file get_line_buffer
+  syn keyword pythonBuiltinFunc insert_text redisplay read_history_file
+  syn keyword pythonBuiltinFunc write_history_file append_history_file
+  syn keyword pythonBuiltinFunc get_history_length set_history_length
+  syn keyword pythonBuiltinFunc clear_history get_current_history_length 
+  syn keyword pythonBuiltinFunc get_history_item remove_history_item 
+  syn keyword pythonBuiltinFunc replace_history_item add_history get_begidx
+  syn keyword pythonBuiltinFunc set_startup_hook set_pre_input_hook
+  syn keyword pythonBuiltinFunc set_completer get_completer get_completion_type
+  syn keyword pythonBuiltinFunc get_endidx set_completer_delims
+  syn keyword pythonBuiltinFunc get_completer_delims 
+  syn keyword pythonBuiltinFunc set_completion_display_matches_hook
+  " 
+  " Metodos de la libreria rlcompleter
+  "
+  syn keyword pythonBuiltinFunc  complete
+  "
+  " Metodos de la libreria struct
+  "
+  syn keyword pythonBuiltinFunc pack pack_into unpack unpack_from iter_unpack 
+  syn keyword pythonBuiltinFunc calcsize
+  " Metodos del objeto Struct
+  syn keyword pythonBuiltinObj size
+  "
+  " Metodos de la libreria codecs
+  "
+  syn keyword pythonBuiltinFunc encode decode lookup getencoder getdecoder 
+  syn keyword pythonBuiltinFunc getincrementalencoder getincrementaldecoder
+  syn keyword pythonBuiltinFunc getreader getwriter register open EncodedFile 
+  syn keyword pythonBuiltinFunc iterencode iterdecode register_error
+  syn keyword pythonBuiltinFunc lookup_error strict_errors replace_errors
+  syn keyword pythonBuiltinFunc ignore_errors xmlcharrefreplace_errors
+  syn keyword pythonBuiltinFunc backslashreplace_errors namereplace_errors
+  " Metodos del objeto IncrementalEncoder
+  syn keyword pythonBuiltinObj encode reset getstate setstate 
+  " Metodos del objeto IncrementalDecoder
+  syn keyword pythonBuiltinObj decode reset getstate setstate
+  " Metodos del objeto StreamWriter
+  syn keyword pythonBuiltinObj write writelines reset
+  " Metodos del objeto StreamReader
+  syn keyword pythonBuiltinObj read readlines reset
+  "
+  " Metodos de la libreria datetime
+  "
+  syn keyword pythonBuiltinFunc  
+
+
 endi
 
 "

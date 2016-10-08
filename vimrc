@@ -103,7 +103,7 @@ let g:SingleCompile_resultsize = 5
 "nmap <F9> :SCCompile<cr>
 nmap <F10> :SCCompileRun<cr>
 "En el caso de que necesites alguna libreria 
-"deberas cambiar por este modo
+"deberas cambiar por este modo de momento funciona para ncurses
 autocmd Filetype c nmap <buffer> <F9> :SCCompileAF -g -O3 -lcurses <CR>
 "autocmd Filetype c nmap <buffer> <F10> :SCCompileRunAF -lcurses <CR>
 
