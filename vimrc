@@ -76,7 +76,7 @@ let g:jedi#completions_enabled = 1
 let g:closetag_filenames = "*.html,*.xhtml,*.phtml"
 
 " Activando autopairs
-let g:AutoPairsFlyMode = 1
+let delimitMate_expand_cr = 0
 
 " Activando Neocomplete
 let g:acp_enableAtStartup = 0
@@ -104,7 +104,7 @@ let g:SingleCompile_resultsize = 5
 nmap <F10> :SCCompileRun<cr>
 "En el caso de que necesites alguna libreria 
 "deberas cambiar por este modo de momento funciona para ncurses
-autocmd Filetype c nmap <buffer> <F9> :SCCompileAF -g -O3 -lcurses <CR>
+autocmd Filetype c nmap <buffer> <F9> :SCCompileAF -g -O3 -lcurses<CR> 
 "autocmd Filetype c nmap <buffer> <F10> :SCCompileRunAF -lcurses <CR>
 
 " SQL Complete
@@ -114,7 +114,8 @@ autocmd Filetype c nmap <buffer> <F9> :SCCompileAF -g -O3 -lcurses <CR>
 let g:sql_type_default = 'mysql'
 
 " Markdown preview
-let vim_markdown_preview_browser='Google Chrome'
-let vim_markdown_preview_github=1
+let vim_markdown_preview_browser='epiphany'
+let vim_markdown_preview_hotkey='<C-m>'
+let vim_markdown_preview_github=3
 
 
