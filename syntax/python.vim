@@ -510,7 +510,7 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonBuiltinObj finditer flags groups groupindex patternt
   " Metodos de operaciones de Objetos match
   syn keyword pythonBuiltinObj expand groupdict start end span pos endpos
-  syn keyword pythonBuiltinObj lastindex lastgroup re string 
+  syn keyword pythonBuiltinObj lastindex lastgroup re 
   "
   " Metodos de la libreria difflib 
   "
@@ -596,8 +596,19 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   "
   " Metodos de la libreria datetime
   "
-  syn keyword pythonBuiltinFunc  
-
+  " Metodos del Objeto timedelta
+  syn keyword pythonBuiltinObj total_seconds
+  " Metodos del Objeto Date
+  syn keyword pythonBuiltinObj date today fromtimestamp fromordinal timetuple
+  syn keyword pythonBuiltinObj toordinal weekday isoweekday isocalendar 
+  syn keyword pythonBuiltinObj isoformat ctime strftime
+  " Metodos del Objeto datetime
+  syn keyword pythonBuiltinObj now utcnow utcfromtimestamp combine strptime date
+  syn keyword pythonBuiltinObj timetz astimezone utcoffset dst tzname utctimetuple
+  syn keyword pythonBuiltinObj timestamp
+  " Metodos del Objeto time
+  " Metodos del Objeto tzinfo
+  syn keyword pythonBuiltinObj fromutc 
 
 endi
 
