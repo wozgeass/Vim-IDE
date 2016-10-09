@@ -620,13 +620,24 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonBuiltinFunc firstweekday isleap leapdays weekday weekheader
   syn keyword pythonBuiltinFunc monthrange monthcalendar prmonth month prcal timegm
   " Metodos del objeto TextCalendar
-  syn keyword pythonBuiltinFunc formatmonth prmonth formatyear pryear
+  syn keyword pythonBuiltinObj formatmonth prmonth formatyear pryear
   " Metodos del objeto HTMLCalendar
-  syn keyword pythonBuiltinFunc formatyearpage
+  syn keyword pythonBuiltinObj formatyearpage
   "
   " Metodos de la libreria collections
   "
-  syn keyword
+  syn keyword pythonBuiltinFunc ChainMap deque Counter OrderedDict defaultdict
+  syn keyword pythonBuiltinFunc UserDict UserList UserString namedtuples
+  " Metodos del objeto ChainMap
+  syn keyword pythonBuiltinObj new_child
+  " Metodos del objeto Counter
+  syn keyword pythonBuiltinObj elements most_common subtract fromkeys
+  " Metodos del objeto deque
+  syn keyword pythonBuiltinObj appendleft extendleft popleft rotate
+  " Metodos del objeto defaultdict
+  syn keyword pythonBuiltinObj default_factory
+  " Metodos del objeto OrderedDict 
+  syn keyword pythonBuiltinObj move_to_end 
 endi
 
 "
