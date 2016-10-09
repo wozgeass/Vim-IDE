@@ -638,6 +638,11 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonBuiltinObj default_factory
   " Metodos del objeto OrderedDict 
   syn keyword pythonBuiltinObj move_to_end 
+  "
+  " Metodos de la libreria heapq
+  "
+  syn keyword pythonBuiltinFunc heappush heappop heappushpop heapify heapreplace
+  syn keyword pythonBuiltinFunc merge nlargest nsmallest
 endi
 
 "
