@@ -609,7 +609,24 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   " Metodos del Objeto time
   " Metodos del Objeto tzinfo
   syn keyword pythonBuiltinObj fromutc 
-
+  "
+  " Metodos de la libreria Calendar
+  "
+  syn keyword pythonBuiltinFunc iterweekdays itermonthdates itermonthdays2
+  syn keyword pythonBuiltinFunc itermonthdays monthdatescalendar monthdays2calendar
+  syn keyword pythonBuiltinFunc monthdayscalendar yeardatescalendar yeardays2calendar
+  syn keyword pythonBuiltinFunc yeardayscalendar TextCalendar HTMLCalendar
+  syn keyword pythonBuiltinFunc LocaleTextCalendar LocaleHTMLCalendar setfirstweekday
+  syn keyword pythonBuiltinFunc firstweekday isleap leapdays weekday weekheader
+  syn keyword pythonBuiltinFunc monthrange monthcalendar prmonth month prcal timegm
+  " Metodos del objeto TextCalendar
+  syn keyword pythonBuiltinFunc formatmonth prmonth formatyear pryear
+  " Metodos del objeto HTMLCalendar
+  syn keyword pythonBuiltinFunc formatyearpage
+  "
+  " Metodos de la libreria collections
+  "
+  syn keyword
 endi
 
 "
