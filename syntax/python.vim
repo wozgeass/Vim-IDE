@@ -643,6 +643,11 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   "
   syn keyword pythonBuiltinFunc heappush heappop heappushpop heapify heapreplace
   syn keyword pythonBuiltinFunc merge nlargest nsmallest
+  "
+  " Metodos de la libreria bisect
+  "
+  syn keyword pythonBuiltinFunc bisect_left bisect_right insort_left insort_right
+  syn keyword pythonBuiltinFunc insort
 endi
 
 "
