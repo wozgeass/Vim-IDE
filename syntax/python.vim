@@ -648,6 +648,11 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   "
   syn keyword pythonBuiltinFunc bisect_left bisect_right insort_left insort_right
   syn keyword pythonBuiltinFunc insort
+  "
+  " Metodos de la libreria array
+  "
+  syn keyword pythonBuiltinFunc buffer_info byteswap formbytes fromfile fromlist
+  syn keyword pythonBuiltinFunc fromunicode tofile tostring tounicode
 endi
 
 "
