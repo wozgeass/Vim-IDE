@@ -653,6 +653,40 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   "
   syn keyword pythonBuiltinFunc buffer_info byteswap formbytes fromfile fromlist
   syn keyword pythonBuiltinFunc fromunicode tofile tostring tounicode
+  " 
+  " Metodos de la libreria weakref
+  "
+  syn keyword pythonBuiltinFunc ref proxy getweakrefcount getweakrefs
+  syn keyword pythonBuiltinFunc WeakKeyDictionary keyrefs WeakValueDictionary
+  syn keyword pythonBuiltinFunc valuerefs WeakSet WeakMethod finalize detach peek
+  "
+  " Metodos de la libreria types
+  "
+  syn keyword pythonBuiltinFunc new_class prepare_class ModuleType MappingProxyType
+  syn keyword pythonBuiltinFunc a
+
+
+
+
+
+
+  "
+  " Metodos de la libreria Serial
+  "
+  syn keyword pythonBuiltinAttr port baudrate bytesize parity stopbits timeout xonxoff
+  syn keyword pythonBuiltinAttr dsrdtr write_timeout inter_byte_timeout name cts dtr
+  syn keyword pythonBuiltinAttr cts dts ri cd is_open rs485_mode
+  syn keyword pythonBuiltinFunc close flush reset_input_buffer reset_output_buffer
+  syn keyword pythonBuiltinFunc break_condition io rs485.RS485Settings Serial SerialBase 
+  syn keyword pythonBuiltinCons BAUDRATES BYTESIZES PARITIES STOPBITS PARITY_NONE
+  syn keyword pythonBuiltinCons PARITY_ODD PARITY_MARK PARITY_SPACE STOPBITS_ONE
+  syn keyword pythonBuiltinCons STOPBITS_ONE_POINT_FIVE STOPBITS_TWO FIVEBITS SIXBITS
+  syn keyword pythonBuiltinCons SEVENBITS EIGHTBITS XON XOFF VERSION
+  " Metodos del objeto io
+  syn keyword pythonBuiltinObj readable writable seekable readinto get_settings
+  syn keyword pythonBuiltinObj apply_settings nonblocking fileno set_input_flow_control
+  syn keyword pythonBuiltinObj set_output_flow_control cancel_read cancel_write
+  syn keyword pythonExClass SerialException
 endi
 
 "
