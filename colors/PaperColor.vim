@@ -484,7 +484,7 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
   call s:HL("PreProc", s:blue, "", "")
   call s:HL("Include", s:red, "", "")
   call s:HL("Define", s:blue, "", "")
-  call s:HL("Macro", s:blue, "", "")
+  call s:HL("Macro", s:blue, "", "bold")
   call s:HL("PreCondit", s:wine, "", "bold")
 
   call s:HL("Type", s:pink, "", "bold")
@@ -507,6 +507,8 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
   call s:HL("Title", s:comment, "", "")
   call s:HL("Global", s:blue, "", "")
 
+  " Resaltado para Arduino
+  call s:HL("arduinoClass", s:orange, "", "bold")
 
   " Extension {{{
   " VimL Highlighting
@@ -631,10 +633,10 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
 
   " NASM highlighting
   call s:HL("nasmStdInstruction", s:navy, "", "")
-  call s:HL("nasmGen08Register", s:aqua, "", "")
-  call s:HL("nasmGen16Register", s:aqua, "", "")
-  call s:HL("nasmGen32Register", s:aqua, "", "")
-  call s:HL("nasmGen64Register", s:aqua, "", "")
+  call s:HL("nasmGen08Register", s:red, "", "")
+  call s:HL("nasmGen16Register", s:red, "", "")
+  call s:HL("nasmGen32Register", s:red, "", "")
+  call s:HL("nasmGen64Register", s:red, "", "")
   call s:HL("nasmHexNumber", s:purple, "", "")
   call s:HL("nasmStorage", s:aqua, "", "bold")
   call s:HL("nasmLabel", s:pink, "", "")
@@ -642,13 +644,14 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
   call s:HL("nasmLocalLabel", s:orange, "", "")
 
   " GAS highlighting
-  call s:HL("gasSymbol", s:pink, "", "")
-  call s:HL("gasDirective", s:blue, "", "bold")
+  call s:HL("gasSymbol", s:pink, "", "bold")
+  call s:HL("gasDirective", s:red, "", "bold")
   call s:HL("gasOpcode_386_Base", s:navy, "", "")
-  call s:HL("gasDecimalNumber", s:purple, "", "")
+  call s:HL("gasDecimalNumber", s:purple, "", "bold")
   call s:HL("gasSymbolRef", s:pink, "", "")
-  call s:HL("gasRegisterX86", s:blue, "", "")
-  call s:HL("gasOpcode_P6_Base", s:navy, "", "")
+  call s:HL("gasRegisterX86", s:orange, "", "bold")
+  call s:HL("gasOpcode", s:wine,"", "")
+  call s:HL("gasString", s:green, "", "bold")
   call s:HL("gasDirectiveStore", s:foreground, "", "bold")
 
   " MIPS highlighting
@@ -769,8 +772,9 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
   call s:HL("pythonDottedName", s:purple, "", "")
   call s:HL("pythonStrFormat", s:foreground, "", "")
   call s:HL("pythonBuiltinFunc", s:wine, "", "bold")
-
+  call s:HL("pythonBuiltinAttr", s:blue, "", "bold")
   call s:HL("pythonBuiltinObj", s:green, "", "bold")
+  call s:HL("pythonBuiltinCons", s:background, "", "bold")
 
   " Java Highlighting
   call s:HL("javaExternal", s:pink, "", "")
