@@ -442,7 +442,7 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonClass nntplib smtplib smtpd telnetlib uuid socketserver
   syn keyword pythonClass xmlrpc ipaddress audioop aifc sunau wave chunk colorsys
   syn keyword pythonClass imghdr sndhdr ossaudiodev gettext locale turtle cmd
-  syn keyword pythonClass shlex tkinter PyGObject PyQt PySide wxPython pygtk
+  syn keyword pythonClass shlex tkinter PyGObject PyQt PySide wxPython pygtk gi
   syn keyword pythonClass typing pydoc doctest unittest test bdb faulthandler
   syn keyword pythonClass pdb timeit trace tracemalloc distutils ensurepip
   syn keyword pythonClass venv zipapp sys sysconfig builtins warnings contextlib
@@ -452,7 +452,7 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonClass pyclbr py_compile compileall dis pickletools formatter
   syn keyword pythonClass msilib msvcrt winreg winsound posix pwd spwd grp crypt
   syn keyword pythonClass termios tty pty fcntl pipes resource nis syslog optparse
-  syn keyword pythonClass imp
+  syn keyword pythonClass imp serial
   syn keyword pythonBuiltinFunc	__import__ abs all any
   syn keyword pythonBuiltinFunc	bin bool bytearray bytes
   syn keyword pythonBuiltinFunc	chr classmethod cmp compile complex
