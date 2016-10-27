@@ -452,7 +452,7 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonClass pyclbr py_compile compileall dis pickletools formatter
   syn keyword pythonClass msilib msvcrt winreg winsound posix pwd spwd grp crypt
   syn keyword pythonClass termios tty pty fcntl pipes resource nis syslog optparse
-  syn keyword pythonClass imp serial
+  syn keyword pythonClass imp serial simpleaudio
   syn keyword pythonBuiltinFunc	__import__ abs all any
   syn keyword pythonBuiltinFunc	bin bool bytearray bytes
   syn keyword pythonBuiltinFunc	chr classmethod cmp compile complex
@@ -668,8 +668,18 @@ if s:Enabled("g:python_highlight_builtin_funcs")
 
 
 
-
-
+  "
+  " Metodos de la libreria simpleaudio
+  "
+  syn keyword pythonBuiltinFunc WaveObject PlayObject stop_all play_buffer
+  syn keyword pythonBuiltinFunc functionchecks sleep
+  " Metodos del Objeto WaveObject 
+  syn keyword pythonBuiltinObj play from_wave_file from_wave_read
+  " Metodos del objeto PlayObject
+  syn keyword pythonBuiltinObj stop is_playing wait_done 
+  " Metodos del objeto functionchecks
+  syn keyword pythonBuiltinObj run_all FunctionCheckBase LeftRightCheck OverlappingCheck
+  syn keyword pythonBuiltinObj StopCheck StopAllCheck IsPlayingCheck WaitDoneCheck
   "
   " Metodos de la libreria Serial
   "
@@ -687,6 +697,13 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonBuiltinObj apply_settings nonblocking fileno set_input_flow_control
   syn keyword pythonBuiltinObj set_output_flow_control cancel_read cancel_write
   syn keyword pythonExClass SerialException
+  "
+  " Metodos de la libreria Gtk
+  "
+  syn keyword pythonBuiltinFunc  
+  "
+  " Metodos de librerias externas
+  "
 endi
 
 "
