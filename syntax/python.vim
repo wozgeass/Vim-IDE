@@ -698,9 +698,21 @@ if s:Enabled("g:python_highlight_builtin_funcs")
   syn keyword pythonBuiltinObj set_output_flow_control cancel_read cancel_write
   syn keyword pythonExClass SerialException
   "
-  " Metodos de la libreria Gtk
+  " Metodos de la libreria gi.repository para programar en GTK
   "
-  syn keyword pythonBuiltinFunc  
+  syn keyword pythonBuiltinFunc require_foreign require_versions version_info
+  syn keyword pythonBuiltinFunc check_version get_required_version repository
+  syn keyword pythonBuiltinFunc Gtk Atk Glib Gdk GModule GObject Gio cairo Pango
+  syn keyword pythonBuiltinFunc GdkPixbuf GdkX11 xlib
+  " Metodos de la clase GTK
+  syn keyword pythonBuiltinObj AboutDialog AboutDialogClass AboutDialogPrivate AccelFlags
+  syn keyword pythonBuiltinObj AccelGroup AccelGroupClass AccelGroupEntry AccelGroupPrivate
+  syn keyword pythonBuiltinObj AccelKey AccelLabel AccelLabelClass AccelLabelPrivate
+  syn keyword pythonBuiltinObj AceelMap AccelMapClass Accesible AccessibleClass
+  syn keyword pythonBuiltinObj AccessiblePrivate Action ActionBar ActionBarClass
+  syn keyword pythonBuiltinObj ActionBarPrivate ActionClass ActionEntry ActionGroup
+  syn keyword pythonBuiltinObj ActionGroupClass ActionGroupPrivate ActionPrivate
+  syn keyword pythonBuiltinObj b
   "
   " Metodos de librerias externas
   "
