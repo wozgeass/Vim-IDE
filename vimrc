@@ -13,6 +13,7 @@ set t_Co=256
 " If using a dark background within the editing area and syntax highlighting
 " turn on this option as well
 set background=light
+"set background=dark
 " Establecemos la tipografia
 set guifont=Hermit-bold/14
 
@@ -114,8 +115,19 @@ autocmd Filetype c nmap <buffer> <F9> :SCCompileAF -g -O3 -lcurses<CR>
 let g:sql_type_default = 'mysql'
 
 " Markdown preview
-let vim_markdown_preview_browser='epiphany'
+"let vim_markdown_preview_browser='epiphany'
+let g:mkdp_path_to_chrome = "google-chrome"
+let g:mkdp_refresh_slow = 1
 let vim_markdown_preview_hotkey='<C-m>'
 let vim_markdown_preview_github=3
+" PHP
+function! PhpSyntaxOverride()
+  hi! def link phpDocTags  phpDefine
+  hi! def link phpDocParam phpType
+endfunction
 
+augroup phpSyntaxOverride
+  autocmd!
+  autocmd FileType php call PhpSyntaxOverride()
+augroup END
 
