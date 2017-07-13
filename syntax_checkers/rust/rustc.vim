@@ -1,14 +1,9 @@
-"============================================================================
-"File:        rust.vim
-"Description: Syntax checking plugin for syntastic.vim
-"Maintainer:  Chad Jablonski <chad.jablonski at gmail dot com>
-"License:     This program is free software. It comes without any warranty,
-"             to the extent permitted by applicable law. You can redistribute
-"             it and/or modify it under the terms of the Do What The Fuck You
-"             Want To Public License, Version 2, as published by Sam Hocevar.
-"             See http://sam.zoy.org/wtfpl/COPYING for more details.
+" Vim syntastic plugin
+" Language:     Rust
+" Maintainer:   Andrew Gallant <jamslam@gmail.com>
 "
-"============================================================================
+" See for details on how to add an external Syntastic checker:
+" https://github.com/scrooloose/syntastic/wiki/Syntax-Checker-Guide#external
 
 if exists("g:loaded_syntastic_rust_rustc_checker")
     finish
@@ -19,13 +14,26 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! SyntaxCheckers_rust_rustc_GetLocList() dict
-    let makeprg = self.makeprgBuild({ 'args_after': '--no-trans' })
+    let makeprg = self.makeprgBuild({})
 
+    " Old errorformat (before nightly 2016/08/10)
     let errorformat  =
         \ '%E%f:%l:%c: %\d%#:%\d%# %.%\{-}error:%.%\{-} %m,'   .
         \ '%W%f:%l:%c: %\d%#:%\d%# %.%\{-}warning:%.%\{-} %m,' .
-        \ '%C%f:%l %m,' .
-        \ '%-Z%.%#'
+        \ '%C%f:%l %m'
+        
+    " New errorformat (after nightly 2016/08/10)
+    let errorformat  .=
+        \ ',' .
+        \ '%-G,' .
+        \ '%-Gerror: aborting %.%#,' .
+        \ '%-Gerror: Could not compile %.%#,' .
+        \ '%Eerror: %m,' .
+        \ '%Eerror[E%n]: %m,' .
+        \ '%-Gwarning: the option `Z` is unstable %.%#,' .
+        \ '%Wwarning: %m,' .
+        \ '%Inote: %m,' .
+        \ '%C %#--> %f:%l:%c'
 
     return SyntasticMake({
         \ 'makeprg': makeprg,
@@ -38,5 +46,3 @@ call g:SyntasticRegistry.CreateAndRegisterChecker({
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
-
-" vim: set et sts=4 sw=4:
