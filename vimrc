@@ -12,11 +12,11 @@ set t_Co=256
 "colorscheme grimmjow
 " If using a dark background within the editing area and syntax highlighting
 " turn on this option as well
+"set background=light
 set background=light
-"set background=dark
 " Establecemos la tipografia
 set guifont=Hermit-bold/14
-
+let g:powerline_pycmd = "python3"
 " Source a global configuration file if available
 if filereadable("/etc/vim/vimrc.local")
   source /etc/vim/vimrc.local
