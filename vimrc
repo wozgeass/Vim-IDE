@@ -13,7 +13,7 @@ set t_Co=256
 " If using a dark background within the editing area and syntax highlighting
 " turn on this option as well
 "set background=light
-set background=light
+set background=dark
 " Establecemos la tipografia
 set guifont=Hermit-bold/14
 let g:powerline_pycmd = "python3"
@@ -32,6 +32,9 @@ set smartindent
 set smarttab
 set autoindent
 set number
+set cursorline
+set cursorcolumn
+
 "Omnicomplete para diferentes lenguajes.
 autocmd FileType python set omnifunc=pythoncomplete#Complete
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
