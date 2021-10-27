@@ -15,12 +15,13 @@ set t_Co=256
 "set background=light
 set background=dark
 " Establecemos la tipografia
-set guifont=Hermit-bold/14
+"set guifont=Hermit-bold/14
 let g:powerline_pycmd = "python3"
 " Source a global configuration file if available
 if filereadable("/etc/vim/vimrc.local")
   source /etc/vim/vimrc.local
 endif
+
 syntax enable
 filetype plugin on
 set tabstop=4
@@ -34,6 +35,7 @@ set autoindent
 set number
 set cursorline
 set cursorcolumn
+set relativenumber
 
 "Omnicomplete para diferentes lenguajes.
 autocmd FileType python set omnifunc=pythoncomplete#Complete
@@ -48,7 +50,7 @@ autocmd FileType sql set omnifunc=sqlcomplete#Complete
 autocmd FileType ruby set omnifunc=rubycomplete#Complete
 " Configuraciones para syntastic
 let g:syntastic_sh_checkers = ['shellcheck']
-let g:syntastic_shell = "/bin/bash"
+let g:syntastic_shell = "/bin/zsh"
 "let g:syntastic_vim_checkers = ['vint']
 let g:syntastic_python_exec = 'python3'
 let g:syntastic_always_populate_loc_list = 1
